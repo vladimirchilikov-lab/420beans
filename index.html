@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<!-- ── CSP meta fallback (Vercel header takes precedence; this covers local/other hosts) ── -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://js.stripe.com https://m.stripe.network; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://*.stripe.com; connect-src 'self' https://api.stripe.com https://m.stripe.network https://m.stripe.com; frame-src https://js.stripe.com https://hooks.stripe.com; child-src https://js.stripe.com https://hooks.stripe.com; worker-src blob:; object-src 'none'; base-uri 'self'; form-action 'self' https://buy.stripe.com">
+
 <!-- ── SEO ── -->
 <title>420 Beans — Specialty Coffee | Специалти Кафе</title>
 <meta name="description" content="420 Beans — specialty coffee with verified farm-to-cup traceability. Light, medium and dark roasts delivered fresh. Специалти кафе с проследим произход. Доставено прясно.">
@@ -13,16 +16,28 @@
 <meta property="og:type" content="website">
 <meta name="theme-color" content="#1A1512">
 
-<!-- ── FONTS ── -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
+<!-- ── FONTS — preconnect first, then stylesheet, display=swap ensures text visible during load ── -->
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Mono:wght@300;400&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Mono:wght@300;400&display=swap" media="print" onload="this.media='all'">
+<noscript>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Mono:wght@300;400&display=swap">
+</noscript>
 
-<!-- ── STRIPE.JS (loads but does nothing until checkout) ── -->
-<script src="https://js.stripe.com/v3/" async></script>
+<!-- ── STRIPE.JS — defer so it doesn't block render ── -->
+<script src="https://js.stripe.com/v3/" defer></script>
 
 <!-- ── STYLES ── -->
 <link rel="stylesheet" href="./style.css">
+
+<!-- ── Font fallback: text visible immediately before webfont arrives ── -->
+<style>
+  body { font-family: 'DM Mono', 'Courier New', monospace; }
+  h1,h2,h3,.nav-logo,.product-name,.intro-heading,.process-title,.sub-title,.footer-brand,.hero-title,.cart-title,.testimonial-text,.stat-num {
+    font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  }
+</style>
 </head>
 <body>
 
@@ -222,7 +237,7 @@
         <p class="product-notes" data-i18n="p1.notes">Spices · Herb · Orange · Bright Acidity</p>
         <div class="product-roast-bar">
           <span class="roast-label" data-i18n="shop.roastLevel">Roast</span>
-          <div class="roast-track"><div class="roast-fill" style="width:45%"></div></div>
+          <div class="roast-track"><div class="roast-fill" data-roast="45"></div></div>
         </div>
         <div class="product-footer">
           <span class="product-price">28 лв</span>
@@ -247,7 +262,7 @@
         <p class="product-notes" data-i18n="p2.notes">Dark Cherry · Cocoa · Walnut · Vanilla</p>
         <div class="product-roast-bar">
           <span class="roast-label" data-i18n="shop.roastLevel">Roast</span>
-          <div class="roast-track"><div class="roast-fill" style="width:60%"></div></div>
+          <div class="roast-track"><div class="roast-fill" data-roast="60"></div></div>
         </div>
         <div class="product-footer">
           <span class="product-price">32 лв</span>
@@ -273,7 +288,7 @@
         <p class="product-notes" data-i18n="p3.notes">Cedar · Dark Chocolate · Smoky · Molasses</p>
         <div class="product-roast-bar">
           <span class="roast-label" data-i18n="shop.roastLevel">Roast</span>
-          <div class="roast-track"><div class="roast-fill" style="width:82%"></div></div>
+          <div class="roast-track"><div class="roast-fill" data-roast="82"></div></div>
         </div>
         <div class="product-footer">
           <span class="product-price">26 лв</span>
@@ -391,9 +406,8 @@
 ═══════════════════════════════════════════════ -->
 <section class="process" id="process">
   <div class="process-header">
-    <h2 class="process-title reveal"
-        data-i18n-html="process.title">
-      From<br>Field to<br><em style="font-style:italic;color:var(--warm)">Cup.</em>
+    <h2 class="process-title reveal" data-i18n-html="process.title">
+      From<br>Field to<br><em class="text-warm">Cup.</em>
     </h2>
     <p class="process-body reveal reveal-delay-2" data-i18n="process.body">
       We carefully select high-quality coffee with a focus on flavour profile and traceable origin — from careful selection to your doorstep.
@@ -542,9 +556,3 @@
 <script src="./script.js"></script>
 </body>
 </html>
-<script src="https://cdn.jsdelivr.net/npm/emailjs-com@2/dist/email.min.js"></script>
-<script>
-(function(){
-  emailjs.init("YOUR_PUBLIC_KEY");
-})();
-</script>
