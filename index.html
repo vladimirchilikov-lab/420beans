@@ -4,9 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- ── CSP meta fallback (Vercel header takes precedence; this covers local/other hosts) ── -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://js.stripe.com https://m.stripe.network; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://*.stripe.com; connect-src 'self' https://api.stripe.com https://m.stripe.network https://m.stripe.com; frame-src https://js.stripe.com https://hooks.stripe.com; child-src https://js.stripe.com https://hooks.stripe.com; worker-src blob:; object-src 'none'; base-uri 'self'; form-action 'self' https://buy.stripe.com">
-
 <!-- ── SEO ── -->
 <title>420 Beans — Specialty Coffee | Специалти Кафе</title>
 <meta name="description" content="420 Beans — specialty coffee with verified farm-to-cup traceability. Light, medium and dark roasts delivered fresh. Специалти кафе с проследим произход. Доставено прясно.">
@@ -16,27 +13,23 @@
 <meta property="og:type" content="website">
 <meta name="theme-color" content="#1A1512">
 
-<!-- ── FONTS — preconnect first, then stylesheet, display=swap ensures text visible during load ── -->
+<!-- ── FONTS ── -->
 <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Mono:wght@300;400&display=swap">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Mono:wght@300;400&display=swap" media="print" onload="this.media='all'">
-<noscript>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Mono:wght@300;400&display=swap">
-</noscript>
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Mono:wght@300;400&display=swap"></noscript>
 
-<!-- ── STRIPE.JS — defer so it doesn't block render ── -->
+<!-- ── STRIPE.JS ── -->
 <script src="https://js.stripe.com/v3/" defer></script>
 
 <!-- ── STYLES ── -->
 <link rel="stylesheet" href="./style.css">
 
-<!-- ── Font fallback: text visible immediately before webfont arrives ── -->
+<!-- ── Font fallback: text visible before webfont arrives ── -->
 <style>
-  body { font-family: 'DM Mono', 'Courier New', monospace; }
-  h1,h2,h3,.nav-logo,.product-name,.intro-heading,.process-title,.sub-title,.footer-brand,.hero-title,.cart-title,.testimonial-text,.stat-num {
-    font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
-  }
+  body{font-family:'DM Mono','Courier New',monospace}
+  h1,h2,h3,.nav-logo,.product-name,.intro-heading,.process-title,.sub-title,.footer-brand,.hero-title,.cart-title,.testimonial-text{font-family:'Playfair Display',Georgia,'Times New Roman',serif}
 </style>
 </head>
 <body>

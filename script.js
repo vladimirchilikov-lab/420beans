@@ -216,6 +216,15 @@ const I18N = {
     'footer.col1': 'Магазин', 'footer.col2': 'Научи повече', 'footer.col3': 'Информация',
     'footer.allcoffee': 'Всички кафета', 'footer.contact': 'Контакт',
     'footer.shipping': 'Политика за доставка', 'footer.returns': 'Връщане', 'footer.privacy': 'Поверителност',
+    'footer.copy': '© 2024 420 Beans. Всички права запазени.',
+    'cart.title': 'Вашата количка', 'cart.total': 'Общо', 'cart.checkout': 'Към плащане',
+    'cart.empty': 'Количката ви е празна.\nОткрийте нашата колекция по-долу.',
+    'cart.added': 'Добавено в количката', 'cart.subscribed': 'Абонирахте се успешно!',
+    'checkout.redirecting': 'Пренасочване към плащане...',
+    'checkout.error': 'Грешка при плащане. Моля опитайте отново.',
+    'checkout.multiItem': 'Моля поръчайте по един продукт наведнъж.',
+  },
+};
 
 /* ─────────────────────────────────────────────────
    STATE
