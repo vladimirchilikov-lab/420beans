@@ -168,26 +168,26 @@
   </div>
   <div class="intro-right reveal reveal-delay-2">
     <div class="stat-box">
-      <div class="stat-num">47</div>
-      <div class="stat-label" data-i18n="about.stat1">Partner Farms</div>
+      <div class="stat-icon">⬡</div>
+      <div class="stat-label" data-i18n="about.stat1">Interesting<br>Process Methods</div>
     </div>
     <div class="stat-box">
-      <div class="stat-num">12</div>
-      <div class="stat-label" data-i18n="about.stat2">Origin Countries</div>
+      <div class="stat-icon">◉</div>
+      <div class="stat-label" data-i18n="about.stat2">Unique<br>Flavour Profiles</div>
     </div>
     <div class="stat-box">
-      <div class="stat-num">72h</div>
-      <div class="stat-label" data-i18n="about.stat3">Farm to Roast</div>
+      <div class="stat-icon">↯</div>
+      <div class="stat-label" data-i18n="about.stat3">Farm-to-Roaster<br>Traceability</div>
     </div>
     <div class="stat-box">
-      <div class="stat-num">96°</div>
-      <div class="stat-label" data-i18n="about.stat4">Roast Precision</div>
+      <div class="stat-icon">◈</div>
+      <div class="stat-label" data-i18n="about.stat4">Precision<br>Roasting</div>
     </div>
   </div>
 </section>
 
 <!-- ══════════════════════════════════════════════
-     PRODUCTS
+     COFFEE SHOP
 ═══════════════════════════════════════════════ -->
 <section class="products" id="shop">
   <div class="products-header reveal">
@@ -196,17 +196,17 @@
       <span class="italic" data-i18n="shop.titleLine2">Collection</span>
     </h2>
     <div class="products-filter">
-      <button class="filter-btn active" data-i18n="shop.all">All</button>
-      <button class="filter-btn" data-i18n="shop.light">Light Roast</button>
-      <button class="filter-btn" data-i18n="shop.medium">Medium Roast</button>
-      <button class="filter-btn" data-i18n="shop.dark">Dark Roast</button>
+      <button class="filter-btn active" data-filter="all"   data-i18n="shop.all">All</button>
+      <button class="filter-btn"        data-filter="filter" data-i18n="shop.filter">Coffee</button>
+      <button class="filter-btn"        data-filter="espresso" data-i18n="shop.espresso">Coffee / Espresso</button>
+      <button class="filter-btn"        data-filter="merch" data-i18n="shop.merch">Merch</button>
     </div>
   </div>
 
-  <div class="product-grid">
+  <div class="product-grid" id="productGrid">
 
-    <!-- PRODUCT 1 -->
-    <article class="product-card reveal" onclick="addToCart('p1')">
+    <!-- COFFEE 1 — Ethiopia Jimma Makhore -->
+    <article class="product-card reveal" data-category="filter" onclick="addToCart('p1')">
       <div class="product-visual bag-1">
         <div class="bag-shape">
           <div class="bag-stripe"></div>
@@ -216,9 +216,14 @@
       </div>
       <div class="product-badge" data-i18n="shop.bestseller">Best Seller</div>
       <div class="product-info">
-        <p class="product-region" data-i18n="p1.region">Ethiopia · Light Roast</p>
-        <h3 class="product-name" data-i18n="p1.name">Yirgacheffe Dawn</h3>
-        <p class="product-notes" data-i18n="p1.notes">Bergamot · Peach · Jasmine · Brown Sugar</p>
+        <p class="product-region" data-i18n="p1.region">Ethiopia · Medium Roast · Natural</p>
+        <h3 class="product-name" data-i18n="p1.name">Jimma Makhore</h3>
+        <p class="product-process" data-i18n="p1.process">Natural process</p>
+        <p class="product-notes" data-i18n="p1.notes">Spices · Herb · Orange · Bright Acidity</p>
+        <div class="product-roast-bar">
+          <span class="roast-label" data-i18n="shop.roastLevel">Roast</span>
+          <div class="roast-track"><div class="roast-fill" style="width:45%"></div></div>
+        </div>
         <div class="product-footer">
           <span class="product-price">28 лв</span>
           <button class="product-add" onclick="event.stopPropagation(); addToCart('p1')" aria-label="Add to cart">+</button>
@@ -226,8 +231,8 @@
       </div>
     </article>
 
-    <!-- PRODUCT 2 -->
-    <article class="product-card reveal reveal-delay-1" onclick="addToCart('p2')">
+    <!-- COFFEE 2 — Colombia Huila Honey -->
+    <article class="product-card reveal reveal-delay-1" data-category="filter espresso" onclick="addToCart('p2')">
       <div class="product-visual bag-2">
         <div class="bag-shape">
           <div class="bag-stripe"></div>
@@ -236,9 +241,14 @@
         </div>
       </div>
       <div class="product-info">
-        <p class="product-region" data-i18n="p2.region">Colombia · Medium Roast</p>
+        <p class="product-region" data-i18n="p2.region">Colombia · Medium Roast · Honey</p>
         <h3 class="product-name" data-i18n="p2.name">Huila Nocturne</h3>
+        <p class="product-process" data-i18n="p2.process">Honey process</p>
         <p class="product-notes" data-i18n="p2.notes">Dark Cherry · Cocoa · Walnut · Vanilla</p>
+        <div class="product-roast-bar">
+          <span class="roast-label" data-i18n="shop.roastLevel">Roast</span>
+          <div class="roast-track"><div class="roast-fill" style="width:60%"></div></div>
+        </div>
         <div class="product-footer">
           <span class="product-price">32 лв</span>
           <button class="product-add" onclick="event.stopPropagation(); addToCart('p2')" aria-label="Add to cart">+</button>
@@ -246,8 +256,8 @@
       </div>
     </article>
 
-    <!-- PRODUCT 3 -->
-    <article class="product-card reveal reveal-delay-2" onclick="addToCart('p3')">
+    <!-- COFFEE 3 — Guatemala Washed -->
+    <article class="product-card reveal reveal-delay-2" data-category="espresso" onclick="addToCart('p3')">
       <div class="product-visual bag-3">
         <div class="bag-shape">
           <div class="bag-stripe"></div>
@@ -257,12 +267,92 @@
       </div>
       <div class="product-badge badge-dark" data-i18n="shop.new">New</div>
       <div class="product-info">
-        <p class="product-region" data-i18n="p3.region">Guatemala · Dark Roast</p>
+        <p class="product-region" data-i18n="p3.region">Guatemala · Dark Roast · Washed</p>
         <h3 class="product-name" data-i18n="p3.name">Antigua Dusk</h3>
+        <p class="product-process" data-i18n="p3.process">Washed process</p>
         <p class="product-notes" data-i18n="p3.notes">Cedar · Dark Chocolate · Smoky · Molasses</p>
+        <div class="product-roast-bar">
+          <span class="roast-label" data-i18n="shop.roastLevel">Roast</span>
+          <div class="roast-track"><div class="roast-fill" style="width:82%"></div></div>
+        </div>
         <div class="product-footer">
           <span class="product-price">26 лв</span>
           <button class="product-add" onclick="event.stopPropagation(); addToCart('p3')" aria-label="Add to cart">+</button>
+        </div>
+      </div>
+    </article>
+
+    <!-- MERCH 1 — T-Shirt Mischief -->
+    <article class="product-card product-card-merch reveal" data-category="merch" onclick="addToCart('m1')">
+      <div class="product-visual merch-visual merch-tshirt">
+        <div class="merch-shape">
+          <div class="tshirt-icon" aria-hidden="true">
+            <svg width="80" height="72" viewBox="0 0 80 72" fill="none">
+              <path d="M20 4 L4 20 L18 26 L18 68 L62 68 L62 26 L76 20 L60 4 L50 12 C50 18 30 18 30 12 Z"
+                fill="rgba(245,240,232,0.15)" stroke="rgba(245,240,232,0.4)" stroke-width="1.5"/>
+            </svg>
+          </div>
+          <span class="merch-brand-tag">420 Beans</span>
+          <span class="merch-sub-tag">Mischief</span>
+        </div>
+      </div>
+      <div class="product-info">
+        <p class="product-region" data-i18n="m1.region">Merch · Apparel</p>
+        <h3 class="product-name" data-i18n="m1.name">Mischief Tee</h3>
+        <p class="product-notes" data-i18n="m1.notes">100% organic cotton · Oversized fit · 3 colours</p>
+        <div class="product-footer">
+          <span class="product-price">35 лв</span>
+          <button class="product-add" onclick="event.stopPropagation(); addToCart('m1')" aria-label="Add to cart">+</button>
+        </div>
+      </div>
+    </article>
+
+    <!-- MERCH 2 — Reusable Coffee Filter -->
+    <article class="product-card product-card-merch reveal reveal-delay-1" data-category="merch" onclick="addToCart('m2')">
+      <div class="product-visual merch-visual merch-filter">
+        <div class="merch-shape">
+          <div class="filter-icon" aria-hidden="true">
+            <svg width="60" height="72" viewBox="0 0 60 72" fill="none">
+              <path d="M4 8 L56 8 L42 40 L42 66 L18 66 L18 40 Z"
+                fill="rgba(200,169,122,0.2)" stroke="rgba(200,169,122,0.6)" stroke-width="1.5"/>
+              <line x1="4" y1="8" x2="56" y2="8" stroke="rgba(200,169,122,0.6)" stroke-width="1.5"/>
+            </svg>
+          </div>
+          <span class="merch-brand-tag">420 Beans</span>
+          <span class="merch-sub-tag">Reusable</span>
+        </div>
+      </div>
+      <div class="product-info">
+        <p class="product-region" data-i18n="m2.region">Merch · Accessories</p>
+        <h3 class="product-name" data-i18n="m2.name">Reusable Filter</h3>
+        <p class="product-notes" data-i18n="m2.notes">Stainless steel · Pour-over compatible · Zero waste</p>
+        <div class="product-footer">
+          <span class="product-price">18 лв</span>
+          <button class="product-add" onclick="event.stopPropagation(); addToCart('m2')" aria-label="Add to cart">+</button>
+        </div>
+      </div>
+    </article>
+
+    <!-- MERCH 3 — Rolling Papers -->
+    <article class="product-card product-card-merch reveal reveal-delay-2" data-category="merch" onclick="addToCart('m3')">
+      <div class="product-visual merch-visual merch-papers">
+        <div class="merch-shape">
+          <div class="papers-pack" aria-hidden="true">
+            <div class="paper-strip paper-strip-1"></div>
+            <div class="paper-strip paper-strip-2"></div>
+            <div class="paper-strip paper-strip-3"></div>
+          </div>
+          <span class="merch-brand-tag">420 Beans</span>
+          <span class="merch-sub-tag">Slow Burn</span>
+        </div>
+      </div>
+      <div class="product-info">
+        <p class="product-region" data-i18n="m3.region">Merch · Lifestyle</p>
+        <h3 class="product-name" data-i18n="m3.name">Slow Burn Papers</h3>
+        <p class="product-notes" data-i18n="m3.notes">Unbleached · Extra-slow burn · 50 leaves</p>
+        <div class="product-footer">
+          <span class="product-price">8 лв</span>
+          <button class="product-add" onclick="event.stopPropagation(); addToCart('m3')" aria-label="Add to cart">+</button>
         </div>
       </div>
     </article>
@@ -414,10 +504,10 @@
     <div>
       <p class="footer-col-title" data-i18n="footer.col1">Shop</p>
       <ul class="footer-links">
-        <li><a href="#shop"   data-i18n="footer.allcoffee">All Coffee</a></li>
-        <li><a href="#shop"   data-i18n="shop.light">Light Roast</a></li>
-        <li><a href="#shop"   data-i18n="shop.medium">Medium Roast</a></li>
-        <li><a href="#shop"   data-i18n="shop.dark">Dark Roast</a></li>
+        <li><a href="#shop" data-i18n="footer.allcoffee">All Coffee</a></li>
+        <li><a href="#shop" data-i18n="shop.filter">Filter Coffee</a></li>
+        <li><a href="#shop" data-i18n="shop.espresso">Coffee / Espresso</a></li>
+        <li><a href="#shop" data-i18n="shop.merch">Merch & Accessories</a></li>
       </ul>
     </div>
     <div>
