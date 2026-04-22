@@ -98,12 +98,15 @@ nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 100;
   display: flex; align-items: center; justify-content: space-between;
   padding: 28px 48px;
-  transition: background 0.3s, backdrop-filter 0.3s;
+  background: rgba(245,240,232,0.82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(26,21,18,0.06);
+  transition: background 0.3s, box-shadow 0.3s;
 }
 nav.scrolled {
-  background: rgba(245,240,232,0.9);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(245,240,232,0.97);
+  box-shadow: 0 2px 20px rgba(26,21,18,0.08);
 }
 .nav-logo {
   font-family: 'Playfair Display', serif;
@@ -610,6 +613,7 @@ footer { background: var(--ink); padding: 80px 48px 40px; }
 .toast.show { transform: translateX(-50%) translateY(0); }
 
 /* ── ANIMATIONS ── */
+.text-warm { font-style: italic; color: var(--warm); }
 @keyframes fadeUp  { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes fadeIn  { from { opacity: 0; } to { opacity: 1; } }
 .reveal {
