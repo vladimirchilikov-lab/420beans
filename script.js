@@ -18,6 +18,9 @@ const CONFIG = {
     p1: 'https://buy.stripe.com/REPLACE_P1_LINK',
     p2: 'https://buy.stripe.com/REPLACE_P2_LINK',
     p3: 'https://buy.stripe.com/REPLACE_P3_LINK',
+    m1: 'https://buy.stripe.com/REPLACE_M1_LINK',
+    m2: 'https://buy.stripe.com/REPLACE_M2_LINK',
+    m3: 'https://buy.stripe.com/REPLACE_M3_LINK',
   },
 
   // ↓ Your site's URL (used for success/cancel redirects in Payment Links)
@@ -30,8 +33,8 @@ const CONFIG = {
    ───────────────────────────────────────────────── */
 const CATALOG = {
   p1: {
-    en: 'Yirgacheffe Dawn',
-    bg: 'Йиргачефе Зора',
+    en: 'Jimma Makhore',
+    bg: 'Джима Махоре',
     price: 28,
     color: 'linear-gradient(170deg, #C8A97A, #A07845)',
   },
@@ -46,6 +49,24 @@ const CATALOG = {
     bg: 'Антигуа Здрач',
     price: 26,
     color: 'linear-gradient(170deg, #A8C8A0, #688060)',
+  },
+  m1: {
+    en: 'Mischief Tee',
+    bg: 'Mischief Тениска',
+    price: 35,
+    color: 'linear-gradient(160deg, #1A1512, #2C1810)',
+  },
+  m2: {
+    en: 'Reusable Filter',
+    bg: 'Многократен Филтър',
+    price: 18,
+    color: 'linear-gradient(160deg, #1C1A14, #2A2418)',
+  },
+  m3: {
+    en: 'Slow Burn Papers',
+    bg: 'Бавно Горящи Листчета',
+    price: 8,
+    color: 'linear-gradient(160deg, #141A12, #1E2A1A)',
   },
 };
 
@@ -63,14 +84,38 @@ const I18N = {
     'about.label': 'Our Philosophy',
     'about.heading': 'Every cup<br>tells a <em>story.</em>',
     'about.body': 'We carefully select high-quality coffee with a focus on flavour profile and traceable origin down to specific farms.',
-    'about.stat1': 'Partner Farms', 'about.stat2': 'Origin Countries',
-    'about.stat3': 'Farm to Roast', 'about.stat4': 'Roast Precision',
+    'about.stat1': 'Interesting\nProcess Methods',
+    'about.stat2': 'Unique\nFlavour Profiles',
+    'about.stat3': 'Farm-to-Roaster\nTraceability',
+    'about.stat4': 'Precision\nRoasting',
     'shop.titleLine1': 'The', 'shop.titleLine2': 'Collection',
-    'shop.all': 'All', 'shop.light': 'Light Roast', 'shop.medium': 'Medium Roast', 'shop.dark': 'Dark Roast',
+    'shop.all': 'All',
+    'shop.filter': 'Coffee',
+    'shop.espresso': 'Coffee / Espresso',
+    'shop.merch': 'Merch',
     'shop.bestseller': 'Best Seller', 'shop.new': 'New',
-    'p1.region': 'Ethiopia · Light Roast', 'p1.name': 'Yirgacheffe Dawn', 'p1.notes': 'Bergamot · Peach · Jasmine · Brown Sugar',
-    'p2.region': 'Colombia · Medium Roast', 'p2.name': 'Huila Nocturne', 'p2.notes': 'Dark Cherry · Cocoa · Walnut · Vanilla',
-    'p3.region': 'Guatemala · Dark Roast', 'p3.name': 'Antigua Dusk', 'p3.notes': 'Cedar · Dark Chocolate · Smoky · Molasses',
+    'shop.roastLevel': 'Roast',
+    'p1.region': 'Ethiopia · Medium Roast · Natural',
+    'p1.name': 'Jimma Makhore',
+    'p1.process': 'Natural process',
+    'p1.notes': 'Spices · Herb · Orange · Bright Acidity',
+    'p2.region': 'Colombia · Medium Roast · Honey',
+    'p2.name': 'Huila Nocturne',
+    'p2.process': 'Honey process',
+    'p2.notes': 'Dark Cherry · Cocoa · Walnut · Vanilla',
+    'p3.region': 'Guatemala · Dark Roast · Washed',
+    'p3.name': 'Antigua Dusk',
+    'p3.process': 'Washed process',
+    'p3.notes': 'Cedar · Dark Chocolate · Smoky · Molasses',
+    'm1.region': 'Merch · Apparel',
+    'm1.name': 'Mischief Tee',
+    'm1.notes': '100% organic cotton · Oversized fit · 3 colours',
+    'm2.region': 'Merch · Accessories',
+    'm2.name': 'Reusable Filter',
+    'm2.notes': 'Stainless steel · Pour-over compatible · Zero waste',
+    'm3.region': 'Merch · Lifestyle',
+    'm3.name': 'Slow Burn Papers',
+    'm3.notes': 'Unbleached · Extra-slow burn · 50 leaves',
     'feat1.title': 'Direct Trade', 'feat1.desc': 'We source directly from producers with verified traceability to specific farms.',
     'feat2.title': 'Roasted Fresh', 'feat2.desc': 'Every batch is roasted to order and ships within 24 hours of your purchase.',
     'feat3.title': 'Traceable Origin', 'feat3.desc': 'Full transparency — every bag is traceable to its specific farm and harvest.',
@@ -114,14 +159,38 @@ const I18N = {
     'about.label': 'Нашата философия',
     'about.heading': 'Всяка чаша<br>разказва <em>история.</em>',
     'about.body': 'Подбираме внимателно висококачествено кафе с фокус върху вкусовия профил и проследим произход до конкретни ферми.',
-    'about.stat1': 'Партньорски ферми', 'about.stat2': 'Страни на произход',
-    'about.stat3': 'Ферма до печене', 'about.stat4': 'Прецизност',
+    'about.stat1': 'Интересни\nМетоди на обработка',
+    'about.stat2': 'Уникални\nВкусови профили',
+    'about.stat3': 'Проследимост\nФерма до пекар',
+    'about.stat4': 'Прецизно\nИзпичане',
     'shop.titleLine1': 'Нашата', 'shop.titleLine2': 'Колекция',
-    'shop.all': 'Всички', 'shop.light': 'Светло печене', 'shop.medium': 'Средно печене', 'shop.dark': 'Тъмно печене',
+    'shop.all': 'Всички',
+    'shop.filter': 'Кафе',
+    'shop.espresso': 'Кафе / Еспресо',
+    'shop.merch': 'Мърч',
     'shop.bestseller': 'Бестселър', 'shop.new': 'Ново',
-    'p1.region': 'Етиопия · Светло печене', 'p1.name': 'Йиргачефе Зора', 'p1.notes': 'Бергамот · Праскова · Жасмин · Кафява захар',
-    'p2.region': 'Колумбия · Средно печене', 'p2.name': 'Уила Ноктюрн', 'p2.notes': 'Тъмна череша · Какао · Орех · Ванилия',
-    'p3.region': 'Гватемала · Тъмно печене', 'p3.name': 'Антигуа Здрач', 'p3.notes': 'Кедър · Тъмен шоколад · Опушено · Меласа',
+    'shop.roastLevel': 'Печене',
+    'p1.region': 'Етиопия · Средно печене · Натурален',
+    'p1.name': 'Джима Махоре',
+    'p1.process': 'Натурален процес',
+    'p1.notes': 'Подправки · Билки · Портокал · Ярка киселинност',
+    'p2.region': 'Колумбия · Средно печене · Honey',
+    'p2.name': 'Уила Ноктюрн',
+    'p2.process': 'Honey процес',
+    'p2.notes': 'Тъмна череша · Какао · Орех · Ванилия',
+    'p3.region': 'Гватемала · Тъмно печене · Промит',
+    'p3.name': 'Антигуа Здрач',
+    'p3.process': 'Промит процес',
+    'p3.notes': 'Кедър · Тъмен шоколад · Опушено · Меласа',
+    'm1.region': 'Мърч · Дрехи',
+    'm1.name': 'Mischief Тениска',
+    'm1.notes': '100% органичен памук · Оувърсайз · 3 цвята',
+    'm2.region': 'Мърч · Аксесоари',
+    'm2.name': 'Многократен Филтър',
+    'm2.notes': 'Неръждаема стомана · Pour-over · Нула отпадъци',
+    'm3.region': 'Мърч · Лайфстайл',
+    'm3.name': 'Бавно горящи листчета',
+    'm3.notes': 'Небелени · Бавно горене · 50 броя',
     'feat1.title': 'Директен произход', 'feat1.desc': 'Набираме директно от производители с верифициран проследим произход до конкретна ферма.',
     'feat2.title': 'Прясно препечено', 'feat2.desc': 'Всяка партида се пече по поръчка и се изпраща в рамките на 24 часа.',
     'feat3.title': 'Проследим произход', 'feat3.desc': 'Пълна прозрачност — всяка торбичка е проследима до конкретна ферма и реколта.',
@@ -147,15 +216,6 @@ const I18N = {
     'footer.col1': 'Магазин', 'footer.col2': 'Научи повече', 'footer.col3': 'Информация',
     'footer.allcoffee': 'Всички кафета', 'footer.contact': 'Контакт',
     'footer.shipping': 'Политика за доставка', 'footer.returns': 'Връщане', 'footer.privacy': 'Поверителност',
-    'footer.copy': '© 2024 420 Beans. Всички права запазени.',
-    'cart.title': 'Вашата количка', 'cart.total': 'Общо', 'cart.checkout': 'Към плащане',
-    'cart.empty': 'Количката ви е празна.\nОткрийте нашата колекция по-долу.',
-    'cart.added': 'Добавено в количката', 'cart.subscribed': 'Абонирахте се успешно!',
-    'checkout.redirecting': 'Пренасочване към плащане...',
-    'checkout.error': 'Неуспешно отваряне на страницата за плащане. Опитайте отново.',
-    'checkout.multiItem': 'Моля поръчайте по един продукт наведнъж.',
-  },
-};
 
 /* ─────────────────────────────────────────────────
    STATE
@@ -256,13 +316,25 @@ function initReveal() {
 }
 
 /* ─────────────────────────────────────────────────
-   FILTER BUTTONS
+   FILTER BUTTONS — category-based show/hide
    ───────────────────────────────────────────────── */
 function initFilters() {
   $$('.filter-btn').forEach(btn => {
     btn.addEventListener('click', function () {
       $$('.filter-btn').forEach(b => b.classList.remove('active'));
       this.classList.add('active');
+
+      const filter = this.getAttribute('data-filter') || 'all';
+
+      $$('.product-card').forEach(card => {
+        if (filter === 'all') {
+          card.classList.remove('hidden');
+          return;
+        }
+        // data-category may contain multiple space-separated values e.g. "filter espresso"
+        const cats = (card.getAttribute('data-category') || '').split(' ');
+        card.classList.toggle('hidden', !cats.includes(filter));
+      });
     });
   });
 }
