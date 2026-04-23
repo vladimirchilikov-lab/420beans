@@ -5,7 +5,7 @@
 
 backend:
   name: github
-  repo: ТВОЕТО_GITHUB_USERNAME/ТВОЕТО_REPO_NAME   # ← СМЕНИ ТОВА
+  repo: vladimirchilikov-lab/420beans   # ← СМЕНИ ТОВА
   branch: main                                      # или master
 
 # Позволява преглед на промени преди публикуване
