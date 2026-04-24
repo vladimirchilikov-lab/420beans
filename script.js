@@ -1,74 +1,202 @@
 /* ═══════════════════════════════════════════════════
    420 BEANS — script.js
-   Pure vanilla JS, no dependencies, no build tools
+   Products loaded dynamically from products.json
+   Settings loaded from _data/settings.json
 ═══════════════════════════════════════════════════ */
 
 /* ─────────────────────────────────────────────────
-   ★ CONFIGURATION — edit these values
+   RUNTIME STATE — populated by loadData()
    ───────────────────────────────────────────────── */
-const CONFIG = {
-  // ↓ Replace with your Stripe PUBLISHABLE key (pk_live_... or pk_test_...)
-  STRIPE_PUBLISHABLE_KEY: 'pk_test_REPLACE_WITH_YOUR_PUBLISHABLE_KEY',
-
-  // ↓ Replace with your Stripe Payment Links for each product
-  // HOW TO CREATE PAYMENT LINKS:
-  //   Stripe Dashboard → Payment Links → Create a link
-  //   Set price in BGN, collect shipping address, then paste URL below
-  PAYMENT_LINKS: {
-    p1: 'https://buy.stripe.com/REPLACE_P1_LINK',
-    p2: 'https://buy.stripe.com/REPLACE_P2_LINK',
-    p3: 'https://buy.stripe.com/REPLACE_P3_LINK',
-    m1: 'https://buy.stripe.com/REPLACE_M1_LINK',
-    m2: 'https://buy.stripe.com/REPLACE_M2_LINK',
-    m3: 'https://buy.stripe.com/REPLACE_M3_LINK',
-  },
-
-  // ↓ Your site's URL (used for success/cancel redirects in Payment Links)
+let CATALOG  = {};   // { id: { en, bg, price, color, stripeLink, ... } }
+let CONFIG   = {
+  STRIPE_PUBLISHABLE_KEY: 'pk_test_REPLACE',
   SITE_URL: window.location.origin,
 };
 
 /* ─────────────────────────────────────────────────
-   PRODUCT CATALOG
-   prices in лв (display only — actual prices set in Stripe)
+   LOAD DATA — fetch products.json + settings.json
+   Both files are edited via the CMS admin panel
    ───────────────────────────────────────────────── */
-const CATALOG = {
-  p1: {
-    en: 'Jimma Makhore',
-    bg: 'Джима Махоре',
-    price: 28,
-    color: 'linear-gradient(170deg, #C8A97A, #A07845)',
-  },
-  p2: {
-    en: 'Huila Nocturne',
-    bg: 'Уила Ноктюрн',
-    price: 32,
-    color: 'linear-gradient(170deg, #E8E0F0, #B8A8D0)',
-  },
-  p3: {
-    en: 'Antigua Dusk',
-    bg: 'Антигуа Здрач',
-    price: 26,
-    color: 'linear-gradient(170deg, #A8C8A0, #688060)',
-  },
-  m1: {
-    en: 'Mischief Tee',
-    bg: 'Mischief Тениска',
-    price: 35,
-    color: 'linear-gradient(160deg, #1A1512, #2C1810)',
-  },
-  m2: {
-    en: 'Reusable Filter',
-    bg: 'Многократен Филтър',
-    price: 18,
-    color: 'linear-gradient(160deg, #1C1A14, #2A2418)',
-  },
-  m3: {
-    en: 'Slow Burn Papers',
-    bg: 'Бавно Горящи Листчета',
-    price: 8,
-    color: 'linear-gradient(160deg, #141A12, #1E2A1A)',
-  },
-};
+async function loadData() {
+  try {
+    // Load in parallel
+    const [productsRes, settingsRes] = await Promise.all([
+      fetch('./products.json'),
+      fetch('./_data/settings.json'),
+    ]);
+
+    // ── Products ──────────────────────────────────
+    if (productsRes.ok) {
+      const products = await productsRes.json();
+      // Convert array → object keyed by id for fast lookup
+      CATALOG = {};
+      products.forEach(p => {
+        CATALOG[p.id] = {
+          en:          p.en.name,
+          bg:          p.bg.name,
+          price:       p.price,
+          roast:       p.roast || 0,
+          stripeLink:  p.stripeLink || '',
+          color:       p.color || 'linear-gradient(160deg,#1A1512,#2C1810)',
+          image:       p.image || '',
+          category:    p.category,
+          badge:       p.badge || '',
+          // full translation objects for renderProducts()
+          _en: p.en,
+          _bg: p.bg,
+        };
+      });
+      // Render product grid dynamically from JSON
+      renderProducts(products);
+    }
+
+    // ── Settings ──────────────────────────────────
+    if (settingsRes.ok) {
+      const settings = await settingsRes.json();
+      if (settings.stripePublishableKey && !settings.stripePublishableKey.includes('REPLACE')) {
+        CONFIG.STRIPE_PUBLISHABLE_KEY = settings.stripePublishableKey;
+      }
+    }
+
+  } catch (err) {
+    // JSON files not found (e.g. local file:// without server) — use fallback
+    console.warn('products.json not loaded, using fallback catalog:', err.message);
+    useFallbackCatalog();
+  }
+}
+
+/* ─────────────────────────────────────────────────
+   RENDER PRODUCTS — builds HTML from products.json
+   ───────────────────────────────────────────────── */
+function renderProducts(products) {
+  const grid = document.getElementById('productGrid');
+  if (!grid) return;
+
+  // Bag style classes for coffee products (cycles through 3 designs)
+  const bagStyles = ['bag-1', 'bag-2', 'bag-3'];
+  let bagIdx = 0;
+
+  // Stagger delay classes
+  const delays = ['', 'reveal-delay-1', 'reveal-delay-2'];
+
+  grid.innerHTML = products.map((p, i) => {
+    const isMerch = p.category === 'merch';
+    const delay   = delays[i % 3];
+    const badge   = p.badge === 'bestseller'
+      ? `<div class="product-badge" data-i18n="shop.bestseller">Best Seller</div>`
+      : p.badge === 'new'
+        ? `<div class="product-badge badge-dark" data-i18n="shop.new">New</div>`
+        : '';
+
+    // Visual — image if available, else CSS bag/merch
+    let visual = '';
+    if (p.image) {
+      visual = `
+        <div class="product-visual">
+          <img src="${p.image}" alt="${p.en.name}" class="product-img" loading="lazy">
+        </div>`;
+    } else if (isMerch) {
+      visual = `
+        <div class="product-visual merch-visual merch-${p.id}">
+          <div class="merch-shape">
+            <span class="merch-brand-tag">420 Beans</span>
+            <span class="merch-sub-tag">${p.en.name}</span>
+          </div>
+        </div>`;
+    } else {
+      const bagClass = bagStyles[bagIdx % bagStyles.length];
+      bagIdx++;
+      visual = `
+        <div class="product-visual ${bagClass}">
+          <div class="bag-shape">
+            <div class="bag-stripe"></div>
+            <div class="bag-circle"><div class="bag-circle-inner"></div></div>
+            <div class="bag-label">420B</div>
+          </div>
+        </div>`;
+    }
+
+    // Roast bar — only for coffee
+    const roastBar = (!isMerch && p.roast > 0) ? `
+        <div class="product-roast-bar">
+          <span class="roast-label" data-i18n="shop.roastLevel">Roast</span>
+          <div class="roast-track"><div class="roast-fill" data-roast="${p.roast}"></div></div>
+        </div>` : '';
+
+    // Process tag — only for coffee
+    const processTag = (!isMerch && p.en.process) ? `
+        <p class="product-process" data-product-id="${p.id}" data-field="process">
+          ${p.en.process}
+        </p>` : '';
+
+    return `
+    <article class="product-card ${isMerch ? 'product-card-merch' : ''} reveal ${delay}"
+             data-category="${p.category}"
+             data-product-id="${p.id}"
+             onclick="addToCart('${p.id}')">
+      ${visual}
+      ${badge}
+      <div class="product-info">
+        <p class="product-region" data-product-id="${p.id}" data-field="region">
+          ${p.en.region}
+        </p>
+        <h3 class="product-name" data-product-id="${p.id}" data-field="name">
+          ${p.en.name}
+        </h3>
+        ${processTag}
+        <p class="product-notes" data-product-id="${p.id}" data-field="notes">
+          ${p.en.notes}
+        </p>
+        ${roastBar}
+        <div class="product-footer">
+          <span class="product-price">€${p.price}</span>
+          <button class="product-add"
+                  onclick="event.stopPropagation(); addToCart('${p.id}')"
+                  aria-label="Add to cart">+</button>
+        </div>
+      </div>
+    </article>`;
+  }).join('');
+
+  // Re-init after dynamic render
+  initReveal();
+  initFilters();
+  initRoastBars();
+  // Re-attach cursor listeners for new elements
+  initCursor();
+  // Apply language to dynamically rendered product text
+  applyProductLanguage();
+}
+
+/* ─────────────────────────────────────────────────
+   APPLY LANGUAGE TO DYNAMIC PRODUCT TEXT
+   ───────────────────────────────────────────────── */
+function applyProductLanguage() {
+  $$('[data-product-id][data-field]').forEach(el => {
+    const id    = el.getAttribute('data-product-id');
+    const field = el.getAttribute('data-field');
+    const prod  = CATALOG[id];
+    if (!prod) return;
+    const translations = lang === 'bg' ? prod._bg : prod._en;
+    if (translations && translations[field] !== undefined) {
+      el.textContent = translations[field];
+    }
+  });
+}
+
+/* ─────────────────────────────────────────────────
+   FALLBACK CATALOG (used if products.json fails to load)
+   ───────────────────────────────────────────────── */
+function useFallbackCatalog() {
+  CATALOG = {
+    p1: { en:'Jimma Makhore', bg:'Джима Махоре', price:14, color:'linear-gradient(170deg,#C8A97A,#A07845)', stripeLink:'', image:'' },
+    p2: { en:'Huila Nocturne', bg:'Уила Ноктюрн', price:16, color:'linear-gradient(170deg,#E8E0F0,#B8A8D0)', stripeLink:'', image:'' },
+    p3: { en:'Antigua Dusk', bg:'Антигуа Здрач', price:13, color:'linear-gradient(170deg,#A8C8A0,#688060)', stripeLink:'', image:'' },
+    m1: { en:'Mischief Tee', bg:'Mischief Тениска', price:18, color:'linear-gradient(160deg,#1A1512,#2C1810)', stripeLink:'', image:'' },
+    m2: { en:'Reusable Filter', bg:'Многократен Филтър', price:9, color:'linear-gradient(160deg,#1C1A14,#2A2418)', stripeLink:'', image:'' },
+    m3: { en:'Slow Burn Papers', bg:'Бавно Горящи Листчета', price:4, color:'linear-gradient(160deg,#141A12,#1E2A1A)', stripeLink:'', image:'' },
+  };
+}
 
 /* ─────────────────────────────────────────────────
    i18n TRANSLATIONS
@@ -119,7 +247,7 @@ const I18N = {
     'feat1.title': 'Direct Trade', 'feat1.desc': 'We source directly from producers with verified traceability to specific farms.',
     'feat2.title': 'Roasted Fresh', 'feat2.desc': 'Every batch is roasted to order and ships within 24 hours of your purchase.',
     'feat3.title': 'Traceable Origin', 'feat3.desc': 'Full transparency — every bag is traceable to its specific farm and harvest.',
-    'feat4.title': 'Free Shipping', 'feat4.desc': 'Complimentary shipping on all orders over 60 лв. No codes required.',
+    'feat4.title': 'Free Shipping', 'feat4.desc': 'Complimentary shipping on all orders over €30. No codes required.',
     'process.title': 'From<br>Field to<br><em class="text-warm">Cup.</em>',
     'process.body': 'We carefully select high-quality coffee with a focus on flavour profile and traceable origin — from careful selection to your doorstep.',
     'step1.title': 'Selection', 'step1.desc': 'We carefully curate high-quality lots selected for flavour complexity, altitude, and verified farm traceability.',
@@ -194,7 +322,7 @@ const I18N = {
     'feat1.title': 'Директен произход', 'feat1.desc': 'Набираме директно от производители с верифициран проследим произход до конкретна ферма.',
     'feat2.title': 'Прясно препечено', 'feat2.desc': 'Всяка партида се пече по поръчка и се изпраща в рамките на 24 часа.',
     'feat3.title': 'Проследим произход', 'feat3.desc': 'Пълна прозрачност — всяка торбичка е проследима до конкретна ферма и реколта.',
-    'feat4.title': 'Безплатна доставка', 'feat4.desc': 'Безплатна доставка за всички поръчки над 60 лв. Без кодове.',
+    'feat4.title': 'Безплатна доставка', 'feat4.desc': 'Безплатна доставка за всички поръчки над €30. Без кодове.',
     'process.title': 'От<br>полето до<br><em class="text-warm">чашата.</em>',
     'process.body': 'Подбираме внимателно висококачествено кафе с фокус върху вкусовия профил и проследим произход до конкретни ферми — от подбора до вашата врата.',
     'step1.title': 'Подбор', 'step1.desc': 'Внимателно подбираме висококачествени партиди по вкусова сложност, altitude и верифициран проследим произход.',
@@ -269,6 +397,7 @@ function setLang(l) {
   $('#btnEN').classList.toggle('active', l === 'en');
   document.documentElement.lang = l;
   applyTranslations();
+  applyProductLanguage();
   updateCartUI();
 }
 
@@ -434,13 +563,17 @@ function updateCartUI() {
 
   body.innerHTML = cart.map(item => {
     const p    = CATALOG[item.id];
+    if (!p) return '';
     const name = lang === 'bg' ? p.bg : p.en;
+    const img  = p.image
+      ? `<img src="${p.image}" alt="${name}" class="cart-item-visual" style="object-fit:cover">`
+      : `<div class="cart-item-visual" style="background:${p.color}"></div>`;
     return `
       <div class="cart-item">
-        <div class="cart-item-visual" style="background:${p.color}"></div>
+        ${img}
         <div class="cart-item-info">
           <div class="cart-item-name">${name}</div>
-          <div class="cart-item-price">${p.price} лв</div>
+          <div class="cart-item-price">€${p.price}</div>
           <div class="qty-controls">
             <button class="qty-btn" onclick="changeQty('${item.id}', -1)">−</button>
             <span class="qty-num">${item.qty}</span>
@@ -451,9 +584,9 @@ function updateCartUI() {
       </div>`;
   }).join('');
 
-  const total = cart.reduce((a, i) => a + CATALOG[i.id].price * i.qty, 0);
+  const total = cart.reduce((a, i) => a + (CATALOG[i.id]?.price || 0) * i.qty, 0);
   const totalEl = $('#cartTotal');
-  if (totalEl) totalEl.textContent = total.toFixed(2) + ' лв';
+  if (totalEl) totalEl.textContent = '€' + total.toFixed(2);
 
   // Re-apply translated labels inside drawer
   const titleEl = $('.cart-title');
@@ -498,88 +631,54 @@ function closeCart() {
       - Multi-item checkout will use Stripe.js redirectToCheckout
    ───────────────────────────────────────────────── */
 
-// Optional: add Stripe Price IDs for multi-item checkout
-// CATALOG.p1.priceId = 'price_XXXXX';
-// CATALOG.p2.priceId = 'price_XXXXX';
-// CATALOG.p3.priceId = 'price_XXXXX';
-
 async function startCheckout() {
   if (!cart.length) return;
 
   const btn = $('#checkoutBtn');
   if (btn) btn.disabled = true;
 
-  // Show loader
-  const loader   = $('#checkoutLoader');
+  const loader    = $('#checkoutLoader');
   const loaderTxt = $('#loaderText');
   if (loaderTxt) loaderTxt.textContent = t('checkout.redirecting');
   loader?.classList.add('active');
   closeCart();
 
   try {
-    // ── CASE 1: single product, single quantity → Payment Link ──────────
+    // Single product → redirect to its Payment Link
     if (cart.length === 1) {
       const item = cart[0];
-      const link = CONFIG.PAYMENT_LINKS[item.id];
+      const link = CATALOG[item.id]?.stripeLink;
 
-      if (!link || link.includes('REPLACE')) {
+      if (!link || link.includes('REPLACE') || link === '') {
         throw new Error('payment_link_not_configured');
       }
 
-      // Append quantity param if >1 (Stripe Payment Links support ?prefilled_quantity=N)
-      const url = item.qty > 1
-        ? `${link}?prefilled_quantity=${item.qty}`
-        : link;
-
+      const url = item.qty > 1 ? `${link}?prefilled_quantity=${item.qty}` : link;
       window.location.href = url;
-      return; // page will navigate away
+      return;
     }
 
-    // ── CASE 2: multiple products → Stripe.js redirectToCheckout ────────
-    // Requires Price IDs to be set in CATALOG
-    const hasPriceIds = cart.every(i => CATALOG[i.id].priceId);
-    if (!hasPriceIds) {
-      // Fallback: redirect to first item's Payment Link with a note
-      const firstItem = cart[0];
-      const link = CONFIG.PAYMENT_LINKS[firstItem.id];
-      if (link && !link.includes('REPLACE')) {
-        showToast(t('checkout.multiItem'));
-        loader?.classList.remove('active');
-        if (btn) btn.disabled = false;
-        openCart();
-        return;
-      }
-      throw new Error('payment_link_not_configured');
+    // Multiple products → show first item's link with toast
+    const firstItem = cart[0];
+    const link = CATALOG[firstItem.id]?.stripeLink;
+    if (link && !link.includes('REPLACE') && link !== '') {
+      showToast(t('checkout.multiItem'));
+      loader?.classList.remove('active');
+      if (btn) btn.disabled = false;
+      openCart();
+      return;
     }
 
-    // Use Stripe.js for multi-item checkout (requires publishable key)
-    if (CONFIG.STRIPE_PUBLISHABLE_KEY.includes('REPLACE')) {
-      throw new Error('stripe_key_not_configured');
-    }
-
-    const stripe = Stripe(CONFIG.STRIPE_PUBLISHABLE_KEY);
-    const lineItems = cart.map(item => ({
-      price:    CATALOG[item.id].priceId,
-      quantity: item.qty,
-    }));
-
-    const { error } = await stripe.redirectToCheckout({
-      lineItems,
-      mode: 'payment',
-      successUrl: `${CONFIG.SITE_URL}/success.html?session_id={CHECKOUT_SESSION_ID}`,
-      cancelUrl:  `${CONFIG.SITE_URL}/cancel.html`,
-    });
-
-    if (error) throw new Error(error.message);
+    throw new Error('payment_link_not_configured');
 
   } catch (err) {
     loader?.classList.remove('active');
     if (btn) btn.disabled = false;
-
-    let msg = t('checkout.error');
-    if (err.message === 'payment_link_not_configured' || err.message === 'stripe_key_not_configured') {
-      msg = 'Payment not configured yet. Please add your Stripe Payment Links in script.js';
-    }
+    const msg = err.message === 'payment_link_not_configured'
+      ? (lang === 'bg'
+          ? 'Добавете Stripe Payment Link в products.json за да активирате плащанията.'
+          : 'Add your Stripe Payment Link in products.json to enable payments.')
+      : t('checkout.error');
     showError(msg);
     console.error('Checkout error:', err);
   }
@@ -615,8 +714,13 @@ function initRoastBars() {
 /* ─────────────────────────────────────────────────
    INIT
    ───────────────────────────────────────────────── */
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  // Load products.json and settings.json first — they drive everything
+  await loadData();
+
+  // Then init UI
   applyTranslations();
+  applyProductLanguage();
   updateCartUI();
   initScrollEffects();
   initCursor();
