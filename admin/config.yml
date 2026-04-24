@@ -5,13 +5,13 @@
 
 backend:
   name: github
-  repo: ТВОЕТО_GITHUB_USERNAME/ТВОЕТО_REPO_NAME   # ← СМЕНИ ТОВА (напр. vladimirchilikov/420beans)
+  repo: vladimirchilikov-lab/420beans   # ← СМЕНИ ТОВА (напр. vladimirchilikov/420beans)
   branch: main
   auth_type: implicit
-  app_id: ТВОЕТО_GITHUB_APP_ID                     # ← СМЕНИ СЛЕД СТЪПКА 2 по-долу
+  app_id: Ov23lijJAp6XItk16oBj                     # ← СМЕНИ СЛЕД СТЪПКА 2 по-долу
 
 # URL на сайта (нужен за OAuth redirect)
-site_url: https://ТВОЯТ-САЙТ.vercel.app            # ← СМЕНИ С РЕАЛНИЯ URL
+site_url: https://project-43rew.vercel.app/            # ← СМЕНИ С РЕАЛНИЯ URL
 
 # Позволява преглед на промени преди публикуване
 publish_mode: editorial_workflow
