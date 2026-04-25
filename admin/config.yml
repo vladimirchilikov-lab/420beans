@@ -5,10 +5,10 @@
 
 backend:
   name: github
-  repo: СМЕНИ/420beans        # ← твоето: напр. vladimirchilikov/420beans
+  repo: vladimirchilikov-lab/420beans        # ← твоето: напр. vladimirchilikov/420beans
   branch: main
 
-site_url: https://СМЕНИ.vercel.app   # ← твоят Vercel URL
+site_url: https://420beans.vercel.app   # ← твоят Vercel URL
 
 media_folder: "images"
 public_folder: "./images"
