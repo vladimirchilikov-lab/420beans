@@ -1,171 +1,89 @@
 # ─────────────────────────────────────────────────────────
-# 420 Beans — Decap CMS Configuration
-# Docs: https://decapcms.org/docs/configuration-options/
+# 420 Beans — Sveltia CMS config
+# Sveltia работи директно с GitHub — без Netlify OAuth proxy
 # ─────────────────────────────────────────────────────────
 
 backend:
   name: github
-  repo: ТВОЕТО_GITHUB_USERNAME/ТВОЕТО_REPO_NAME   # ← СМЕНИ ТОВА (напр. vladimirchilikov/420beans)
+  repo: СМЕНИ/420beans        # ← твоето: напр. vladimirchilikov/420beans
   branch: main
-  auth_type: implicit
-  app_id: ТВОЕТО_GITHUB_APP_ID                     # ← СМЕНИ СЛЕД СТЪПКА 2 по-долу
 
-# URL на сайта (нужен за OAuth redirect)
-site_url: https://ТВОЯТ-САЙТ.vercel.app            # ← СМЕНИ С РЕАЛНИЯ URL
+site_url: https://СМЕНИ.vercel.app   # ← твоят Vercel URL
 
-# Позволява преглед на промени преди публикуване
-publish_mode: editorial_workflow
-
-# Папка за качени снимки
 media_folder: "images"
 public_folder: "./images"
 
-# ─────────────────────────────────────────────────────────
-# КОЛЕКЦИИ — всяка е отделна секция в CMS
-# ─────────────────────────────────────────────────────────
 collections:
 
-  # ── 1. ПРОДУКТИ ──────────────────────────────────────
   - name: "products"
-    label: "☕ Продукти / Products"
+    label: "☕ Продукти"
     label_singular: "Продукт"
-    description: "Управлявай всички продукти — кафета и мърч"
     files:
       - name: "all_products"
         label: "Всички продукти"
         file: "products.json"
-        description: "Редактирай продуктите, цените, описанията и снимките"
         fields:
           - label: "Продукти"
             name: "products"
             widget: "list"
             summary: "{{fields.en.name}} — €{{fields.price}}"
             fields:
-              - label: "ID (не променяй!)"
-                name: "id"
-                widget: "string"
-                hint: "Уникален идентификатор: p1, p2, m1 и т.н."
-
+              - { label: "ID",    name: "id",    widget: "string" }
               - label: "Категория"
                 name: "category"
                 widget: "select"
                 options:
-                  - { label: "Кафе (Filter)", value: "filter" }
+                  - { label: "Кафе (Filter)",  value: "filter" }
                   - { label: "Кафе / Еспресо", value: "filter espresso" }
-                  - { label: "Еспресо", value: "espresso" }
-                  - { label: "Мърч", value: "merch" }
-
-              - label: "Бадж (badge)"
+                  - { label: "Еспресо",        value: "espresso" }
+                  - { label: "Мърч",           value: "merch" }
+              - label: "Badge"
                 name: "badge"
                 widget: "select"
                 required: false
                 default: ""
                 options:
-                  - { label: "Няма", value: "" }
+                  - { label: "Няма",        value: "" }
                   - { label: "Best Seller", value: "bestseller" }
-                  - { label: "New", value: "new" }
-
-              - label: "Снимка на продукта"
-                name: "image"
-                widget: "image"
-                required: false
-                allow_multiple: false
-                hint: "Препоръчителен размер: 600×800px, формат WebP или JPG"
-
-              - label: "Цена (€)"
-                name: "price"
-                widget: "number"
-                min: 1
-                max: 999
-                step: 1
-                hint: "Само числото — символът € се добавя автоматично"
-
-              - label: "Степен на печене (0–100)"
-                name: "roast"
-                widget: "number"
-                min: 0
-                max: 100
-                step: 1
-                hint: "0 = светло, 100 = тъмно. За мърч остави 0."
-
-              - label: "Stripe Payment Link"
-                name: "stripeLink"
-                widget: "string"
-                hint: "URL от Stripe Dashboard → Payment Links"
-
+                  - { label: "New",         value: "new" }
+              - { label: "Снимка",             name: "image",      widget: "image",  required: false }
+              - { label: "Цена (€)",           name: "price",      widget: "number", min: 1, max: 9999, value_type: "int" }
+              - { label: "Степен на печене",   name: "roast",      widget: "number", min: 0, max: 100,  value_type: "int" }
+              - { label: "Stripe Payment Link",name: "stripeLink", widget: "string" }
               - label: "🇬🇧 Английски"
                 name: "en"
                 widget: "object"
                 fields:
-                  - { label: "Регион / вид печене", name: "region", widget: "string" }
-                  - { label: "Име на продукта", name: "name", widget: "string" }
-                  - { label: "Метод на обработка", name: "process", widget: "string", required: false }
-                  - { label: "Вкусови бележки", name: "notes", widget: "string", hint: "Разделени с ·" }
-
+                  - { label: "Регион", name: "region",  widget: "string" }
+                  - { label: "Ime",   name: "name",    widget: "string" }
+                  - { label: "Процес", name: "process", widget: "string", required: false }
+                  - { label: "Вкус",  name: "notes",   widget: "string" }
               - label: "🇧🇬 Български"
                 name: "bg"
                 widget: "object"
                 fields:
-                  - { label: "Регион / вид печене", name: "region", widget: "string" }
-                  - { label: "Име на продукта", name: "name", widget: "string" }
-                  - { label: "Метод на обработка", name: "process", widget: "string", required: false }
-                  - { label: "Вкусови бележки", name: "notes", widget: "string", hint: "Разделени с ·" }
+                  - { label: "Регион", name: "region",  widget: "string" }
+                  - { label: "Ime",   name: "name",    widget: "string" }
+                  - { label: "Процес", name: "process", widget: "string", required: false }
+                  - { label: "Вкус",  name: "notes",   widget: "string" }
 
-  # ── 2. НАСТРОЙКИ НА САЙТА ────────────────────────────
   - name: "settings"
     label: "⚙️ Настройки"
     files:
-
       - name: "site_settings"
         label: "Основни настройки"
         file: "_data/settings.json"
         fields:
-          - label: "Stripe Publishable Key"
-            name: "stripePublishableKey"
-            widget: "string"
-            hint: "pk_live_... или pk_test_... (НЕ secret key!)"
-            default: "pk_test_REPLACE"
-
-          - label: "Имейл за контакт"
-            name: "contactEmail"
-            widget: "string"
-            default: "hello@420beans.com"
-
-          - label: "Instagram URL"
-            name: "instagramUrl"
-            widget: "string"
-            required: false
-
-          - label: "Facebook URL"
-            name: "facebookUrl"
-            widget: "string"
-            required: false
-
-          - label: "TikTok URL"
-            name: "tiktokUrl"
-            widget: "string"
-            required: false
-
+          - { label: "Stripe Publishable Key", name: "stripePublishableKey", widget: "string" }
+          - { label: "Контактен имейл",        name: "contactEmail",         widget: "string" }
+          - { label: "Instagram URL",          name: "instagramUrl",         widget: "string", required: false }
+          - { label: "Facebook URL",           name: "facebookUrl",          widget: "string", required: false }
+          - { label: "TikTok URL",             name: "tiktokUrl",            widget: "string", required: false }
       - name: "hero"
-        label: "Hero секция (начална страница)"
+        label: "Hero секция"
         file: "_data/hero.json"
         fields:
-          - label: "🇬🇧 Eyebrow текст (малкият надпис)"
-            name: "eyebrowEN"
-            widget: "string"
-            default: "Specialty Coffee — Est. 2024"
-
-          - label: "🇧🇬 Eyebrow текст"
-            name: "eyebrowBG"
-            widget: "string"
-            default: "Специалти Кафе — Осн. 2024"
-
-          - label: "🇬🇧 Описание под заглавието"
-            name: "descEN"
-            widget: "text"
-            default: "Carefully selected high-quality coffee, focused on flavour profile and traceable single-farm origin."
-
-          - label: "🇧🇬 Описание под заглавието"
-            name: "descBG"
-            widget: "text"
-            default: "Подбираме внимателно висококачествено кафе с фокус върху вкусовия профил и проследим произход до конкретни ферми."
+          - { label: "🇬🇧 Eyebrow", name: "eyebrowEN", widget: "string" }
+          - { label: "🇧🇬 Eyebrow", name: "eyebrowBG", widget: "string" }
+          - { label: "🇬🇧 Описание", name: "descEN",   widget: "text" }
+          - { label: "🇧🇬 Описание", name: "descBG",   widget: "text" }
