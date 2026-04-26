@@ -4,12 +4,12 @@
 
 backend:
   name: github
-  repo: СМЕНИ/420beans             # ← напр. vladimirchilikov/420beans
+  repo: vladimirchilikov-lab/420beans             # ← напр. vladimirchilikov/420beans
   branch: main
   auth_type: implicit
-  app_id: СМЕНИ_CLIENT_ID          # ← GitHub OAuth App → Client ID
+  app_id: Ov23lijJAp6XItk16oBj          # ← GitHub OAuth App → Client ID
 
-site_url: https://СМЕНИ.vercel.app # ← твоят Vercel URL
+site_url: https://420beans.vercel.app # ← твоят Vercel URL
 
 media_folder: "images"
 public_folder: "/images"
