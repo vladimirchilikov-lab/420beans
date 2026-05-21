@@ -1,15 +1,16 @@
 # ─────────────────────────────────────────────────────────
 # 420 Beans — Sveltia CMS config
+# Auth via Cloudflare Workers OAuth proxy (sveltia-cms-auth)
 # ─────────────────────────────────────────────────────────
 
 backend:
   name: github
-  repo: vladimirchilikov-lab/420beans             # ← напр. vladimirchilikov/420beans
+  repo: СМЕНИ/420beans                                          # ← напр. vladimirchilikov/420beans
   branch: main
-  auth_type: pkce
-  app_id: Ov23lijJAp6XItk16oBj          # ← GitHub OAuth App → Client ID
+  base_url: https://sveltia-cms-auth.СМЕНИ.workers.dev         # ← Cloudflare Worker URL
+  # НЕ добавяй auth_type или app_id — base_url е достатъчно
 
-site_url: https://420beans.vercel.app # ← твоят Vercel URL
+site_url: https://СМЕНИ.vercel.app                             # ← твоят Vercel URL
 
 media_folder: "images"
 public_folder: "/images"
