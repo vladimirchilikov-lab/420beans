@@ -10,7 +10,7 @@ backend:
   base_url: https://sveltia-cms-auth.vladimirchilikov-lab.workers.dev         # ← Cloudflare Worker URL
   # НЕ добавяй auth_type или app_id — base_url е достатъчно
 
-site_url: https://СМЕНИ.vercel.app                             # ← твоят Vercel URL
+site_url: https://420beans.vercel.app                             # ← твоят Vercel URL
 
 media_folder: "images"
 public_folder: "/images"
