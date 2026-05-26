@@ -1,0 +1,128 @@
+[
+  {
+    "id": "p1",
+    "category": "filter",
+    "badge": "bestseller",
+    "image": "",
+    "price": 14,
+    "roast": 45,
+    "stripeLink": "https://buy.stripe.com/REPLACE_P1_LINK",
+    "en": {
+      "region": "Ethiopia · Medium Roast · Natural",
+      "name": "Jimma Makhore",
+      "process": "Natural process",
+      "notes": "Spices · Herb · Orange · Bright Acidity"
+    },
+    "bg": {
+      "region": "Етиопия · Средно печене · Натурален",
+      "name": "Джима Махоре",
+      "process": "Натурален процес",
+      "notes": "Подправки · Билки · Портокал · Ярка киселинност"
+    }
+  },
+  {
+    "id": "p2",
+    "category": "filter espresso",
+    "badge": "",
+    "image": "",
+    "price": 16,
+    "roast": 60,
+    "stripeLink": "https://buy.stripe.com/REPLACE_P2_LINK",
+    "en": {
+      "region": "Colombia · Medium Roast · Honey",
+      "name": "Huila Nocturne",
+      "process": "Honey process",
+      "notes": "Dark Cherry · Cocoa · Walnut · Vanilla"
+    },
+    "bg": {
+      "region": "Колумбия · Средно печене · Honey",
+      "name": "Уила Ноктюрн",
+      "process": "Honey процес",
+      "notes": "Тъмна череша · Какао · Орех · Ванилия"
+    }
+  },
+  {
+    "id": "p3",
+    "category": "espresso",
+    "badge": "new",
+    "image": "",
+    "price": 13,
+    "roast": 82,
+    "stripeLink": "https://buy.stripe.com/REPLACE_P3_LINK",
+    "en": {
+      "region": "Guatemala · Dark Roast · Washed",
+      "name": "Antigua Dusk",
+      "process": "Washed process",
+      "notes": "Cedar · Dark Chocolate · Smoky · Molasses"
+    },
+    "bg": {
+      "region": "Гватемала · Тъмно печене · Промит",
+      "name": "Антигуа Здрач",
+      "process": "Промит процес",
+      "notes": "Кедър · Тъмен шоколад · Опушено · Меласа"
+    }
+  },
+  {
+    "id": "m1",
+    "category": "merch",
+    "badge": "",
+    "image": "",
+    "price": 18,
+    "roast": 0,
+    "stripeLink": "https://buy.stripe.com/REPLACE_M1_LINK",
+    "en": {
+      "region": "Merch · Apparel",
+      "name": "Mischief Tee",
+      "process": "",
+      "notes": "100% organic cotton · Oversized fit · 3 colours"
+    },
+    "bg": {
+      "region": "Мърч · Дрехи",
+      "name": "Mischief Тениска",
+      "process": "",
+      "notes": "100% органичен памук · Оувърсайз · 3 цвята"
+    }
+  },
+  {
+    "id": "m2",
+    "category": "merch",
+    "badge": "",
+    "image": "",
+    "price": 9,
+    "roast": 0,
+    "stripeLink": "https://buy.stripe.com/REPLACE_M2_LINK",
+    "en": {
+      "region": "Merch · Accessories",
+      "name": "Reusable Filter",
+      "process": "",
+      "notes": "Stainless steel · Pour-over compatible · Zero waste"
+    },
+    "bg": {
+      "region": "Мърч · Аксесоари",
+      "name": "Многократен Филтър",
+      "process": "",
+      "notes": "Неръждаема стомана · Pour-over · Нула отпадъци"
+    }
+  },
+  {
+    "id": "m3",
+    "category": "merch",
+    "badge": "",
+    "image": "",
+    "price": 4,
+    "roast": 0,
+    "stripeLink": "https://buy.stripe.com/REPLACE_M3_LINK",
+    "en": {
+      "region": "Merch · Lifestyle",
+      "name": "Slow Burn Papers",
+      "process": "",
+      "notes": "Unbleached · Extra-slow burn · 50 leaves"
+    },
+    "bg": {
+      "region": "Мърч · Лайфстайл",
+      "name": "Бавно горящи листчета",
+      "process": "",
+      "notes": "Небелени · Бавно горене · 50 броя"
+    }
+  }
+]
