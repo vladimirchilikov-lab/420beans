@@ -1,34 +1,108 @@
 /* ═══════════════════════════════════════════════════
    420 BEANS — script.js
    Products loaded dynamically from products.json
+   Texts loaded from _data/texts.json
    Settings loaded from _data/settings.json
 ═══════════════════════════════════════════════════ */
 
 /* ─────────────────────────────────────────────────
    RUNTIME STATE — populated by loadData()
    ───────────────────────────────────────────────── */
-let CATALOG  = {};   // { id: { en, bg, price, color, stripeLink, ... } }
+let CATALOG  = {};
 let CONFIG   = {
   STRIPE_PUBLISHABLE_KEY: 'pk_test_REPLACE',
   SITE_URL: window.location.origin,
 };
 
 /* ─────────────────────────────────────────────────
-   LOAD DATA — fetch products.json + settings.json
-   Both files are edited via the CMS admin panel
+   LOAD DATA — fetch products.json + texts.json + settings.json
    ───────────────────────────────────────────────── */
 async function loadData() {
   try {
-    // Load in parallel
-    const [productsRes, settingsRes] = await Promise.all([
+    const [productsRes, settingsRes, textsRes] = await Promise.all([
       fetch('./products.json'),
       fetch('./_data/settings.json'),
+      fetch('./_data/texts.json'),
     ]);
+
+    // ── Texts — overwrite i18n keys from JSON ─────
+    if (textsRes.ok) {
+      const tx = await textsRes.json();
+      // Hero
+      if (tx.hero) {
+        I18N.en['hero.eyebrow'] = tx.hero.eyebrowEN || I18N.en['hero.eyebrow'];
+        I18N.bg['hero.eyebrow'] = tx.hero.eyebrowBG || I18N.bg['hero.eyebrow'];
+        I18N.en['hero.desc']    = tx.hero.descEN    || I18N.en['hero.desc'];
+        I18N.bg['hero.desc']    = tx.hero.descBG    || I18N.bg['hero.desc'];
+      }
+      // About
+      if (tx.about) {
+        I18N.en['about.label']   = tx.about.labelEN   || I18N.en['about.label'];
+        I18N.bg['about.label']   = tx.about.labelBG   || I18N.bg['about.label'];
+        I18N.en['about.heading'] = tx.about.headingEN ? tx.about.headingEN.replace(/\n/g,'<br>') : I18N.en['about.heading'];
+        I18N.bg['about.heading'] = tx.about.headingBG ? tx.about.headingBG.replace(/\n/g,'<br>') : I18N.bg['about.heading'];
+        I18N.en['about.body']    = tx.about.bodyEN    || I18N.en['about.body'];
+        I18N.bg['about.body']    = tx.about.bodyBG    || I18N.bg['about.body'];
+        I18N.en['about.stat1']   = tx.about.stat1EN   || I18N.en['about.stat1'];
+        I18N.bg['about.stat1']   = tx.about.stat1BG   || I18N.bg['about.stat1'];
+        I18N.en['about.stat2']   = tx.about.stat2EN   || I18N.en['about.stat2'];
+        I18N.bg['about.stat2']   = tx.about.stat2BG   || I18N.bg['about.stat2'];
+        I18N.en['about.stat3']   = tx.about.stat3EN   || I18N.en['about.stat3'];
+        I18N.bg['about.stat3']   = tx.about.stat3BG   || I18N.bg['about.stat3'];
+        I18N.en['about.stat4']   = tx.about.stat4EN   || I18N.en['about.stat4'];
+        I18N.bg['about.stat4']   = tx.about.stat4BG   || I18N.bg['about.stat4'];
+      }
+      // Process
+      if (tx.process) {
+        I18N.en['process.body']  = tx.process.bodyEN       || I18N.en['process.body'];
+        I18N.bg['process.body']  = tx.process.bodyBG       || I18N.bg['process.body'];
+        I18N.en['step1.title']   = tx.process.step1TitleEN || I18N.en['step1.title'];
+        I18N.bg['step1.title']   = tx.process.step1TitleBG || I18N.bg['step1.title'];
+        I18N.en['step1.desc']    = tx.process.step1DescEN  || I18N.en['step1.desc'];
+        I18N.bg['step1.desc']    = tx.process.step1DescBG  || I18N.bg['step1.desc'];
+        I18N.en['step2.title']   = tx.process.step2TitleEN || I18N.en['step2.title'];
+        I18N.bg['step2.title']   = tx.process.step2TitleBG || I18N.bg['step2.title'];
+        I18N.en['step2.desc']    = tx.process.step2DescEN  || I18N.en['step2.desc'];
+        I18N.bg['step2.desc']    = tx.process.step2DescBG  || I18N.bg['step2.desc'];
+        I18N.en['step3.title']   = tx.process.step3TitleEN || I18N.en['step3.title'];
+        I18N.bg['step3.title']   = tx.process.step3TitleBG || I18N.bg['step3.title'];
+        I18N.en['step3.desc']    = tx.process.step3DescEN  || I18N.en['step3.desc'];
+        I18N.bg['step3.desc']    = tx.process.step3DescBG  || I18N.bg['step3.desc'];
+        I18N.en['step4.title']   = tx.process.step4TitleEN || I18N.en['step4.title'];
+        I18N.bg['step4.title']   = tx.process.step4TitleBG || I18N.bg['step4.title'];
+        I18N.en['step4.desc']    = tx.process.step4DescEN  || I18N.en['step4.desc'];
+        I18N.bg['step4.desc']    = tx.process.step4DescBG  || I18N.bg['step4.desc'];
+      }
+      // Features
+      if (tx.features) {
+        ['feat1','feat2','feat3','feat4'].forEach(f => {
+          I18N.en[`${f}.title`] = tx.features[`${f}TitleEN`] || I18N.en[`${f}.title`];
+          I18N.bg[`${f}.title`] = tx.features[`${f}TitleBG`] || I18N.bg[`${f}.title`];
+          I18N.en[`${f}.desc`]  = tx.features[`${f}DescEN`]  || I18N.en[`${f}.desc`];
+          I18N.bg[`${f}.desc`]  = tx.features[`${f}DescBG`]  || I18N.bg[`${f}.desc`];
+        });
+      }
+      // Subscribe
+      if (tx.subscribe) {
+        I18N.en['sub.label'] = tx.subscribe.labelEN || I18N.en['sub.label'];
+        I18N.bg['sub.label'] = tx.subscribe.labelBG || I18N.bg['sub.label'];
+        I18N.en['sub.desc']  = tx.subscribe.descEN  || I18N.en['sub.desc'];
+        I18N.bg['sub.desc']  = tx.subscribe.descBG  || I18N.bg['sub.desc'];
+      }
+      // Footer
+      if (tx.footer) {
+        I18N.en['footer.tagline'] = tx.footer.taglineEN || I18N.en['footer.tagline'];
+        I18N.bg['footer.tagline'] = tx.footer.taglineBG || I18N.bg['footer.tagline'];
+        I18N.en['footer.copy']    = tx.footer.copyEN    || I18N.en['footer.copy'];
+        I18N.bg['footer.copy']    = tx.footer.copyBG    || I18N.bg['footer.copy'];
+      }
+    }
 
     // ── Products ──────────────────────────────────
     if (productsRes.ok) {
-      const products = await productsRes.json();
-      // Convert array → object keyed by id for fast lookup
+      const raw = await productsRes.json();
+      // Sveltia sometimes wraps in { products: [...] } — handle both formats
+      const products = Array.isArray(raw) ? raw : (raw.products || []);
       CATALOG = {};
       products.forEach(p => {
         CATALOG[p.id] = {
@@ -41,12 +115,10 @@ async function loadData() {
           image:       p.image || '',
           category:    p.category,
           badge:       p.badge || '',
-          // full translation objects for renderProducts()
           _en: p.en,
           _bg: p.bg,
         };
       });
-      // Render product grid dynamically from JSON
       renderProducts(products);
     }
 
@@ -59,8 +131,7 @@ async function loadData() {
     }
 
   } catch (err) {
-    // JSON files not found (e.g. local file:// without server) — use fallback
-    console.warn('products.json not loaded, using fallback catalog:', err.message);
+    console.warn('Data load error, using fallback:', err.message);
     useFallbackCatalog();
   }
 }
