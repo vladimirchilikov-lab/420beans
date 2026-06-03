@@ -679,27 +679,8 @@ function closeCart() {
 }
 
 /* ─────────────────────────────────────────────────
-   STRIPE CHECKOUT — Frontend-only via Payment Links
-   ─────────────────────────────────────────────────
-   No backend needed. Uses Stripe Payment Links.
-
-   HOW IT WORKS:
-   1. You create a Payment Link in Stripe Dashboard for each product
-   2. When user clicks "Checkout", we redirect to that link
-   3. If cart has 1 item → go to that product's Payment Link
-   4. If cart has multiple items → open Stripe Checkout with line items
-      using the Stripe.js redirectToCheckout (requires Price IDs)
-
-   SETUP STEPS:
-   A) Simple (Payment Links — no code changes needed):
-      - Create a Payment Link per product in Stripe Dashboard
-      - Paste URLs in CONFIG.PAYMENT_LINKS above
-      - Single-product checkout works out of the box
-
-   B) Multi-product cart (requires Price IDs):
-      - Create Products & Prices in Stripe Dashboard
-      - Add price IDs to CATALOG below (priceId field)
-      - Multi-item checkout will use Stripe.js redirectToCheckout
+   STRIPE CHECKOUT — Server-side via /api/checkout
+   Prices come from Supabase — secure, not manipulable
    ───────────────────────────────────────────────── */
 
 async function startCheckout() {
@@ -715,42 +696,30 @@ async function startCheckout() {
   closeCart();
 
   try {
-    // Single product → redirect to its Payment Link
-    if (cart.length === 1) {
-      const item = cart[0];
-      const link = CATALOG[item.id]?.stripeLink;
+    // Send cart to server — server fetches prices from Supabase
+    const res = await fetch('/api/checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        items: cart.map(i => ({ id: i.id, quantity: i.qty })),
+      }),
+    });
 
-      if (!link || link.includes('REPLACE') || link === '') {
-        throw new Error('payment_link_not_configured');
-      }
-
-      const url = item.qty > 1 ? `${link}?prefilled_quantity=${item.qty}` : link;
-      window.location.href = url;
-      return;
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || 'Server error');
     }
 
-    // Multiple products → show first item's link with toast
-    const firstItem = cart[0];
-    const link = CATALOG[firstItem.id]?.stripeLink;
-    if (link && !link.includes('REPLACE') && link !== '') {
-      showToast(t('checkout.multiItem'));
-      loader?.classList.remove('active');
-      if (btn) btn.disabled = false;
-      openCart();
-      return;
-    }
+    const { url } = await res.json();
+    if (!url) throw new Error('No checkout URL');
 
-    throw new Error('payment_link_not_configured');
+    // Redirect to Stripe
+    window.location.href = url;
 
   } catch (err) {
     loader?.classList.remove('active');
     if (btn) btn.disabled = false;
-    const msg = err.message === 'payment_link_not_configured'
-      ? (lang === 'bg'
-          ? 'Добавете Stripe Payment Link в products.json за да активирате плащанията.'
-          : 'Add your Stripe Payment Link in products.json to enable payments.')
-      : t('checkout.error');
-    showError(msg);
+    showError(t('checkout.error'));
     console.error('Checkout error:', err);
   }
 }

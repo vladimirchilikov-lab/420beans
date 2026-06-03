@@ -2,8 +2,13 @@
   "rewrites": [
     { "source": "/admin",        "destination": "/admin/index.html" },
     { "source": "/admin/",       "destination": "/admin/index.html" },
-    { "source": "/admin/:path*", "destination": "/admin/index.html" }
+    { "source": "/admin/:path*", "destination": "/admin/index.html" },
+    { "source": "/success",      "destination": "/success.html" },
+    { "source": "/cancel",       "destination": "/cancel.html" }
   ],
+  "env": {
+    "NEXT_PUBLIC_SITE_URL": "https://420beans.vercel.app"
+  },
   "headers": [
     {
       "source": "/admin(.*)",
