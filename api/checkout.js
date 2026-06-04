@@ -1,16 +1,5 @@
-// api/checkout.js
-// Creates Stripe Checkout Session
-// Prices come from Supabase — never trust client-side prices
-// Vercel Serverless Function
-
 const Stripe = require('stripe');
 const { createClient } = require('@supabase/supabase-js');
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_KEY
-);
 
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -21,17 +10,19 @@ module.exports = async (req, res) => {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   try {
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+    const supabase = createClient(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_SERVICE_KEY
+    );
+
     const { items, email } = req.body;
 
-    // Validate input
     if (!items || !Array.isArray(items) || items.length === 0) {
       return res.status(400).json({ error: 'No items provided' });
     }
 
-    // Get product IDs from cart
     const productIds = items.map(i => i.id);
-
-    // Fetch prices from Supabase — server-side, cannot be manipulated
     const { data: products, error } = await supabase
       .from('products')
       .select('id, name, description, price, image_url')
@@ -42,18 +33,15 @@ module.exports = async (req, res) => {
       return res.status(400).json({ error: 'Products not found' });
     }
 
-    // Build Stripe line items using DB prices
     const lineItems = items.map(item => {
       const product = products.find(p => p.id === item.id);
       if (!product) throw new Error(`Product ${item.id} not found`);
-
       const qty = parseInt(item.quantity, 10);
       if (!qty || qty < 1 || qty > 20) throw new Error('Invalid quantity');
-
       return {
         price_data: {
           currency: 'eur',
-          unit_amount: product.price, // from DB — secure
+          unit_amount: product.price,
           product_data: {
             name: product.name,
             description: product.description || undefined,
@@ -64,9 +52,6 @@ module.exports = async (req, res) => {
       };
     });
 
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://420beans.vercel.app';
-
-    // Create Stripe Checkout Session
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
       line_items: lineItems,
@@ -75,8 +60,8 @@ module.exports = async (req, res) => {
         allowed_countries: ['BG', 'DE', 'FR', 'GB', 'GR', 'RO'],
       },
       phone_number_collection: { enabled: true },
-      success_url: `${siteUrl}/success.html?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${siteUrl}/cancel.html`,
+      success_url: 'https://420beans.vercel.app/success.html?session_id={CHECKOUT_SESSION_ID}',
+      cancel_url: 'https://420beans.vercel.app/cancel.html',
       metadata: {
         items: JSON.stringify(items),
         source: '420beans',
