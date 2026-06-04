@@ -1,5 +1,12 @@
 const Stripe = require('stripe');
 const { createClient } = require('@supabase/supabase-js');
+const { buffer } = require('micro');
+
+module.exports.config = {
+  api: {
+    bodyParser: false
+  }
+};
 
 module.exports = async (req, res) => {
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
@@ -14,8 +21,10 @@ module.exports = async (req, res) => {
   let event;
 
   try {
+    const buf = await buffer(req);
+
     event = stripe.webhooks.constructEvent(
-      req.body,
+      buf,
       sig,
       process.env.STRIPE_WEBHOOK_SECRET
     );
@@ -23,15 +32,37 @@ module.exports = async (req, res) => {
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
+  // ONLY handle successful payments
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object;
 
-    await supabase.from('orders').insert({
-      stripe_session_id: session.id,
-      email: session.customer_email,
-      total: session.amount_total,
-      items: session.metadata || {}
-    });
+    const sessionId = session.id;
+
+    // Check if order already exists
+    const { data: existing } = await supabase
+      .from('orders')
+      .select('id')
+      .eq('stripe_session_id', sessionId)
+      .maybeSingle();
+
+    if (!existing) {
+      // Insert new order
+      await supabase.from('orders').insert({
+        stripe_session_id: sessionId,
+        email: session.customer_email,
+        total: session.amount_total,
+        items: session.metadata || {},
+        status: 'paid'
+      });
+    } else {
+      // Update existing order
+      await supabase
+        .from('orders')
+        .update({
+          status: 'paid'
+        })
+        .eq('stripe_session_id', sessionId);
+    }
   }
 
   res.json({ received: true });
