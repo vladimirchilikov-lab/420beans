@@ -5,12 +5,12 @@
 
 backend:
   name: github
-  repo: vladimirchilikov-lab/420beans                                       # ← напр. vladimirchilikov/420beans
+  repo: СМЕНИ/420beans                                          # ← напр. vladimirchilikov/420beans
   branch: main
-  base_url: https://sveltia-cms-auth.vladimir-chilikov.workers.dev         # ← Cloudflare Worker URL
+  base_url: https://sveltia-cms-auth.СМЕНИ.workers.dev         # ← Cloudflare Worker URL
   # НЕ добавяй auth_type или app_id — base_url е достатъчно
 
-site_url: https://420beans.vercel.app                             # ← твоят Vercel URL
+site_url: https://СМЕНИ.vercel.app                             # ← твоят Vercel URL
 
 media_folder: "images"
 public_folder: "/images"
@@ -89,3 +89,103 @@ collections:
           - { label: "🇧🇬 Eyebrow", name: "eyebrowBG", widget: "string" }
           - { label: "🇬🇧 Описание", name: "descEN",   widget: "text" }
           - { label: "🇧🇬 Описание", name: "descBG",   widget: "text" }
+
+  # ── ТЕКСТОВЕ ──────────────────────────────────────────
+  - name: "texts"
+    label: "✏️ Текстове на сайта"
+    files:
+      - name: "all_texts"
+        label: "Всички текстове"
+        file: "_data/texts.json"
+        fields:
+
+          - label: "🏠 Hero секция"
+            name: "hero"
+            widget: "object"
+            fields:
+              - { label: "🇬🇧 Малкият надпис", name: "eyebrowEN", widget: "string" }
+              - { label: "🇧🇬 Малкият надпис", name: "eyebrowBG", widget: "string" }
+              - { label: "🇬🇧 Описание",       name: "descEN",    widget: "text" }
+              - { label: "🇧🇬 Описание",       name: "descBG",    widget: "text" }
+
+          - label: "📖 За нас (About)"
+            name: "about"
+            widget: "object"
+            fields:
+              - { label: "🇬🇧 Заглавие секция", name: "labelEN",   widget: "string" }
+              - { label: "🇧🇬 Заглавие секция", name: "labelBG",   widget: "string" }
+              - { label: "🇬🇧 Heading",         name: "headingEN", widget: "string" }
+              - { label: "🇧🇬 Heading",         name: "headingBG", widget: "string" }
+              - { label: "🇬🇧 Текст",           name: "bodyEN",    widget: "text" }
+              - { label: "🇧🇬 Текст",           name: "bodyBG",    widget: "text" }
+              - { label: "🇬🇧 Квадрат 1",       name: "stat1EN",   widget: "string" }
+              - { label: "🇧🇬 Квадрат 1",       name: "stat1BG",   widget: "string" }
+              - { label: "🇬🇧 Квадрат 2",       name: "stat2EN",   widget: "string" }
+              - { label: "🇧🇬 Квадрат 2",       name: "stat2BG",   widget: "string" }
+              - { label: "🇬🇧 Квадрат 3",       name: "stat3EN",   widget: "string" }
+              - { label: "🇧🇬 Квадрат 3",       name: "stat3BG",   widget: "string" }
+              - { label: "🇬🇧 Квадрат 4",       name: "stat4EN",   widget: "string" }
+              - { label: "🇧🇬 Квадрат 4",       name: "stat4BG",   widget: "string" }
+
+          - label: "⚙️ Процес (4 стъпки)"
+            name: "process"
+            widget: "object"
+            fields:
+              - { label: "🇬🇧 Въвеждащ текст", name: "bodyEN",       widget: "text" }
+              - { label: "🇧🇬 Въвеждащ текст", name: "bodyBG",       widget: "text" }
+              - { label: "🇬🇧 Стъпка 1 заглавие", name: "step1TitleEN", widget: "string" }
+              - { label: "🇧🇬 Стъпка 1 заглавие", name: "step1TitleBG", widget: "string" }
+              - { label: "🇬🇧 Стъпка 1 текст",    name: "step1DescEN",  widget: "text" }
+              - { label: "🇧🇬 Стъпка 1 текст",    name: "step1DescBG",  widget: "text" }
+              - { label: "🇬🇧 Стъпка 2 заглавие", name: "step2TitleEN", widget: "string" }
+              - { label: "🇧🇬 Стъпка 2 заглавие", name: "step2TitleBG", widget: "string" }
+              - { label: "🇬🇧 Стъпка 2 текст",    name: "step2DescEN",  widget: "text" }
+              - { label: "🇧🇬 Стъпка 2 текст",    name: "step2DescBG",  widget: "text" }
+              - { label: "🇬🇧 Стъпка 3 заглавие", name: "step3TitleEN", widget: "string" }
+              - { label: "🇧🇬 Стъпка 3 заглавие", name: "step3TitleBG", widget: "string" }
+              - { label: "🇬🇧 Стъпка 3 текст",    name: "step3DescEN",  widget: "text" }
+              - { label: "🇧🇬 Стъпка 3 текст",    name: "step3DescBG",  widget: "text" }
+              - { label: "🇬🇧 Стъпка 4 заглавие", name: "step4TitleEN", widget: "string" }
+              - { label: "🇧🇬 Стъпка 4 заглавие", name: "step4TitleBG", widget: "string" }
+              - { label: "🇬🇧 Стъпка 4 текст",    name: "step4DescEN",  widget: "text" }
+              - { label: "🇧🇬 Стъпка 4 текст",    name: "step4DescBG",  widget: "text" }
+
+          - label: "⬡ Features (4 квадрата)"
+            name: "features"
+            widget: "object"
+            fields:
+              - { label: "🇬🇧 Feature 1 заглавие", name: "feat1TitleEN", widget: "string" }
+              - { label: "🇧🇬 Feature 1 заглавие", name: "feat1TitleBG", widget: "string" }
+              - { label: "🇬🇧 Feature 1 текст",    name: "feat1DescEN",  widget: "text" }
+              - { label: "🇧🇬 Feature 1 текст",    name: "feat1DescBG",  widget: "text" }
+              - { label: "🇬🇧 Feature 2 заглавие", name: "feat2TitleEN", widget: "string" }
+              - { label: "🇧🇬 Feature 2 заглавие", name: "feat2TitleBG", widget: "string" }
+              - { label: "🇬🇧 Feature 2 текст",    name: "feat2DescEN",  widget: "text" }
+              - { label: "🇧🇬 Feature 2 текст",    name: "feat2DescBG",  widget: "text" }
+              - { label: "🇬🇧 Feature 3 заглавие", name: "feat3TitleEN", widget: "string" }
+              - { label: "🇧🇬 Feature 3 заглавие", name: "feat3TitleBG", widget: "string" }
+              - { label: "🇬🇧 Feature 3 текст",    name: "feat3DescEN",  widget: "text" }
+              - { label: "🇧🇬 Feature 3 текст",    name: "feat3DescBG",  widget: "text" }
+              - { label: "🇬🇧 Feature 4 заглавие", name: "feat4TitleEN", widget: "string" }
+              - { label: "🇧🇬 Feature 4 заглавие", name: "feat4TitleBG", widget: "string" }
+              - { label: "🇬🇧 Feature 4 текст",    name: "feat4DescEN",  widget: "text" }
+              - { label: "🇧🇬 Feature 4 текст",    name: "feat4DescBG",  widget: "text" }
+
+          - label: "📧 Абонамент"
+            name: "subscribe"
+            widget: "object"
+            fields:
+              - { label: "🇬🇧 Малкият надпис", name: "labelEN", widget: "string" }
+              - { label: "🇧🇬 Малкият надпис", name: "labelBG", widget: "string" }
+              - { label: "🇬🇧 Описание",       name: "descEN",  widget: "text" }
+              - { label: "🇧🇬 Описание",       name: "descBG",  widget: "text" }
+
+          - label: "🦶 Footer"
+            name: "footer"
+            widget: "object"
+            fields:
+              - { label: "🇬🇧 Tagline", name: "taglineEN", widget: "text" }
+              - { label: "🇧🇬 Tagline", name: "taglineBG", widget: "text" }
+              - { label: "🇬🇧 Copyright", name: "copyEN", widget: "string" }
+              - { label: "🇧🇬 Copyright", name: "copyBG", widget: "string" }
+

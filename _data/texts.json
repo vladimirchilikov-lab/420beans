@@ -1,0 +1,76 @@
+{
+  "hero": {
+    "eyebrowEN": "Specialty Coffee — Est. 2024",
+    "eyebrowBG": "Специалти Кафе — Осн. 2024",
+    "descEN": "Carefully selected green coffee with traceable origin and interesting flavour profiles.",
+    "descBG": "Подбрано зелено кафе с проследим произход и интересен вкусов профил."
+  },
+  "about": {
+    "labelEN": "Our Philosophy",
+    "labelBG": "Нашата философия",
+    "headingEN": "Every cup tells a story.",
+    "headingBG": "Всяка чаша разказва история.",
+    "bodyEN": "We carefully select green coffee with traceable origin down to specific farms.",
+    "bodyBG": "Подбираме внимателно зелено кафе с проследим произход до конкретни ферми.",
+    "stat1EN": "Interesting Process Methods",
+    "stat1BG": "Интересни методи на обработка",
+    "stat2EN": "Unique Flavour Profiles",
+    "stat2BG": "Уникални вкусови профили",
+    "stat3EN": "Farm-to-Roaster Traceability",
+    "stat3BG": "Проследимост ферма до пекар",
+    "stat4EN": "Precision Roasting",
+    "stat4BG": "Прецизно изпичане"
+  },
+  "process": {
+    "bodyEN": "Quality green coffee, roasted to preserve and express its natural flavours — that's the whole process.",
+    "bodyBG": "Качествено зелено кафе, изпечено по начин запазващ и изразяващ вкуса му — това е целият процес.",
+    "step1TitleEN": "Selection",
+    "step1TitleBG": "Подбор",
+    "step1DescEN": "We source green coffee with traceable origin and interesting flavour profiles.",
+    "step1DescBG": "Подбираме зелено кафе с проследим произход, с интересен вкусов профил.",
+    "step2TitleEN": "Processing",
+    "step2TitleBG": "Обработка",
+    "step2DescEN": "After your order, each coffee is roasted in a way that brings out its natural flavour.",
+    "step2DescBG": "След поръчка изпичаме всяко кафе по начин, който да подчертае вкуса му.",
+    "step3TitleEN": "Roasting",
+    "step3TitleBG": "Печене",
+    "step3DescEN": "We aim for balanced sweetness and expressive taste notes.",
+    "step3DescBG": "Целим балансирана сладост и изразени вкусове.",
+    "step4TitleEN": "Delivery",
+    "step4TitleBG": "Доставка",
+    "step4DescEN": "Your coffee isn't sitting on a shelf for years — it's roasted shortly after your order.",
+    "step4DescBG": "Кафето ви не е стояло на рафта в магазина с години — пече се скоро след поръчката ви."
+  },
+  "features": {
+    "feat1TitleEN": "Direct Trade",
+    "feat1TitleBG": "Директен произход",
+    "feat1DescEN": "We source directly from producers with verified traceability to specific farms.",
+    "feat1DescBG": "Набираме директно от производители с верифициран проследим произход до конкретна ферма.",
+    "feat2TitleEN": "Roasted Fresh",
+    "feat2TitleBG": "Прясно препечено",
+    "feat2DescEN": "Every batch is roasted to order and ships within 24 hours of your purchase.",
+    "feat2DescBG": "Всяка партида се пече по поръчка и се изпраща в рамките на 24 часа.",
+    "feat3TitleEN": "Traceable Origin",
+    "feat3TitleBG": "Проследим произход",
+    "feat3DescEN": "Full transparency — every bag is traceable to its specific farm and harvest.",
+    "feat3DescBG": "Пълна прозрачност — всяка торбичка е проследима до конкретна ферма и реколта.",
+    "feat4TitleEN": "Free Shipping",
+    "feat4TitleBG": "Безплатна доставка",
+    "feat4DescEN": "Complimentary shipping on all orders over €30. No codes required.",
+    "feat4DescBG": "Безплатна доставка за всички поръчки над €30. Без кодове."
+  },
+  "subscribe": {
+    "labelEN": "Never Run Out",
+    "labelBG": "Никога без кафе",
+    "titleEN": "Fresh coffee. On repeat.",
+    "titleBG": "Прясно кафе. Всеки път.",
+    "descEN": "Subscribe and save 15% on every order. Choose your cadence — weekly, bi-weekly, or monthly. Pause or cancel anytime.",
+    "descBG": "Абонирайте се и спестете 15% от всяка поръчка. Седмично, двуседмично или месечно. Спирайте по всяко време."
+  },
+  "footer": {
+    "taglineEN": "Specialty coffee with traceable origin. Roasted with obsession. Delivered with care.",
+    "taglineBG": "Специалти кафе с проследим произход. Препечено с обсесия. Доставено с грижа.",
+    "copyEN": "© 2024 420 Beans. All rights reserved.",
+    "copyBG": "© 2024 420 Beans. Всички права запазени."
+  }
+}

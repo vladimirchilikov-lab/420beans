@@ -1,0 +1,9 @@
+{
+  "name": "420beans",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@supabase/supabase-js": "2.44.2",
+    "stripe": "16.1.0"
+  }
+}
