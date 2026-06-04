@@ -1,21 +1,7 @@
 const Stripe = require('stripe');
 const { createClient } = require('@supabase/supabase-js');
 
-const ALLOWED_ORIGIN = 'https://420beans.vercel.app';
-
 module.exports = async (req, res) => {
-  res.setHeader('Access-Control-Allow-Origin', ALLOWED_ORIGIN);
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
-
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
-
   try {
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -24,73 +10,48 @@ module.exports = async (req, res) => {
       process.env.SUPABASE_SERVICE_ROLE_KEY
     );
 
-    const { items = [], email } = req.body || {};
+    const { items, email } = req.body;
 
-    if (!Array.isArray(items) || items.length === 0) {
-      return res.status(400).json({ error: 'No items provided' });
+    if (!items?.length) {
+      return res.status(400).json({ error: 'No items' });
     }
 
-    const productIds = items.map(i => i.id);
+    const ids = items.map(i => i.id);
 
-    const { data: products, error } = await supabase
+    const { data: products } = await supabase
       .from('products')
       .select('id,name,description,price,image_url')
-      .in('id', productIds);
+      .in('id', ids);
 
-    if (error) throw error;
-    if (!products) throw new Error('No products returned');
-
-    const lineItems = items.map(item => {
-      const product = products.find(p => String(p.id) === String(item.id));
-
-      if (!product) {
-        throw new Error(`Product not found: ${item.id}`);
-      }
-
-      const quantity = Number(item.quantity);
-
-      if (!Number.isInteger(quantity) || quantity < 1 || quantity > 20) {
-        throw new Error('Invalid quantity');
-      }
+    const line_items = items.map(i => {
+      const p = products.find(x => x.id === i.id);
 
       return {
         price_data: {
           currency: 'eur',
-          unit_amount: product.price * 100, // FIX HERE
+          unit_amount: p.price, // already cents
           product_data: {
-            name: product.name,
-            description: product.description || undefined,
-            images: product.image_url ? [product.image_url] : undefined
+            name: p.name,
+            description: p.description,
+            images: p.image_url ? [p.image_url] : []
           }
         },
-        quantity
+        quantity: i.quantity
       };
     });
 
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
-      line_items: lineItems,
-      customer_email: email || undefined,
+      line_items,
+      customer_email: email,
 
-      shipping_address_collection: {
-        allowed_countries: ['BG', 'RO', 'GR', 'DE', 'FR', 'GB']
-      },
-
-      phone_number_collection: { enabled: true },
-
-      success_url: 'https://420beans.vercel.app/success.html?session_id={CHECKOUT_SESSION_ID}',
-      cancel_url: 'https://420beans.vercel.app/cancel.html',
-
-      metadata: {
-        source: '420beans',
-        item_count: String(items.length)
-      }
+      success_url: `${process.env.SITE_URL}/success.html`,
+      cancel_url: `${process.env.SITE_URL}/cancel.html`
     });
 
-    return res.status(200).json({ url: session.url });
+    res.json({ url: session.url });
 
-  } catch (err) {
-    console.error('Checkout error:', err);
-    return res.status(500).json({ error: err.message || 'Checkout failed' });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
   }
 };
