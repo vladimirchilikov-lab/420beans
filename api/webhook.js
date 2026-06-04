@@ -4,6 +4,7 @@ const { createClient } = require('@supabase/supabase-js');
 async function getRawBody(req) {
   return new Promise((resolve, reject) => {
     const chunks = [];
+
     req.on('data', chunk => chunks.push(chunk));
     req.on('end', () => resolve(Buffer.concat(chunks)));
     req.on('error', reject);
@@ -11,44 +12,84 @@ async function getRawBody(req) {
 }
 
 module.exports = async (req, res) => {
-  if (req.method !== 'POST') return res.status(405).end();
+  if (req.method !== 'POST') {
+    return res.status(405).end();
+  }
 
-  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-  const supabase = createClient(
-    process.env.SUPABASE_URL,
-    process.env.SUPABASE_SERVICE_KEY
-  );
-
-  const rawBody = await getRawBody(req);
-  const sig = req.headers['stripe-signature'];
-
-  let event;
   try {
-    event = stripe.webhooks.constructEvent(
+    if (
+      !process.env.STRIPE_SECRET_KEY ||
+      !process.env.STRIPE_WEBHOOK_SECRET
+    ) {
+      throw new Error('Missing environment variables');
+    }
+
+    const stripe = new Stripe(
+      process.env.STRIPE_SECRET_KEY
+    );
+
+    const supabase = createClient(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_SERVICE_KEY
+    );
+
+    const rawBody = await getRawBody(req);
+
+    const signature =
+      req.headers['stripe-signature'];
+
+    const event = stripe.webhooks.constructEvent(
       rawBody,
-      sig,
+      signature,
       process.env.STRIPE_WEBHOOK_SECRET
     );
-  } catch (err) {
-    return res.status(400).json({ error: `Webhook Error: ${err.message}` });
-  }
 
-  if (event.type === 'checkout.session.completed') {
-    const session = event.data.object;
-    try {
+    console.log('Webhook:', event.type);
+
+    if (
+      event.type === 'checkout.session.completed'
+    ) {
+      const session = event.data.object;
+
+      const order = {
+        stripe_session_id: session.id,
+        customer_email:
+          session.customer_details?.email || null,
+        customer_name:
+          session.customer_details?.name || null,
+        customer_phone:
+          session.customer_details?.phone || null,
+        shipping_address:
+          session.customer_details?.address || null,
+        total: session.amount_total,
+        status: 'paid'
+      };
+
       const { error } = await supabase
         .from('orders')
-        .insert([{
-          stripe_session_id: session.id,
-          customer_email: session.customer_details?.email || 'unknown',
-          total: session.amount_total,
-          status: 'paid',
-        }]);
-      if (error) throw error;
-    } catch (err) {
-      console.error('Order save error:', err.message);
-    }
-  }
+        .upsert([order], {
+          onConflict: 'stripe_session_id'
+        });
 
-  return res.status(200).json({ received: true });
+      if (error) {
+        throw error;
+      }
+
+      console.log(
+        'Order saved:',
+        session.id
+      );
+    }
+
+    return res.status(200).json({
+      received: true
+    });
+
+  } catch (err) {
+    console.error('Webhook error:', err);
+
+    return res.status(400).json({
+      error: err.message
+    });
+  }
 };
