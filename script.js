@@ -20,7 +20,7 @@ let CONFIG   = {
 async function loadData() {
   try {
     const [productsRes, settingsRes, textsRes] = await Promise.all([
-      fetch('./products.json'),
+      fetch('/api/products'),
       fetch('./_data/settings.json'),
       fetch('./_data/texts.json'),
     ]);
