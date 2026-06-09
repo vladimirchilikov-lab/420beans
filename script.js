@@ -98,25 +98,29 @@ async function loadData() {
       }
     }
 
-    // ── Products ──────────────────────────────────
+    // ── Products from /api/products (Supabase) ────
     if (productsRes.ok) {
       const raw = await productsRes.json();
-      // Sveltia sometimes wraps in { products: [...] } — handle both formats
+      // Handle array [] or wrapped { products: [] }
       const products = Array.isArray(raw) ? raw : (raw.products || []);
+
       CATALOG = {};
       products.forEach(p => {
+        // Support both nested {en:{name}} and flat {name} formats
+        const enName  = p.en?.name  || p.name  || '';
+        const bgName  = p.bg?.name  || p.name  || '';
         CATALOG[p.id] = {
-          en:          p.en.name,
-          bg:          p.bg.name,
-          price:       p.price,
-          roast:       p.roast || 0,
-          stripeLink:  p.stripeLink || '',
-          color:       p.color || 'linear-gradient(160deg,#1A1512,#2C1810)',
-          image:       p.image || '',
-          category:    p.category,
-          badge:       p.badge || '',
-          _en: p.en,
-          _bg: p.bg,
+          en:         enName,
+          bg:         bgName,
+          price:      p.price,
+          roast:      p.roast  || 0,
+          stripeLink: p.stripeLink || p.stripe_link || '',
+          color:      'linear-gradient(160deg,#1A1512,#2C1810)',
+          image:      p.image  || p.image_url || '',
+          category:   p.category || 'filter',
+          badge:      p.badge  || '',
+          _en: p.en || { name: enName, region: p.category || '', notes: p.description || '', process: '' },
+          _bg: p.bg || { name: bgName, region: p.category || '', notes: p.description || '', process: '' },
         };
       });
       renderProducts(products);
@@ -161,17 +165,19 @@ function renderProducts(products) {
 
     // Visual — image if available, else CSS bag/merch
     let visual = '';
-    if (p.image) {
+    const productImage = p.image || p.image_url || '';
+    const enName = p.en?.name || p.name || '';
+    if (productImage) {
       visual = `
         <div class="product-visual">
-          <img src="${p.image}" alt="${p.en.name}" class="product-img" loading="lazy">
+          <img src="${productImage}" alt="${enName}" class="product-img" loading="lazy">
         </div>`;
     } else if (isMerch) {
       visual = `
         <div class="product-visual merch-visual merch-${p.id}">
           <div class="merch-shape">
             <span class="merch-brand-tag">420 Beans</span>
-            <span class="merch-sub-tag">${p.en.name}</span>
+            <span class="merch-sub-tag">${enName}</span>
           </div>
         </div>`;
     } else {
@@ -187,40 +193,42 @@ function renderProducts(products) {
         </div>`;
     }
 
-    // Roast bar — only for coffee
     const roastBar = (!isMerch && p.roast > 0) ? `
         <div class="product-roast-bar">
           <span class="roast-label" data-i18n="shop.roastLevel">Roast</span>
           <div class="roast-track"><div class="roast-fill" data-roast="${p.roast}"></div></div>
         </div>` : '';
 
-    // Process tag — only for coffee
-    const processTag = (!isMerch && p.en.process) ? `
+    const enProcess = p.en?.process || '';
+    const processTag = (!isMerch && enProcess) ? `
         <p class="product-process" data-product-id="${p.id}" data-field="process">
-          ${p.en.process}
+          ${enProcess}
         </p>` : '';
+
+    const enRegion = p.en?.region || p.category || '';
+    const enNotes  = p.en?.notes  || p.description || '';
 
     return `
     <article class="product-card ${isMerch ? 'product-card-merch' : ''} reveal ${delay}"
-             data-category="${p.category}"
+             data-category="${p.category || 'filter'}"
              data-product-id="${p.id}"
              onclick="addToCart('${p.id}')">
       ${visual}
       ${badge}
       <div class="product-info">
         <p class="product-region" data-product-id="${p.id}" data-field="region">
-          ${p.en.region}
+          ${enRegion}
         </p>
         <h3 class="product-name" data-product-id="${p.id}" data-field="name">
-          ${p.en.name}
+          ${enName}
         </h3>
         ${processTag}
         <p class="product-notes" data-product-id="${p.id}" data-field="notes">
-          ${p.en.notes}
+          ${enNotes}
         </p>
         ${roastBar}
         <div class="product-footer">
-          <span class="product-price">€${p.price}</span>
+          <span class="product-price">€${(p.price / 100).toFixed(2)}</span>
           <button class="product-add"
                   onclick="event.stopPropagation(); addToCart('${p.id}')"
                   aria-label="Add to cart">+</button>
