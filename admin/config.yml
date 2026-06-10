@@ -5,12 +5,12 @@
 
 backend:
   name: github
-  repo: СМЕНИ/420beans                                          # ← напр. vladimirchilikov/420beans
+  repo: vladimirchilikov-lab/420beans                                        # ← напр. vladimirchilikov/420beans
   branch: main
-  base_url: https://sveltia-cms-auth.СМЕНИ.workers.dev         # ← Cloudflare Worker URL
+  base_url: https://sveltia-cms-auth.vladimir-chilikov.workers.dev         # ← Cloudflare Worker URL
   # НЕ добавяй auth_type или app_id — base_url е достатъчно
 
-site_url: https://СМЕНИ.vercel.app                             # ← твоят Vercel URL
+site_url: https://420beans.vercel.app/                             # ← твоят Vercel URL
 
 media_folder: "images"
 public_folder: "/images"
