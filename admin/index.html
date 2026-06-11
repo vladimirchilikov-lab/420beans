@@ -10,12 +10,14 @@
 </head>
 
 <body>
+
   <div id="nc-root"></div>
 
-  <!-- Sveltia CMS (production-safe, no CDN) -->
+  <!-- ✅ FIX: no CDN, no unpkg -->
   <script type="module">
     import CMS from "https://esm.sh/@sveltia/cms";
     CMS.init();
   </script>
+
 </body>
 </html>
