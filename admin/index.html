@@ -5,18 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex, nofollow" />
   <title>420 Beans — Admin</title>
-
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>☕</text></svg>">
 </head>
-
 <body>
 
-  <div id="nc-root"></div>
+  <script src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js"></script>
 
-  <!-- ✅ FIX: no CDN, no unpkg -->
-  <script type="module">
-    import CMS from "https://esm.sh/@sveltia/cms";
-    CMS.init();
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      if (window.CMS) {
+        window.CMS.init();
+      } else {
+        console.error("Sveltia CMS failed to load");
+      }
+    });
   </script>
 
 </body>
