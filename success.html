@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Order Confirmed — 420 Beans</title>
+<meta name="description" content="Your 420 Beans order was placed successfully.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Mono:wght@300;400&display=swap">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>☕</text></svg>">
+<link rel="stylesheet" href="./style.css">
+<style>body{font-family:'DM Mono','Courier New',monospace}h1,.nav-logo{font-family:'Playfair Display',Georgia,serif}</style>
+</head>
+<body class="page-simple">
+
+<nav id="mainNav">
+  <a href="./" class="nav-logo">420 <span>Beans</span></a>
+  <div class="nav-right">
+    <div class="lang-switcher">
+      <button class="lang-btn" id="btnBG" onclick="switchLang('bg')">БГ</button>
+      <button class="lang-btn active" id="btnEN" onclick="switchLang('en')">EN</button>
+    </div>
+  </div>
+</nav>
+
+<main class="page-main">
+  <div class="status-box">
+    <div class="status-icon success">✓</div>
+    <p class="status-eyebrow" id="eyebrow">Order Confirmed</p>
+    <h1 class="status-heading" id="heading">
+      Thank <em>you!</em>
+    </h1>
+    <p class="status-desc" id="desc">
+      Your order has been placed successfully. You'll receive a confirmation email shortly with your order details and delivery information.
+    </p>
+    <div class="order-ref" id="orderRef">Order Confirmed ✓</div>
+    <div class="status-actions">
+      <a href="./" class="btn-primary" id="shopBtn">Continue Shopping</a>
+      <a href="./" class="btn-ghost" id="homeBtn">← Back to Home</a>
+    </div>
+  </div>
+</main>
+
+<footer class="page-footer">
+  <p>© 2024 420 Beans. All rights reserved.</p>
+</footer>
+
+<script>
+  const translations = {
+    en: {
+      title:   'Order Confirmed — 420 Beans',
+      eyebrow: 'Order Confirmed',
+      heading: 'Thank <em>you!</em>',
+      desc:    "Your order has been placed successfully. You'll receive a confirmation email shortly with your order details and delivery information.",
+      shop:    'Continue Shopping',
+      home:    '← Back to Home',
+    },
+    bg: {
+      title:   'Поръчката е потвърдена — 420 Beans',
+      eyebrow: 'Поръчката е потвърдена',
+      heading: 'Благодарим <em>ви!</em>',
+      desc:    'Поръчката ви е приета успешно. Ще получите имейл с потвърждение и информация за доставката.',
+      shop:    'Продължи пазаруването',
+      home:    '← Обратно',
+    },
+  };
+
+  // Read session_id from URL (set by Stripe after successful payment)
+  const params    = new URLSearchParams(window.location.search);
+  const sessionId = params.get('session_id');
+  if (sessionId) {
+    document.getElementById('orderRef').textContent =
+      'Order #' + sessionId.replace('cs_', '').slice(-12).toUpperCase();
+  }
+
+  let currentLang = navigator.language?.startsWith('bg') ? 'bg' : 'en';
+
+  function applyLang(l) {
+    const tr = translations[l] || translations.en;
+    document.title = tr.title;
+    document.getElementById('eyebrow').textContent  = tr.eyebrow;
+    document.getElementById('heading').innerHTML    = tr.heading;
+    document.getElementById('desc').textContent     = tr.desc;
+    document.getElementById('shopBtn').textContent  = tr.shop;
+    document.getElementById('homeBtn').textContent  = tr.home;
+    document.getElementById('btnBG').classList.toggle('active', l === 'bg');
+    document.getElementById('btnEN').classList.toggle('active', l === 'en');
+    document.documentElement.lang = l;
+    currentLang = l;
+  }
+
+  function switchLang(l) { applyLang(l); }
+
+  applyLang(currentLang);
+</script>
+</body>
+</html>

@@ -1,0 +1,191 @@
+# ─────────────────────────────────────────────────────────
+# 420 Beans — Sveltia CMS config
+# Auth via Cloudflare Workers OAuth proxy (sveltia-cms-auth)
+# ─────────────────────────────────────────────────────────
+
+backend:
+  name: github
+  repo: СМЕНИ/420beans                                          # ← напр. vladimirchilikov/420beans
+  branch: main
+  base_url: https://sveltia-cms-auth.СМЕНИ.workers.dev         # ← Cloudflare Worker URL
+  # НЕ добавяй auth_type или app_id — base_url е достатъчно
+
+site_url: https://СМЕНИ.vercel.app                             # ← твоят Vercel URL
+
+media_folder: "images"
+public_folder: "/images"
+
+collections:
+
+  - name: "products"
+    label: "☕ Продукти"
+    label_singular: "Продукт"
+    files:
+      - name: "all_products"
+        label: "Всички продукти"
+        file: "products.json"
+        fields:
+          - label: "Продукти"
+            name: "products"
+            widget: "list"
+            summary: "{{fields.en.name}} — €{{fields.price}}"
+            fields:
+              - { label: "ID",    name: "id",    widget: "string" }
+              - label: "Категория"
+                name: "category"
+                widget: "select"
+                options:
+                  - { label: "Кафе (Filter)",  value: "filter" }
+                  - { label: "Кафе / Еспресо", value: "filter espresso" }
+                  - { label: "Еспресо",        value: "espresso" }
+                  - { label: "Мърч",           value: "merch" }
+              - label: "Badge"
+                name: "badge"
+                widget: "select"
+                required: false
+                default: ""
+                options:
+                  - { label: "Няма",        value: "" }
+                  - { label: "Best Seller", value: "bestseller" }
+                  - { label: "New",         value: "new" }
+              - { label: "Снимка",             name: "image",      widget: "image",  required: false }
+              - { label: "Цена (€)",           name: "price",      widget: "number", min: 1, max: 9999, value_type: "int" }
+              - { label: "Степен на печене",   name: "roast",      widget: "number", min: 0, max: 100,  value_type: "int" }
+              - { label: "Stripe Payment Link",name: "stripeLink", widget: "string" }
+              - label: "🇬🇧 Английски"
+                name: "en"
+                widget: "object"
+                fields:
+                  - { label: "Регион", name: "region",  widget: "string" }
+                  - { label: "Ime",   name: "name",    widget: "string" }
+                  - { label: "Процес", name: "process", widget: "string", required: false }
+                  - { label: "Вкус",  name: "notes",   widget: "string" }
+              - label: "🇧🇬 Български"
+                name: "bg"
+                widget: "object"
+                fields:
+                  - { label: "Регион", name: "region",  widget: "string" }
+                  - { label: "Ime",   name: "name",    widget: "string" }
+                  - { label: "Процес", name: "process", widget: "string", required: false }
+                  - { label: "Вкус",  name: "notes",   widget: "string" }
+
+  - name: "settings"
+    label: "⚙️ Настройки"
+    files:
+      - name: "site_settings"
+        label: "Основни настройки"
+        file: "_data/settings.json"
+        fields:
+          - { label: "Stripe Publishable Key", name: "stripePublishableKey", widget: "string" }
+          - { label: "Контактен имейл",        name: "contactEmail",         widget: "string" }
+          - { label: "Instagram URL",          name: "instagramUrl",         widget: "string", required: false }
+          - { label: "Facebook URL",           name: "facebookUrl",          widget: "string", required: false }
+          - { label: "TikTok URL",             name: "tiktokUrl",            widget: "string", required: false }
+      - name: "hero"
+        label: "Hero секция"
+        file: "_data/hero.json"
+        fields:
+          - { label: "🇬🇧 Eyebrow", name: "eyebrowEN", widget: "string" }
+          - { label: "🇧🇬 Eyebrow", name: "eyebrowBG", widget: "string" }
+          - { label: "🇬🇧 Описание", name: "descEN",   widget: "text" }
+          - { label: "🇧🇬 Описание", name: "descBG",   widget: "text" }
+
+  # ── ТЕКСТОВЕ ──────────────────────────────────────────
+  - name: "texts"
+    label: "✏️ Текстове на сайта"
+    files:
+      - name: "all_texts"
+        label: "Всички текстове"
+        file: "_data/texts.json"
+        fields:
+
+          - label: "🏠 Hero секция"
+            name: "hero"
+            widget: "object"
+            fields:
+              - { label: "🇬🇧 Малкият надпис", name: "eyebrowEN", widget: "string" }
+              - { label: "🇧🇬 Малкият надпис", name: "eyebrowBG", widget: "string" }
+              - { label: "🇬🇧 Описание",       name: "descEN",    widget: "text" }
+              - { label: "🇧🇬 Описание",       name: "descBG",    widget: "text" }
+
+          - label: "📖 За нас (About)"
+            name: "about"
+            widget: "object"
+            fields:
+              - { label: "🇬🇧 Заглавие секция", name: "labelEN",   widget: "string" }
+              - { label: "🇧🇬 Заглавие секция", name: "labelBG",   widget: "string" }
+              - { label: "🇬🇧 Heading",         name: "headingEN", widget: "string" }
+              - { label: "🇧🇬 Heading",         name: "headingBG", widget: "string" }
+              - { label: "🇬🇧 Текст",           name: "bodyEN",    widget: "text" }
+              - { label: "🇧🇬 Текст",           name: "bodyBG",    widget: "text" }
+              - { label: "🇬🇧 Квадрат 1",       name: "stat1EN",   widget: "string" }
+              - { label: "🇧🇬 Квадрат 1",       name: "stat1BG",   widget: "string" }
+              - { label: "🇬🇧 Квадрат 2",       name: "stat2EN",   widget: "string" }
+              - { label: "🇧🇬 Квадрат 2",       name: "stat2BG",   widget: "string" }
+              - { label: "🇬🇧 Квадрат 3",       name: "stat3EN",   widget: "string" }
+              - { label: "🇧🇬 Квадрат 3",       name: "stat3BG",   widget: "string" }
+              - { label: "🇬🇧 Квадрат 4",       name: "stat4EN",   widget: "string" }
+              - { label: "🇧🇬 Квадрат 4",       name: "stat4BG",   widget: "string" }
+
+          - label: "⚙️ Процес (4 стъпки)"
+            name: "process"
+            widget: "object"
+            fields:
+              - { label: "🇬🇧 Въвеждащ текст", name: "bodyEN",       widget: "text" }
+              - { label: "🇧🇬 Въвеждащ текст", name: "bodyBG",       widget: "text" }
+              - { label: "🇬🇧 Стъпка 1 заглавие", name: "step1TitleEN", widget: "string" }
+              - { label: "🇧🇬 Стъпка 1 заглавие", name: "step1TitleBG", widget: "string" }
+              - { label: "🇬🇧 Стъпка 1 текст",    name: "step1DescEN",  widget: "text" }
+              - { label: "🇧🇬 Стъпка 1 текст",    name: "step1DescBG",  widget: "text" }
+              - { label: "🇬🇧 Стъпка 2 заглавие", name: "step2TitleEN", widget: "string" }
+              - { label: "🇧🇬 Стъпка 2 заглавие", name: "step2TitleBG", widget: "string" }
+              - { label: "🇬🇧 Стъпка 2 текст",    name: "step2DescEN",  widget: "text" }
+              - { label: "🇧🇬 Стъпка 2 текст",    name: "step2DescBG",  widget: "text" }
+              - { label: "🇬🇧 Стъпка 3 заглавие", name: "step3TitleEN", widget: "string" }
+              - { label: "🇧🇬 Стъпка 3 заглавие", name: "step3TitleBG", widget: "string" }
+              - { label: "🇬🇧 Стъпка 3 текст",    name: "step3DescEN",  widget: "text" }
+              - { label: "🇧🇬 Стъпка 3 текст",    name: "step3DescBG",  widget: "text" }
+              - { label: "🇬🇧 Стъпка 4 заглавие", name: "step4TitleEN", widget: "string" }
+              - { label: "🇧🇬 Стъпка 4 заглавие", name: "step4TitleBG", widget: "string" }
+              - { label: "🇬🇧 Стъпка 4 текст",    name: "step4DescEN",  widget: "text" }
+              - { label: "🇧🇬 Стъпка 4 текст",    name: "step4DescBG",  widget: "text" }
+
+          - label: "⬡ Features (4 квадрата)"
+            name: "features"
+            widget: "object"
+            fields:
+              - { label: "🇬🇧 Feature 1 заглавие", name: "feat1TitleEN", widget: "string" }
+              - { label: "🇧🇬 Feature 1 заглавие", name: "feat1TitleBG", widget: "string" }
+              - { label: "🇬🇧 Feature 1 текст",    name: "feat1DescEN",  widget: "text" }
+              - { label: "🇧🇬 Feature 1 текст",    name: "feat1DescBG",  widget: "text" }
+              - { label: "🇬🇧 Feature 2 заглавие", name: "feat2TitleEN", widget: "string" }
+              - { label: "🇧🇬 Feature 2 заглавие", name: "feat2TitleBG", widget: "string" }
+              - { label: "🇬🇧 Feature 2 текст",    name: "feat2DescEN",  widget: "text" }
+              - { label: "🇧🇬 Feature 2 текст",    name: "feat2DescBG",  widget: "text" }
+              - { label: "🇬🇧 Feature 3 заглавие", name: "feat3TitleEN", widget: "string" }
+              - { label: "🇧🇬 Feature 3 заглавие", name: "feat3TitleBG", widget: "string" }
+              - { label: "🇬🇧 Feature 3 текст",    name: "feat3DescEN",  widget: "text" }
+              - { label: "🇧🇬 Feature 3 текст",    name: "feat3DescBG",  widget: "text" }
+              - { label: "🇬🇧 Feature 4 заглавие", name: "feat4TitleEN", widget: "string" }
+              - { label: "🇧🇬 Feature 4 заглавие", name: "feat4TitleBG", widget: "string" }
+              - { label: "🇬🇧 Feature 4 текст",    name: "feat4DescEN",  widget: "text" }
+              - { label: "🇧🇬 Feature 4 текст",    name: "feat4DescBG",  widget: "text" }
+
+          - label: "📧 Абонамент"
+            name: "subscribe"
+            widget: "object"
+            fields:
+              - { label: "🇬🇧 Малкият надпис", name: "labelEN", widget: "string" }
+              - { label: "🇧🇬 Малкият надпис", name: "labelBG", widget: "string" }
+              - { label: "🇬🇧 Описание",       name: "descEN",  widget: "text" }
+              - { label: "🇧🇬 Описание",       name: "descBG",  widget: "text" }
+
+          - label: "🦶 Footer"
+            name: "footer"
+            widget: "object"
+            fields:
+              - { label: "🇬🇧 Tagline", name: "taglineEN", widget: "text" }
+              - { label: "🇧🇬 Tagline", name: "taglineBG", widget: "text" }
+              - { label: "🇬🇧 Copyright", name: "copyEN", widget: "string" }
+              - { label: "🇧🇬 Copyright", name: "copyBG", widget: "string" }
+

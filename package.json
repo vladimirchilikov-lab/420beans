@@ -8,6 +8,10 @@
     "start": "wrangler dev",
     "test": "vitest"
   },
+  "dependencies": {
+    "@supabase/supabase-js": "2.44.2",
+    "stripe": "16.1.0"
+  },
   "devDependencies": {
     "@cloudflare/vitest-pool-workers": "^0.12.4",
     "vitest": "~3.2.0",
