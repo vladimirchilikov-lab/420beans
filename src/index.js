@@ -4,20 +4,17 @@ export default {
 
     const COOKIE_NAME = "gh_token";
 
-    // ─────────────────────────────
-    // LOGIN
-    // ─────────────────────────────
+    // ───────── LOGIN ─────────
     if (url.pathname === "/login") {
       const redirect = `https://github.com/login/oauth/authorize` +
         `?client_id=${env.GITHUB_CLIENT_ID}` +
-        `&scope=repo,user`;
+        `&scope=repo,user` +
+        `&redirect_uri=${url.origin}/callback`;
 
       return Response.redirect(redirect, 302);
     }
 
-    // ─────────────────────────────
-    // CALLBACK
-    // ─────────────────────────────
+    // ───────── CALLBACK ─────────
     if (url.pathname === "/callback") {
       const code = url.searchParams.get("code");
 
@@ -40,39 +37,25 @@ export default {
         return new Response("Auth failed", { status: 401 });
       }
 
-      return new Response("Login OK — you can close this tab", {
-        headers: {
-          "Set-Cookie": `${COOKIE_NAME}=${data.access_token}; Path=/; HttpOnly; Secure; SameSite=Lax`,
-          "Content-Type": "text/plain",
-        },
-      });
+      return new Response(
+        `<script>
+          window.opener.postMessage(
+            { token: "${data.access_token}" },
+            "*"
+          );
+          window.close();
+        </script>`,
+        {
+          headers: { "Content-Type": "text/html" },
+        }
+      );
     }
 
-    // ─────────────────────────────
-    // PROTECT /admin
-    // ─────────────────────────────
+    // ───────── PROTECT ADMIN ─────────
     if (url.pathname.startsWith("/admin")) {
-      const cookie = request.headers.get("Cookie") || "";
-
-      if (!cookie.includes(COOKIE_NAME)) {
-        return Response.redirect(`${url.origin}/login`, 302);
-      }
+      return fetch(request);
     }
 
-    // ─────────────────────────────
-    // SIMPLE API CHECK (optional)
-    // ─────────────────────────────
-    if (url.pathname === "/api/me") {
-      const cookie = request.headers.get("Cookie") || "";
-      if (!cookie.includes(COOKIE_NAME)) {
-        return new Response("Not logged in", { status: 401 });
-      }
-
-      return new Response(JSON.stringify({ ok: true }), {
-        headers: { "Content-Type": "application/json" },
-      });
-    }
-
-    return new Response("420 Beans Auth OK 🚀");
+    return new Response("OK");
   },
 };

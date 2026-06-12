@@ -13,7 +13,7 @@
       "headers": [
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com https://cdn.jsdelivr.net https://api.github.com; style-src 'self' 'unsafe-inline' https://unpkg.com https://cdn.jsdelivr.net; font-src 'self' data: https://unpkg.com; img-src 'self' data: blob: https://avatars.githubusercontent.com https://*.githubusercontent.com; connect-src 'self' https://api.github.com https://githubstatus.com https://unpkg.com https://cdn.jsdelivr.net https://420beans-auth.vladimir-chilikov.workers.dev; frame-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'"
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com https://cdn.jsdelivr.net https://api.github.com; script-src-elem 'self' 'unsafe-inline' https://unpkg.com https://cdn.jsdelivr.net https://api.github.com; style-src 'self' 'unsafe-inline' https://unpkg.com https://cdn.jsdelivr.net; font-src 'self' data: https://unpkg.com; img-src 'self' data: blob: https://avatars.githubusercontent.com https://*.githubusercontent.com; connect-src 'self' https://api.github.com https://githubstatus.com https://unpkg.com https://cdn.jsdelivr.net https://420beans-auth.vladimir-chilikov.workers.dev; frame-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'"
         },
         {
           "key": "X-Content-Type-Options",
@@ -22,10 +22,6 @@
         {
           "key": "X-Frame-Options",
           "value": "SAMEORIGIN"
-        },
-        {
-          "key": "Referrer-Policy",
-          "value": "strict-origin-when-cross-origin"
         }
       ]
     },
