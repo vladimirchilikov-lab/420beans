@@ -1,0 +1,18 @@
+backend:
+  name: github
+  repo: vladimirchilikov-lab/420beans
+  branch: main
+
+media_folder: "images"
+public_folder: "/images"
+
+collections:
+  - name: "products"
+    label: "Products"
+    folder: "products"
+    create: true
+    extension: "json"
+    format: "json"
+    fields:
+      - { name: title, label: Title, widget: string }
+      - { name: price, label: Price, widget: number }
