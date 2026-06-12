@@ -23,6 +23,10 @@ export default {
     if (url.pathname === "/callback") {
       const code = url.searchParams.get("code");
 
+      if (!code) {
+        return new Response("Missing code", { status: 400 });
+      }
+
       const tokenRes = await fetch(
         "https://github.com/login/oauth/access_token",
         {
@@ -42,22 +46,49 @@ export default {
       const data = await tokenRes.json();
 
       if (!data.access_token) {
-        return new Response(JSON.stringify(data, null, 2), {
-          status: 401,
-          headers: {
-            "Content-Type": "application/json"
+        return new Response(
+          JSON.stringify(
+            {
+              error: "token_exchange_failed",
+              github_response: data
+            },
+            null,
+            2
+          ),
+          {
+            status: 401,
+            headers: { "Content-Type": "application/json" }
           }
-        });
+        );
       }
 
+      // ─────────────────────────────
+      // SAFE RETURN (NO DOUBLE CODE / NO postMessage CRASH)
+      // ─────────────────────────────
       return new Response(
-        `<script>
-          window.opener.postMessage(
-            { token: "${data.access_token}" },
-            "*"
-          );
-          window.close();
-        </script>`,
+        `<!DOCTYPE html>
+<html>
+  <body>
+    <h3>Login successful</h3>
+    <p>You can close this tab.</p>
+
+    <script>
+      const token = "${data.access_token}";
+
+      try {
+        if (window.opener) {
+          window.opener.postMessage({ token }, "*");
+        } else {
+          localStorage.setItem("gh_token", token);
+        }
+      } catch (e) {
+        localStorage.setItem("gh_token", token);
+      }
+
+      setTimeout(() => window.close(), 300);
+    </script>
+  </body>
+</html>`,
         {
           headers: {
             "Content-Type": "text/html"
