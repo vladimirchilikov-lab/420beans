@@ -10,11 +10,15 @@
 
 <script>
   window.addEventListener("DOMContentLoaded", () => {
-    if (window.CMS) {
-      window.CMS.init();
-    } else {
+    if (!window.CMS) {
       console.error("CMS failed to load");
+      return;
     }
+
+    // 🔒 FORCE disable any legacy fallback behavior
+    window.CMS_MANUAL_INIT = false;
+
+    window.CMS.init();
   });
 </script>
 
