@@ -1,169 +1,67 @@
-# ─────────────────────────────────────────────────────────
-# 420 Beans — Sveltia CMS (PRODUCTION READY)
-# Auth: Cloudflare Workers OAuth proxy
-# ─────────────────────────────────────────────────────────
-
 backend:
   name: github
   repo: vladimirchilikov-lab/420beans
   branch: main
   base_url: https://420beans-auth.vladimir-chilikov.workers.dev
-  auth_endpoint: /login
+  auth_endpoint: https://420beans-auth.vladimir-chilikov.workers.dev/login
 
 site_url: https://420beans.vercel.app
 
 media_folder: "images"
 public_folder: "/images"
 
-# ─────────────────────────────────────────────────────────
-# PRODUCTS
-# ─────────────────────────────────────────────────────────
-
 collections:
 
   - name: "products"
-    label: "☕ Продукти"
-    files:
-      - name: "all_products"
-        label: "Всички продукти"
-        file: "products.json"
+    label: "☕ Products"
+    folder: "products"
+    create: true
+    extension: "json"
+    format: "json"
 
-        fields:
-          - label: "Продукти"
-            name: "products"
-            widget: "list"
+    fields:
 
-            summary: "{{fields.en.name}} — €{{fields.price}}"
-
-            fields:
-              - { label: "ID", name: "id", widget: "string" }
-
-              - label: "Категория"
-                name: "category"
-                widget: "select"
-                options:
-                  - { label: "Кафе", value: "filter" }
-                  - { label: "Еспресо", value: "espresso" }
-                  - { label: "Мърч", value: "merch" }
-
-              - label: "Badge"
-                name: "badge"
-                widget: "select"
-                required: false
-                options:
-                  - { label: "Няма", value: "" }
-                  - { label: "Best Seller", value: "bestseller" }
-                  - { label: "New", value: "new" }
-
-              - { label: "Снимка", name: "image", widget: "image", required: false }
-
-              - { label: "Цена (€ центове)", name: "price", widget: "number", value_type: "int" }
-
-              - { label: "Roast", name: "roast", widget: "number", min: 0, max: 100, value_type: "int" }
-
-              - { label: "Stripe Link", name: "stripeLink", widget: "string", required: false }
-
-              - label: "EN"
-                name: "en"
-                widget: "object"
-                fields:
-                  - { label: "Name", name: "name", widget: "string" }
-                  - { label: "Region", name: "region", widget: "string" }
-                  - { label: "Process", name: "process", widget: "string", required: false }
-                  - { label: "Notes", name: "notes", widget: "string" }
-
-              - label: "BG"
-                name: "bg"
-                widget: "object"
-                fields:
-                  - { label: "Name", name: "name", widget: "string" }
-                  - { label: "Region", name: "region", widget: "string" }
-                  - { label: "Process", name: "process", widget: "string", required: false }
-                  - { label: "Notes", name: "notes", widget: "string" }
-
-# ─────────────────────────────────────────────────────────
-# SETTINGS
-# ─────────────────────────────────────────────────────────
-
-  - name: "settings"
-    label: "⚙️ Настройки"
-    files:
-
-      - name: "site_settings"
-        label: "Основни настройки"
-        file: "_data/settings.json"
-
-        fields:
-          - { label: "Stripe Key", name: "stripePublishableKey", widget: "string" }
-          - { label: "Email", name: "contactEmail", widget: "string" }
-          - { label: "Instagram", name: "instagramUrl", widget: "string", required: false }
-
-      - name: "hero"
-        label: "Hero"
-        file: "_data/hero.json"
-
-        fields:
-          - { label: "Eyebrow EN", name: "eyebrowEN", widget: "string" }
-          - { label: "Eyebrow BG", name: "eyebrowBG", widget: "string" }
-          - { label: "Desc EN", name: "descEN", widget: "text" }
-          - { label: "Desc BG", name: "descBG", widget: "text" }
-
-# ─────────────────────────────────────────────────────────
-# TEXTS
-# ─────────────────────────────────────────────────────────
-
-  - name: "texts"
-    label: "✏️ Текстове"
-    files:
-
-      - name: "all_texts"
-        label: "Всички текстове"
-        file: "_data/texts.json"
+      - name: products
+        label: Products
+        widget: list
 
         fields:
 
-          - name: hero
-            label: "Hero"
-            widget: "object"
-            fields:
-              - { name: eyebrowEN, widget: string }
-              - { name: eyebrowBG, widget: string }
-              - { name: descEN, widget: text }
-              - { name: descBG, widget: text }
+          - { name: id, label: ID, widget: string }
 
-          - name: about
-            label: "About"
-            widget: "object"
-            fields:
-              - { name: headingEN, widget: string }
-              - { name: headingBG, widget: string }
-              - { name: bodyEN, widget: text }
-              - { name: bodyBG, widget: text }
+          - name: category
+            label: Category
+            widget: select
+            options: ["filter", "espresso", "merch"]
 
-          - name: process
-            label: "Process"
-            widget: "object"
-            fields:
-              - { name: bodyEN, widget: text }
-              - { name: bodyBG, widget: text }
+          - name: badge
+            label: Badge
+            widget: select
+            required: false
+            options: ["", "bestseller", "new"]
 
-          - name: features
-            label: "Features"
-            widget: "object"
-            fields:
-              - { name: feat1TitleEN, widget: string }
-              - { name: feat1DescEN, widget: text }
+          - { name: image, label: Image, widget: image, required: false }
 
-          - name: subscribe
-            label: "Subscribe"
-            widget: "object"
-            fields:
-              - { name: labelEN, widget: string }
-              - { name: descEN, widget: text }
+          - { name: price, label: Price, widget: number }
 
-          - name: footer
-            label: "Footer"
-            widget: "object"
+          - { name: roast, label: Roast, widget: number }
+
+          - { name: stripeLink, label: Stripe Link, widget: string, required: false }
+
+          - name: en
+            label: English
+            widget: object
             fields:
-              - { name: taglineEN, widget: text }
-              - { name: copyEN, widget: string }
+              - { name: name, widget: string }
+              - { name: region, widget: string }
+              - { name: process, widget: string, required: false }
+              - { name: notes, widget: string }
+
+          - name: bg
+            label: Bulgarian
+            widget: object
+            fields:
+              - { name: name, widget: string }
+              - { name: region, widget: string }
+              - { name: process, widget: string, required: false }
+              - { name: notes, widget: string }
