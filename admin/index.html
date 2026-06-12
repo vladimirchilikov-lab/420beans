@@ -6,7 +6,10 @@
 </head>
 <body>
 
-<script src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js"></script>
+<script type="module">
+  import CMS from "https://unpkg.com/@sveltia/cms/dist/sveltia-cms.esm.js";
+  CMS.init();
+</script>
 
 </body>
 </html>
