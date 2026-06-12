@@ -6,9 +6,16 @@
 </head>
 <body>
 
-<script type="module">
-  import CMS from "https://unpkg.com/@sveltia/cms/dist/sveltia-cms.esm.js";
-  CMS.init();
+<script src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js"></script>
+
+<script>
+  window.addEventListener("DOMContentLoaded", () => {
+    if (window.CMS) {
+      window.CMS.init();
+    } else {
+      console.error("CMS failed to load");
+    }
+  });
 </script>
 
 </body>
