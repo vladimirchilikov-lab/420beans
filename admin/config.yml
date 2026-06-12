@@ -2,66 +2,17 @@ backend:
   name: github
   repo: vladimirchilikov-lab/420beans
   branch: main
-  base_url: https://420beans-auth.vladimir-chilikov.workers.dev
-  auth_endpoint: https://420beans-auth.vladimir-chilikov.workers.dev/login
-
-site_url: https://420beans.vercel.app
 
 media_folder: "images"
 public_folder: "/images"
 
 collections:
-
   - name: "products"
-    label: "☕ Products"
+    label: "Products"
     folder: "products"
     create: true
     extension: "json"
     format: "json"
-
     fields:
-
-      - name: products
-        label: Products
-        widget: list
-
-        fields:
-
-          - { name: id, label: ID, widget: string }
-
-          - name: category
-            label: Category
-            widget: select
-            options: ["filter", "espresso", "merch"]
-
-          - name: badge
-            label: Badge
-            widget: select
-            required: false
-            options: ["", "bestseller", "new"]
-
-          - { name: image, label: Image, widget: image, required: false }
-
-          - { name: price, label: Price, widget: number }
-
-          - { name: roast, label: Roast, widget: number }
-
-          - { name: stripeLink, label: Stripe Link, widget: string, required: false }
-
-          - name: en
-            label: English
-            widget: object
-            fields:
-              - { name: name, widget: string }
-              - { name: region, widget: string }
-              - { name: process, widget: string, required: false }
-              - { name: notes, widget: string }
-
-          - name: bg
-            label: Bulgarian
-            widget: object
-            fields:
-              - { name: name, widget: string }
-              - { name: region, widget: string }
-              - { name: process, widget: string, required: false }
-              - { name: notes, widget: string }
+      - { name: title, label: Title, widget: string }
+      - { name: price, label: Price, widget: number }

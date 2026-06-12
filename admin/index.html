@@ -1,44 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="robots" content="noindex, nofollow" />
-  <title>420 Beans — Admin</title>
-
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>☕</text></svg>">
-
-  <!-- Sveltia config -->
-  <script>
-    window.CMS_MANUAL_INIT = true;
-  </script>
+  <meta charset="utf-8">
+  <title>420 Beans Admin</title>
 </head>
-
 <body>
 
-  <script src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js"></script>
+<script src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js"></script>
 
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      if (!window.CMS) {
-        console.error("CMS failed to load");
-        return;
-      }
-
-      // ✅ correct Sveltia init
-      window.CMS.init({
-        config: {
-          backend: {
-            name: "github",
-            repo: "vladimirchilikov-lab/420beans",
-            auth_endpoint: "https://420beans-auth.vladimir-chilikov.workers.dev"
-          },
-          media_folder: "public/uploads",
-          public_folder: "/uploads"
-        }
-      });
-    });
-  </script>
+<script>
+  window.CMS_MANUAL_INIT = false;
+</script>
 
 </body>
 </html>
