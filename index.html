@@ -146,19 +146,8 @@
      MARQUEE
 ═══════════════════════════════════════════════ -->
 <div class="marquee-wrap" aria-hidden="true">
-  <div class="marquee-track">
-    <span class="marquee-item">Ethiopia Yirgacheffe</span><span class="marquee-dot">·</span>
-    <span class="marquee-item">Colombia Huila</span><span class="marquee-dot">·</span>
-    <span class="marquee-item">Guatemala Antigua</span><span class="marquee-dot">·</span>
-    <span class="marquee-item">Kenya AA</span><span class="marquee-dot">·</span>
-    <span class="marquee-item">Costa Rica Tarrazu</span><span class="marquee-dot">·</span>
-    <span class="marquee-item">Brazil Cerrado</span><span class="marquee-dot">·</span>
-    <span class="marquee-item">Ethiopia Yirgacheffe</span><span class="marquee-dot">·</span>
-    <span class="marquee-item">Colombia Huila</span><span class="marquee-dot">·</span>
-    <span class="marquee-item">Guatemala Antigua</span><span class="marquee-dot">·</span>
-    <span class="marquee-item">Kenya AA</span><span class="marquee-dot">·</span>
-    <span class="marquee-item">Costa Rica Tarrazu</span><span class="marquee-dot">·</span>
-    <span class="marquee-item">Brazil Cerrado</span><span class="marquee-dot">·</span>
+  <div class="marquee-track" id="marquee-track">
+    <span class="marquee-item">Зареждане...</span>
   </div>
 </div>
 
@@ -365,6 +354,22 @@
 </footer>
 
 <!-- ── JS ── -->
+<script>
+(async () => {
+  try {
+    const res = await fetch('https://qgqgxlzrvltzmtpnldfx.supabase.co/rest/v1/products?select=name&order=created_at.asc', {
+      headers: { 'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFncWd4bHpydmx0em10cG5sZGZ4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc0NjA3MjgsImV4cCI6MjA5MzAzNjcyOH0.pkhjrZYilK_htUSBE-1Sbjzt-8-7zn28D8mUK3rVIXg' }
+    });
+    const items = await res.json();
+    if (!items.length) return;
+    const track = document.getElementById('marquee-track');
+    const html = [...items, ...items].map(p =>
+      `<span class="marquee-item">${p.name}</span><span class="marquee-dot">·</span>`
+    ).join('');
+    track.innerHTML = html;
+  } catch(e) { console.warn('Marquee error', e); }
+})();
+</script>
 <script src="./script.js"></script>
 </body>
 </html>
