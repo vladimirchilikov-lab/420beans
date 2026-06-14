@@ -35,7 +35,7 @@ module.exports = async (req, res) => {
       category: p.category || 'filter',
       badge: '',
       image: p.image_url || '',
-      price: (p.price || 0) / 100, // cents → euros
+      price: p.price || 0, // cents → euros
       roast: 50,
       stripeLink: '',
 
