@@ -698,3 +698,48 @@ footer { background: var(--ink); padding: 80px 48px 40px; }
   .hero-title { font-size: clamp(2.5rem, 14vw, 4rem); }
   .process-steps { grid-template-columns: 1fr; }
 }
+
+/* ── WEIGHT SELECTOR ── */
+.weight-selector {
+  display: flex;
+  gap: 6px;
+  margin: 8px 0;
+}
+.weight-btn {
+  flex: 1;
+  padding: 6px 0;
+  border: 1px solid rgba(26,21,18,0.15);
+  background: transparent;
+  color: var(--ash);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: 'DM Mono', monospace;
+}
+.weight-btn:hover {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+.weight-btn.active {
+  background: var(--ink);
+  color: var(--cream);
+  border-color: var(--ink);
+  font-weight: 600;
+}
+
+/* ── SHIPPING BANNER ── */
+#shipping-banner {
+  display: none;
+  text-align: center;
+  padding: 10px 16px;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-family: 'DM Mono', monospace;
+  position: sticky;
+  top: 0;
+  z-index: 99;
+  transition: all 0.3s;
+}
