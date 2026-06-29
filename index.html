@@ -5,62 +5,134 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <!-- ── SEO ── -->
-<title>420 Beans — Specialty Coffee | Специалти Кафе</title>
-<meta name="description" content="420 Beans — specialty coffee with verified farm-to-cup traceability. Light, medium and dark roasts delivered fresh. Специалти кафе с проследим произход. Доставено прясно.">
-<meta name="keywords" content="specialty coffee, coffee Bulgaria, 420 beans, single origin, специалти кафе, кафе България">
+<title>420 Beans — Specialty Coffee | Специално Кафе</title>
+<meta name="description" content="420 Beans — specialty coffee with verified farm-to-cup traceability. Light, medium and dark roasts delivered fresh. Специално кафе с проследим произход. Доставено прясно.">
+<meta name="keywords" content="specialty coffee, coffee Bulgaria, 420 beans, single origin, специално кафе, кафе България">
 <meta property="og:title" content="420 Beans — Specialty Coffee">
 <meta property="og:description" content="Carefully selected high-quality coffee focused on flavour profile and traceable single-farm origin.">
 <meta property="og:type" content="website">
 <meta name="theme-color" content="#1A1512">
 
-<!-- ── FONTS — single link with display=swap, crossorigin required for CORS ── -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Mono:wght@300;400&display=swap">
 
-<!-- ── FAVICON — inline SVG prevents 404 ── -->
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>☕</text></svg>">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg stroke='%23C8A97A' stroke-width='4' stroke-linecap='round'%3E%3Cline x1='50' y1='6' x2='50' y2='16'/%3E%3Cline x1='32' y1='10' x2='36' y2='19'/%3E%3Cline x1='68' y1='10' x2='64' y2='19'/%3E%3Cline x1='18' y1='20' x2='25' y2='27'/%3E%3Cline x1='82' y1='20' x2='75' y2='27'/%3E%3Cline x1='10' y1='36' x2='19' y2='40'/%3E%3Cline x1='90' y1='36' x2='81' y2='40'/%3E%3C/g%3E%3Cellipse cx='50' cy='62' rx='18' ry='24' fill='%23C8A97A'/%3E%3Cpath d='M50 40 Q42 50 50 62 Q58 74 50 84' stroke='%23F5F0E8' stroke-width='3' fill='none'/%3E%3C/svg%3E">
 
-<!-- ── STRIPE.JS ── -->
 <script src="https://js.stripe.com/v3/" defer></script>
 
-<!-- ── STYLES ── -->
 <link rel="stylesheet" href="./style.css">
 
-<!-- ── Font fallback: text visible before webfont arrives ── -->
 <style>
   body{font-family:'DM Mono','Courier New',monospace}
   h1,h2,h3,.nav-logo,.product-name,.intro-heading,.process-title,.sub-title,.footer-brand,.hero-title,.cart-title,.testimonial-text{font-family:'Playfair Display',Georgia,'Times New Roman',serif}
+
+  .brand-mark {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    line-height: 0;
+  }
+  .brand-mark svg {
+    display: block !important;
+    overflow: visible;
+  }
+  .brand-mark .ray   { stroke: #C8A97A; stroke-width: 4; stroke-linecap: round; opacity: 0.9; }
+  .brand-mark .bean  { fill: #C8A97A; }
+  .brand-mark .crack { stroke: #F5F0E8; stroke-width: 3; fill: none; }
+
+  .nav-logo { display: flex !important; align-items: center; gap: 12px; }
+  .nav-logo .brand-mark, .nav-logo .brand-mark svg { width: 44px !important; height: 44px !important; min-width: 44px; }
+
+  .footer-brand { display: flex !important; align-items: center; gap: 16px; }
+  .footer-brand .brand-mark, .footer-brand .brand-mark svg { width: 48px !important; height: 48px !important; min-width: 48px; }
+
+  .loader-logo { display: flex !important; align-items: center; gap: 14px; }
+  .loader-logo .brand-mark, .loader-logo .brand-mark svg { width: 40px !important; height: 40px !important; min-width: 40px; }
+
+  .hero-number { display: flex !important; align-items: center; justify-content: center; }
+  .hero-number .brand-mark, .hero-number .brand-mark svg { width: 320px !important; height: 320px !important; }
+  .hero-number .brand-mark .ray   { stroke: #C8A97A; opacity: 0.35; }
+  .hero-number .brand-mark .bean  { fill: #C8A97A; opacity: 0.35; }
+  .hero-number .brand-mark .crack { stroke: #1A1512; opacity: 0.18; }
+  @media (min-width: 900px) {
+    .hero-number .brand-mark, .hero-number .brand-mark svg { width: 420px !important; height: 420px !important; }
+  }
+
+  .sub-big-text-wrap { display: flex !important; flex-direction: column; align-items: center; gap: 18px; }
+  .sub-big-text-wrap .brand-mark, .sub-big-text-wrap .brand-mark svg { width: 110px !important; height: 110px !important; }
+  .sub-big-text-wrap .brand-mark .ray   { stroke: #C8A97A; opacity: 0.6; }
+  .sub-big-text-wrap .brand-mark .bean  { fill: #C8A97A; opacity: 0.6; }
+  .sub-big-text-wrap .brand-mark .crack { stroke: #F5F0E8; opacity: 0.4; }
+
+  .hero-logo-badge {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.2s forwards;
+  }
+  .hero-logo-badge .brand-mark, .hero-logo-badge .brand-mark svg { width: 52px !important; height: 52px !important; min-width: 52px; }
+  .hero-logo-badge .badge-text {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: #9A9088;
+    line-height: 1.6;
+  }
+  .hero-logo-badge .badge-text strong {
+    display: block;
+    color: #1A1512;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
 </style>
 </head>
 <body>
 
-<!-- ── CHECKOUT LOADER ── -->
 <div class="checkout-loader" id="checkoutLoader">
-  <div class="loader-logo">420 <span>Beans</span></div>
+  <div class="loader-logo">
+    <span class="brand-mark" aria-hidden="true">
+      <svg width="40" height="40" viewBox="0 0 100 100" fill="none">
+        <g class="ray">
+          <line x1="50" y1="6" x2="50" y2="16"/>
+          <line x1="32" y1="10" x2="36" y2="19"/>
+          <line x1="68" y1="10" x2="64" y2="19"/>
+          <line x1="18" y1="20" x2="25" y2="27"/>
+          <line x1="82" y1="20" x2="75" y2="27"/>
+          <line x1="10" y1="36" x2="19" y2="40"/>
+          <line x1="90" y1="36" x2="81" y2="40"/>
+        </g>
+        <ellipse class="bean" cx="50" cy="62" rx="18" ry="24"/>
+        <path class="crack" d="M50 40 Q42 50 50 62 Q58 74 50 84"/>
+      </svg>
+    </span>
+    420 <span>Beans</span>
+  </div>
   <div class="loader-spinner"></div>
   <p class="loader-text" id="loaderText">Redirecting to payment...</p>
 </div>
 
-<!-- ── ERROR BANNER ── -->
 <div class="error-banner" id="errorBanner">
   <span id="errorMsg">Payment error. Please try again.</span>
   <button class="error-close" onclick="hideError()">×</button>
 </div>
 
-<!-- ── CURSOR ── -->
 <div class="cursor" id="cursor"></div>
 <div class="cursor-ring" id="cursorRing"></div>
 
-<!-- ── OVERLAY ── -->
 <div class="overlay" id="overlay" onclick="closeCart()"></div>
 
-<!-- ── TOAST ── -->
 <div class="toast" id="toast"></div>
 
-<!-- ══════════════════════════════════════════════
-     CART DRAWER
-═══════════════════════════════════════════════ -->
 <div class="cart-drawer" id="cartDrawer">
   <div class="cart-header">
     <div class="cart-title" data-i18n="cart.title">Your Cart</div>
@@ -80,11 +152,25 @@
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════════
-     NAV
-═══════════════════════════════════════════════ -->
 <nav id="mainNav">
-  <a href="./" class="nav-logo">420 <span>Beans</span></a>
+  <a href="./" class="nav-logo">
+    <span class="brand-mark" aria-hidden="true">
+      <svg width="44" height="44" viewBox="0 0 100 100" fill="none">
+        <g class="ray">
+          <line x1="50" y1="6" x2="50" y2="16"/>
+          <line x1="32" y1="10" x2="36" y2="19"/>
+          <line x1="68" y1="10" x2="64" y2="19"/>
+          <line x1="18" y1="20" x2="25" y2="27"/>
+          <line x1="82" y1="20" x2="75" y2="27"/>
+          <line x1="10" y1="36" x2="19" y2="40"/>
+          <line x1="90" y1="36" x2="81" y2="40"/>
+        </g>
+        <ellipse class="bean" cx="50" cy="62" rx="18" ry="24"/>
+        <path class="crack" d="M50 40 Q42 50 50 62 Q58 74 50 84"/>
+      </svg>
+    </span>
+    420 <span>Beans</span>
+  </a>
   <ul class="nav-links">
     <li><a href="#shop"      data-i18n="nav.shop">Shop</a></li>
     <li><a href="#process"   data-i18n="nav.process">Process</a></li>
@@ -103,11 +189,26 @@
   </div>
 </nav>
 
-<!-- ══════════════════════════════════════════════
-     HERO
-═══════════════════════════════════════════════ -->
 <section class="hero">
   <div class="hero-left">
+    <div class="hero-logo-badge" aria-hidden="true">
+      <span class="brand-mark">
+        <svg width="52" height="52" viewBox="0 0 100 100" fill="none">
+          <g class="ray">
+            <line x1="50" y1="6" x2="50" y2="16"/>
+            <line x1="32" y1="10" x2="36" y2="19"/>
+            <line x1="68" y1="10" x2="64" y2="19"/>
+            <line x1="18" y1="20" x2="25" y2="27"/>
+            <line x1="82" y1="20" x2="75" y2="27"/>
+            <line x1="10" y1="36" x2="19" y2="40"/>
+            <line x1="90" y1="36" x2="81" y2="40"/>
+          </g>
+          <ellipse class="bean" cx="50" cy="62" rx="18" ry="24"/>
+          <path class="crack" d="M50 40 Q42 50 50 62 Q58 74 50 84"/>
+        </svg>
+      </span>
+      <span class="badge-text"><strong>420 Beans</strong>Specialty Coffee</span>
+    </div>
     <p class="hero-eyebrow" data-i18n="hero.eyebrow">Specialty Coffee — Est. 2024</p>
     <h1 class="hero-title" data-i18n-html="hero.title">
       Obsess<em>ively</em><br>Good<br>Coffee.
@@ -134,7 +235,23 @@
         </div>
       </div>
     </div>
-    <div class="hero-number">420</div>
+    <div class="hero-number" aria-hidden="true">
+      <span class="brand-mark">
+        <svg width="320" height="320" viewBox="0 0 100 100" fill="none">
+          <g class="ray">
+            <line x1="50" y1="6" x2="50" y2="16"/>
+            <line x1="32" y1="10" x2="36" y2="19"/>
+            <line x1="68" y1="10" x2="64" y2="19"/>
+            <line x1="18" y1="20" x2="25" y2="27"/>
+            <line x1="82" y1="20" x2="75" y2="27"/>
+            <line x1="10" y1="36" x2="19" y2="40"/>
+            <line x1="90" y1="36" x2="81" y2="40"/>
+          </g>
+          <ellipse class="bean" cx="50" cy="62" rx="18" ry="24"/>
+          <path class="crack" d="M50 40 Q42 50 50 62 Q58 74 50 84"/>
+        </svg>
+      </span>
+    </div>
   </div>
   <div class="hero-scroll">
     <div class="scroll-line"></div>
@@ -142,18 +259,23 @@
   </div>
 </section>
 
-<!-- ══════════════════════════════════════════════
-     MARQUEE
-═══════════════════════════════════════════════ -->
 <div class="marquee-wrap" aria-hidden="true">
-  <div class="marquee-track" id="marquee-track">
-    <span class="marquee-item">Зареждане...</span>
+  <div class="marquee-track">
+    <span class="marquee-item">Ethiopia Yirgacheffe</span><span class="marquee-dot">·</span>
+    <span class="marquee-item">Colombia Huila</span><span class="marquee-dot">·</span>
+    <span class="marquee-item">Guatemala Antigua</span><span class="marquee-dot">·</span>
+    <span class="marquee-item">Kenya AA</span><span class="marquee-dot">·</span>
+    <span class="marquee-item">Costa Rica Tarrazu</span><span class="marquee-dot">·</span>
+    <span class="marquee-item">Brazil Cerrado</span><span class="marquee-dot">·</span>
+    <span class="marquee-item">Ethiopia Yirgacheffe</span><span class="marquee-dot">·</span>
+    <span class="marquee-item">Colombia Huila</span><span class="marquee-dot">·</span>
+    <span class="marquee-item">Guatemala Antigua</span><span class="marquee-dot">·</span>
+    <span class="marquee-item">Kenya AA</span><span class="marquee-dot">·</span>
+    <span class="marquee-item">Costa Rica Tarrazu</span><span class="marquee-dot">·</span>
+    <span class="marquee-item">Brazil Cerrado</span><span class="marquee-dot">·</span>
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════════
-     ABOUT
-═══════════════════════════════════════════════ -->
 <section class="intro" id="about">
   <div class="intro-left reveal">
     <p class="section-label" data-i18n="about.label">Our Philosophy</p>
@@ -184,9 +306,6 @@
   </div>
 </section>
 
-<!-- ══════════════════════════════════════════════
-     COFFEE SHOP
-═══════════════════════════════════════════════ -->
 <section class="products" id="shop">
   <div class="products-header reveal">
     <h2 class="products-title">
@@ -202,17 +321,12 @@
   </div>
 
   <div class="product-grid" id="productGrid">
-    <!-- Products loaded dynamically from products.json by script.js -->
-    <!-- Loading state -->
     <div id="productsLoader" style="grid-column:1/-1;padding:80px;text-align:center;opacity:0.4;font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase">
       Loading products...
     </div>
   </div>
 </section>
 
-<!-- ══════════════════════════════════════════════
-     FEATURES
-═══════════════════════════════════════════════ -->
 <div class="feature-strip">
   <div class="feature-item reveal">
     <span class="feature-icon" aria-hidden="true">⬡</span>
@@ -236,9 +350,6 @@
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════════
-     PROCESS
-═══════════════════════════════════════════════ -->
 <section class="process" id="process">
   <div class="process-header">
     <h2 class="process-title reveal" data-i18n-html="process.title">
@@ -272,9 +383,6 @@
   </div>
 </section>
 
-<!-- ══════════════════════════════════════════════
-     SUBSCRIPTION
-═══════════════════════════════════════════════ -->
 <section class="subscription" id="subscribe">
   <div class="sub-left">
     <p class="sub-label" data-i18n="sub.label">Never Run Out</p>
@@ -294,7 +402,24 @@
   </div>
   <div class="sub-right" aria-hidden="true">
     <div class="sub-visual">
-      <div class="sub-big-text">420 BEANS</div>
+      <div class="sub-big-text-wrap">
+        <span class="brand-mark">
+          <svg width="110" height="110" viewBox="0 0 100 100" fill="none">
+            <g class="ray">
+              <line x1="50" y1="6" x2="50" y2="16"/>
+              <line x1="32" y1="10" x2="36" y2="19"/>
+              <line x1="68" y1="10" x2="64" y2="19"/>
+              <line x1="18" y1="20" x2="25" y2="27"/>
+              <line x1="82" y1="20" x2="75" y2="27"/>
+              <line x1="10" y1="36" x2="19" y2="40"/>
+              <line x1="90" y1="36" x2="81" y2="40"/>
+            </g>
+            <ellipse class="bean" cx="50" cy="62" rx="18" ry="24"/>
+            <path class="crack" d="M50 40 Q42 50 50 62 Q58 74 50 84"/>
+          </svg>
+        </span>
+        <div class="sub-big-text">420 BEANS</div>
+      </div>
       <div class="sub-cups">
         <div class="cup"><div class="cup-top"></div><div class="cup-liquid"></div></div>
         <div class="cup"><div class="cup-top"></div><div class="cup-liquid"></div></div>
@@ -304,14 +429,27 @@
   </div>
 </section>
 
-
-<!-- ══════════════════════════════════════════════
-     FOOTER
-═══════════════════════════════════════════════ -->
 <footer>
   <div class="footer-top">
     <div>
-      <div class="footer-brand">420 <span>Beans</span></div>
+      <div class="footer-brand">
+        <span class="brand-mark" aria-hidden="true">
+          <svg width="48" height="48" viewBox="0 0 100 100" fill="none">
+            <g class="ray">
+              <line x1="50" y1="6" x2="50" y2="16"/>
+              <line x1="32" y1="10" x2="36" y2="19"/>
+              <line x1="68" y1="10" x2="64" y2="19"/>
+              <line x1="18" y1="20" x2="25" y2="27"/>
+              <line x1="82" y1="20" x2="75" y2="27"/>
+              <line x1="10" y1="36" x2="19" y2="40"/>
+              <line x1="90" y1="36" x2="81" y2="40"/>
+            </g>
+            <ellipse class="bean" cx="50" cy="62" rx="18" ry="24"/>
+            <path class="crack" d="M50 40 Q42 50 50 62 Q58 74 50 84"/>
+          </svg>
+        </span>
+        420 <span>Beans</span>
+      </div>
       <p class="footer-tagline" data-i18n="footer.tagline">
         Specialty coffee with traceable single-farm origin. Roasted with obsession. Delivered with care.
       </p>
@@ -353,23 +491,6 @@
   </div>
 </footer>
 
-<!-- ── JS ── -->
-<script>
-(async () => {
-  try {
-    const res = await fetch('https://qgqgxlzrvltzmtpnldfx.supabase.co/rest/v1/products?select=name&order=created_at.asc', {
-      headers: { 'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFncWd4bHpydmx0em10cG5sZGZ4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc0NjA3MjgsImV4cCI6MjA5MzAzNjcyOH0.pkhjrZYilK_htUSBE-1Sbjzt-8-7zn28D8mUK3rVIXg' }
-    });
-    const items = await res.json();
-    if (!items.length) return;
-    const track = document.getElementById('marquee-track');
-    const html = [...items, ...items].map(p =>
-      `<span class="marquee-item">${p.name}</span><span class="marquee-dot">·</span>`
-    ).join('');
-    track.innerHTML = html;
-  } catch(e) { console.warn('Marquee error', e); }
-})();
-</script>
 <script src="./script.js"></script>
 </body>
 </html>
