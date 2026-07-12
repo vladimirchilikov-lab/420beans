@@ -2,6 +2,12 @@ const { createClient } = require('@supabase/supabase-js');
 
 module.exports = async (req, res) => {
   try {
+
+    console.log("ENV CHECK", {
+      url: !!process.env.SUPABASE_URL,
+      key: !!process.env.SUPABASE_SERVICE_KEY
+    });
+
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
 
@@ -9,13 +15,13 @@ module.exports = async (req, res) => {
       return res.status(200).end();
     }
 
-    if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_KEY) {
       throw new Error('Missing SUPABASE env variables');
     }
 
     const supabase = createClient(
       process.env.SUPABASE_URL,
-      process.env.SUPABASE_SERVICE_ROLE_KEY
+      process.env.SUPABASE_SERVICE_KEY
     );
 
     const { data, error } = await supabase
