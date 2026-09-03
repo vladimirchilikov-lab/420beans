@@ -321,6 +321,11 @@ const I18N = {
     'checkout.error': 'Could not open payment page. Please try again.',
     'shipping.banner': 'Add €{amount} more for free shipping',
     'shipping.free': '🎉 You have free shipping!',
+    'chat.title': 'Coffee Advisor',
+    'chat.subtitle': 'Ask me anything about coffee',
+    'chat.placeholder': 'Ask about a coffee or a brew method…',
+    'chat.greeting': "Hey! I'm Bean, your coffee advisor. Tell me how you brew — V60, French press, moka, espresso machine, Aeropress — or what flavours you love, and I'll point you to the right bag and recipe.",
+    'chat.error': "Sorry, I couldn't get a response. Please try again in a moment.",
   },
   bg: {
     'nav.shop': 'Магазин', 'nav.process': 'Процес', 'nav.subscribe': 'Абонамент',
@@ -365,6 +370,11 @@ const I18N = {
     'checkout.error': 'Грешка при плащане. Моля опитайте отново.',
     'shipping.banner': 'Добави още €{amount} за безплатна доставка',
     'shipping.free': '🎉 Имате безплатна доставка!',
+    'chat.title': 'Кафе консултант',
+    'chat.subtitle': 'Пита ме каквото искаш за кафето',
+    'chat.placeholder': 'Питай за кафе или начин на приготвяне…',
+    'chat.greeting': 'Здравей! Аз съм Бийн, твоят кафе консултант. Кажи ми как си правиш кафето — V60, френска преса, moka, машина за еспресо, aeropress — или какви вкусове харесваш, и ще ти посоча правилното кафе и рецепта.',
+    'chat.error': 'Извинявай, не успях да получа отговор. Опитай отново след малко.',
   },
 };
 
@@ -665,6 +675,110 @@ function initRoastBars() {
 }
 
 /* ─────────────────────────────────────────────────────
+   COFFEE ADVISOR CHAT
+───────────────────────────────────────────────────────*/
+let chatHistory = [];        // {role, content} за API-то
+let chatOpen = false;
+let chatBusy = false;
+let chatGreeted = false;
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function appendChatMessage(role, text) {
+  const body = $('#chatBody');
+  if (!body) return;
+  const el = document.createElement('div');
+  el.className = `chat-msg ${role}`;
+  el.innerHTML = escapeHtml(text);
+  body.appendChild(el);
+  body.scrollTop = body.scrollHeight;
+  return el;
+}
+
+function showChatTyping() {
+  const body = $('#chatBody');
+  if (!body) return;
+  const el = document.createElement('div');
+  el.className = 'chat-typing';
+  el.id = 'chatTyping';
+  el.innerHTML = '<span></span><span></span><span></span>';
+  body.appendChild(el);
+  body.scrollTop = body.scrollHeight;
+}
+
+function hideChatTyping() {
+  $('#chatTyping')?.remove();
+}
+
+function toggleChat() { chatOpen ? closeChat() : openChat(); }
+
+function openChat() {
+  chatOpen = true;
+  $('#chatDrawer')?.classList.add('open');
+  $('#chatLauncher')?.classList.add('open');
+  if (!chatGreeted) {
+    chatGreeted = true;
+    appendChatMessage('bot', t('chat.greeting'));
+  }
+  setTimeout(() => $('#chatInput')?.focus(), 200);
+}
+
+function closeChat() {
+  chatOpen = false;
+  $('#chatDrawer')?.classList.remove('open');
+  $('#chatLauncher')?.classList.remove('open');
+}
+
+async function sendChatMessage() {
+  const input = $('#chatInput');
+  const btn = $('#chatSendBtn');
+  if (!input || chatBusy) return;
+  const text = input.value.trim();
+  if (!text) return;
+
+  appendChatMessage('user', text);
+  chatHistory.push({ role: 'user', content: text });
+  input.value = '';
+  chatBusy = true;
+  if (btn) btn.disabled = true;
+  showChatTyping();
+
+  try {
+    const res = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages: chatHistory, lang }),
+    });
+    const data = await res.json();
+    hideChatTyping();
+    if (!res.ok || !data.reply) throw new Error(data.error || 'Chat failed');
+    appendChatMessage('bot', data.reply);
+    chatHistory.push({ role: 'assistant', content: data.reply });
+  } catch (err) {
+    hideChatTyping();
+    appendChatMessage('error', t('chat.error'));
+    console.warn('Chat error:', err.message);
+  } finally {
+    chatBusy = false;
+    if (btn) btn.disabled = false;
+    input.focus();
+  }
+}
+
+function initChat() {
+  $('#chatInput')?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendChatMessage();
+    }
+  });
+}
+
+/* ─────────────────────────────────────────────────────
    INIT
 ───────────────────────────────────────────────────────*/
 document.addEventListener('DOMContentLoaded', async () => {
@@ -677,6 +791,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   initReveal();
   initFilters();
   initRoastBars();
+  initChat();
   setLang(lang); // прилага активния бутон
 });
 
@@ -691,3 +806,7 @@ window.startCheckout  = startCheckout;
 window.handleSubscribe = handleSubscribe;
 window.hideError      = hideError;
 window.selectWeight   = selectWeight;
+window.toggleChat     = toggleChat;
+window.openChat       = openChat;
+window.closeChat      = closeChat;
+window.sendChatMessage = sendChatMessage;
