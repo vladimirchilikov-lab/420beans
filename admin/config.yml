@@ -8,6 +8,7 @@ media_folder: "images"
 public_folder: "/images"
 
 collections:
+
   - name: "products"
     label: "Products"
     folder: "products"
@@ -17,3 +18,102 @@ collections:
     fields:
       - { name: title, label: Title, widget: string }
       - { name: price, label: Price, widget: number }
+
+  - name: "site_texts"
+    label: "Текстове на сайта"
+    files:
+
+      - label: "Основни текстове"
+        name: "texts"
+        file: "_data/texts.json"
+        fields:
+
+          - label: "Hero"
+            name: "hero"
+            widget: "object"
+            fields:
+              - { name: eyebrowBG, label: "Малък текст — BG", widget: string }
+              - { name: eyebrowEN, label: "Малък текст — EN", widget: string }
+              - { name: descBG, label: "Описание — BG", widget: text }
+              - { name: descEN, label: "Описание — EN", widget: text }
+
+          - label: "За нас"
+            name: "about"
+            widget: "object"
+            fields:
+              - { name: labelBG, label: "Етикет — BG", widget: string }
+              - { name: labelEN, label: "Етикет — EN", widget: string }
+              - { name: headingBG, label: "Заглавие — BG", widget: text }
+              - { name: headingEN, label: "Заглавие — EN", widget: text }
+              - { name: bodyBG, label: "Текст — BG", widget: text }
+              - { name: bodyEN, label: "Текст — EN", widget: text }
+              - { name: stat1BG, label: "Статистика 1 — BG", widget: string }
+              - { name: stat1EN, label: "Статистика 1 — EN", widget: string }
+              - { name: stat2BG, label: "Статистика 2 — BG", widget: string }
+              - { name: stat2EN, label: "Статистика 2 — EN", widget: string }
+              - { name: stat3BG, label: "Статистика 3 — BG", widget: string }
+              - { name: stat3EN, label: "Статистика 3 — EN", widget: string }
+              - { name: stat4BG, label: "Статистика 4 — BG", widget: string }
+              - { name: stat4EN, label: "Статистика 4 — EN", widget: string }
+
+          - label: "Процес"
+            name: "process"
+            widget: "object"
+            fields:
+              - { name: bodyBG, label: "Описание — BG", widget: text }
+              - { name: bodyEN, label: "Описание — EN", widget: text }
+              - { name: step1TitleBG, label: "Стъпка 1 заглавие — BG", widget: string }
+              - { name: step1TitleEN, label: "Стъпка 1 заглавие — EN", widget: string }
+              - { name: step1DescBG, label: "Стъпка 1 описание — BG", widget: text }
+              - { name: step1DescEN, label: "Стъпка 1 описание — EN", widget: text }
+              - { name: step2TitleBG, label: "Стъпка 2 заглавие — BG", widget: string }
+              - { name: step2TitleEN, label: "Стъпка 2 заглавие — EN", widget: string }
+              - { name: step2DescBG, label: "Стъпка 2 описание — BG", widget: text }
+              - { name: step2DescEN, label: "Стъпка 2 описание — EN", widget: text }
+              - { name: step3TitleBG, label: "Стъпка 3 заглавие — BG", widget: string }
+              - { name: step3TitleEN, label: "Стъпка 3 заглавие — EN", widget: string }
+              - { name: step3DescBG, label: "Стъпка 3 описание — BG", widget: text }
+              - { name: step3DescEN, label: "Стъпка 3 описание — EN", widget: text }
+              - { name: step4TitleBG, label: "Стъпка 4 заглавие — BG", widget: string }
+              - { name: step4TitleEN, label: "Стъпка 4 заглавие — EN", widget: string }
+              - { name: step4DescBG, label: "Стъпка 4 описание — BG", widget: text }
+              - { name: step4DescEN, label: "Стъпка 4 описание — EN", widget: text }
+
+          - label: "Предимства"
+            name: "features"
+            widget: "object"
+            fields:
+              - { name: feat1TitleBG, label: "Предимство 1 заглавие — BG", widget: string }
+              - { name: feat1TitleEN, label: "Предимство 1 заглавие — EN", widget: string }
+              - { name: feat1DescBG, label: "Предимство 1 описание — BG", widget: text }
+              - { name: feat1DescEN, label: "Предимство 1 описание — EN", widget: text }
+              - { name: feat2TitleBG, label: "Предимство 2 заглавие — BG", widget: string }
+              - { name: feat2TitleEN, label: "Предимство 2 заглавие — EN", widget: string }
+              - { name: feat2DescBG, label: "Предимство 2 описание — BG", widget: text }
+              - { name: feat2DescEN, label: "Предимство 2 описание — EN", widget: text }
+              - { name: feat3TitleBG, label: "Предимство 3 заглавие — BG", widget: string }
+              - { name: feat3TitleEN, label: "Предимство 3 заглавие — EN", widget: string }
+              - { name: feat3DescBG, label: "Предимство 3 описание — BG", widget: text }
+              - { name: feat3DescEN, label: "Предимство 3 описание — EN", widget: text }
+              - { name: feat4TitleBG, label: "Предимство 4 заглавие — BG", widget: string }
+              - { name: feat4TitleEN, label: "Предимство 4 заглавие — EN", widget: string }
+              - { name: feat4DescBG, label: "Предимство 4 описание — BG", widget: text }
+              - { name: feat4DescEN, label: "Предимство 4 описание — EN", widget: text }
+
+          - label: "Абонамент"
+            name: "subscribe"
+            widget: "object"
+            fields:
+              - { name: labelBG, label: "Етикет — BG", widget: string }
+              - { name: labelEN, label: "Етикет — EN", widget: string }
+              - { name: descBG, label: "Описание — BG", widget: text }
+              - { name: descEN, label: "Описание — EN", widget: text }
+
+          - label: "Footer"
+            name: "footer"
+            widget: "object"
+            fields:
+              - { name: taglineBG, label: "Tagline — BG", widget: text }
+              - { name: taglineEN, label: "Tagline — EN", widget: text }
+              - { name: copyBG, label: "Copyright — BG", widget: string }
+              - { name: copyEN, label: "Copyright — EN", widget: string }
