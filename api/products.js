@@ -24,34 +24,40 @@ module.exports = async (req, res) => {
       process.env.SUPABASE_SERVICE_KEY
     );
 
+    // select('*'), за да работи както преди, така и след добавянето на
+    // допълнителните колони (name_bg, region, badge, roast, sort_order, active ...)
     const { data, error } = await supabase
       .from('products')
-      .select('id, name, description, price, price_500, price_1000, image_url, category, created_at')
+      .select('*')
       .order('created_at', { ascending: true });
 
     if (error) throw error;
 
-    const products = (data || []).map(p => ({
+    const rows = (data || [])
+      .filter(p => p.active !== false)
+      .sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0)); // стабилно сортиране
+
+    const products = rows.map(p => ({
       id: p.id,
       category: p.category || 'filter',
-      badge: '',
+      badge: p.badge || '',
       image: p.image_url || '',
       price: p.price || 0,
       price_500: p.price_500 || (p.price * 2) || 0,
       price_1000: p.price_1000 || (p.price * 4) || 0,
-      roast: 50,
+      roast: p.roast === null || p.roast === undefined ? 50 : p.roast,
       stripeLink: '',
       en: {
         name: p.name || '',
-        region: p.category || '',
+        region: p.region || p.category || '',
         notes: p.description || '',
-        process: ''
+        process: p.process || ''
       },
       bg: {
-        name: p.name || '',
-        region: p.category || '',
-        notes: p.description || '',
-        process: ''
+        name: p.name_bg || p.name || '',
+        region: p.region_bg || p.region || p.category || '',
+        notes: p.description_bg || p.description || '',
+        process: p.process_bg || p.process || ''
       }
     }));
 
