@@ -60,6 +60,9 @@ async function loadData() {
         };
       });
       renderProducts(products);
+
+      // Populate marquee from real products (used if settings.marquee not set)
+      window._productsForMarquee = products;
     }
 
     // Settings: _data/settings.json first, admin settings from the database on top
@@ -104,14 +107,23 @@ function applySiteSettings(s) {
     }
   });
 
-  if (Array.isArray(s.marquee) && s.marquee.length) {
-    const track = $('.marquee-track');
-    if (track) {
-      const items = s.marquee.map(x => String(x).trim()).filter(Boolean);
+  // Marquee: use settings.marquee if defined, otherwise fall back to product regions
+  const track = $('.marquee-track');
+  if (track) {
+    let items = [];
+    if (Array.isArray(s.marquee) && s.marquee.length) {
+      items = s.marquee.map(x => String(x).trim()).filter(Boolean);
+    } else if (Array.isArray(window._productsForMarquee) && window._productsForMarquee.length) {
+      const lang = document.documentElement.lang || 'en';
+      items = window._productsForMarquee
+        .map(p => (lang === 'bg' && p._bg?.region) ? p._bg.region : (p._en?.region || p.region || ''))
+        .map(r => r.trim()).filter(Boolean);
+    }
+    if (items.length) {
       const once = items
         .map(x => `<span class="marquee-item">${escapeHtml(x)}</span><span class="marquee-dot">·</span>`)
         .join('');
-      if (once) track.innerHTML = once + once;
+      track.innerHTML = once + once;
     }
   }
 }
