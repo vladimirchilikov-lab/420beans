@@ -47,7 +47,7 @@
     "feat1DescEN": "We source directly from producers with verified traceability to specific farms.",
     "feat1DescBG": "Набираме директно от производители с верифициран проследим произход до конкретна ферма.",
     "feat2TitleEN": "Roasted Fresh",
-    "feat2TitleBG": "Прясно препечено",
+    "feat2TitleBG": "Прясно изпечено",
     "feat2DescEN": "Every batch is roasted to order and ships within 24 hours of your purchase.",
     "feat2DescBG": "Всяка партида се пече по поръчка и се изпраща в рамките на 24 часа.",
     "feat3TitleEN": "Traceable Origin",
@@ -56,8 +56,8 @@
     "feat3DescBG": "Пълна прозрачност — всяка торбичка е проследима до конкретна ферма и реколта.",
     "feat4TitleEN": "Free Shipping",
     "feat4TitleBG": "Безплатна доставка",
-    "feat4DescEN": "Complimentary shipping on all orders over €30. No codes required.",
-    "feat4DescBG": "Безплатна доставка за всички поръчки над €30. Без кодове."
+    "feat4DescEN": "Complimentary shipping on all orders over €35. No codes required.",
+    "feat4DescBG": "Безплатна доставка за всички поръчки над €35. Без кодове."
   },
   "subscribe": {
     "labelEN": "Never Run Out",
@@ -69,7 +69,7 @@
   },
   "footer": {
     "taglineEN": "Specialty coffee with traceable origin. Roasted with obsession. Delivered with care.",
-    "taglineBG": "Специалти кафе с проследим произход. Препечено с обсесия. Доставено с грижа.",
+    "taglineBG": "Специалти кафе с проследим произход. Изпечено с обсесия. Доставено с грижа.",
     "copyEN": "© 2024 420 Beans. All rights reserved.",
     "copyBG": "© 2024 420 Beans. Всички права запазени."
   }
