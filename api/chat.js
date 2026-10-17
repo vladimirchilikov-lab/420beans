@@ -195,7 +195,7 @@ module.exports = async function handler(req, res) {
 
     const { data: products, error: productsError } = await supabase
       .from('products')
-      .select('name, description, price, category')
+      .select('name, name_bg, description, description_bg, price, category')
       .limit(100);
 
     let catalogBlock = '';
@@ -205,14 +205,21 @@ module.exports = async function handler(req, res) {
         ? { product: 'Product', description: 'Description', price: 'Price', category: 'Category', missing: 'not specified' }
         : { product: 'Продукт', description: 'Описание', price: 'Цена', category: 'Категория', missing: 'не е посочена' };
 
+    function localized(product, field) {
+      const primary = lang === 'en' ? field : field + '_bg';
+      const fallback = lang === 'en' ? field + '_bg' : field;
+
+      return product[primary] || product[fallback] || '';
+    }
+
     if (productsError) {
       console.error('Supabase products error:', productsError.message);
     } else if (Array.isArray(products) && products.length > 0) {
       catalogBlock = products
         .map(function (product) {
           return [
-            labels.product + ': ' + (product.name || labels.missing),
-            labels.description + ': ' + (product.description || labels.missing),
+            labels.product + ': ' + (localized(product, 'name') || labels.missing),
+            labels.description + ': ' + (localized(product, 'description') || labels.missing),
             labels.price + ': ' + formatPrice(product, lang),
             labels.category + ': ' + (product.category || labels.missing)
           ].join('\n');
