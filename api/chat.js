@@ -1,6 +1,6 @@
 const { createClient } = require('@supabase/supabase-js');
 
-const OPENROUTER_MODEL = 'mistralai/mistral-7b-instruct:free';
+const GROQ_MODEL = 'llama-3.3-70b-versatile';
 const MAX_TURNS = 8;          // колко последни съобщения пазим (потребител + бот)
 const MAX_MSG_LEN = 600;      // макс. дължина на едно съобщение от потребителя
 const MAX_TOKENS = 500;
@@ -52,8 +52,8 @@ module.exports = async (req, res) => {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   try {
-    if (!process.env.OPENROUTER_API_KEY) {
-      throw new Error('Missing OPENROUTER_API_KEY env variable');
+    if (!process.env.GROQ_API_KEY) {
+      throw new Error('Missing GROQ_API_KEY env variable');
     }
 
     const { messages, lang } = req.body || {};
@@ -88,16 +88,14 @@ module.exports = async (req, res) => {
 
     const systemPrompt = buildSystemPrompt(buildCatalogBlock(products), lang === 'en' ? 'en' : 'bg');
 
-    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
-        'HTTP-Referer': 'https://420beans.vercel.app',
-        'X-Title': '420 Beans Coffee Advisor',
+        'Authorization': `Bearer ${process.env.GROQ_API_KEY}`,
       },
       body: JSON.stringify({
-        model: OPENROUTER_MODEL,
+        model: GROQ_MODEL,
         max_tokens: MAX_TOKENS,
         messages: [
           { role: 'system', content: systemPrompt },
@@ -108,7 +106,7 @@ module.exports = async (req, res) => {
 
     if (!response.ok) {
       const errText = await response.text();
-      console.error('OpenRouter API error:', response.status, errText);
+      console.error('Groq API error:', response.status, errText);
       throw new Error(`AI service error ${response.status}: ${errText.slice(0, 200)}`);
     }
 
