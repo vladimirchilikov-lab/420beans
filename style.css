@@ -268,16 +268,16 @@ nav.scrolled {
   border-top: 1px solid rgba(255,255,255,0.06);
 }
 .marquee-track {
-  display: flex; white-space: nowrap;
+  display: flex; white-space: nowrap; width: max-content; will-change: transform;
 }
 .marquee-track.is-ready {
-  animation: marquee 22s linear infinite;
+  animation: marquee 28s linear infinite;
 }
 .marquee-item {
   font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase;
   color: rgba(255,255,255,0.4); padding: 0 48px; flex-shrink: 0;
 }
-.marquee-dot { color: var(--warm); padding: 0 8px; }
+.marquee-dot { color: var(--warm); padding: 0 8px; flex-shrink: 0; }
 @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
 /* ── SECTION COMMON ── */
