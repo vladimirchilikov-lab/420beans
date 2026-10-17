@@ -1,6 +1,6 @@
 const { createClient } = require('@supabase/supabase-js');
 
-const GROQ_MODEL = 'llama-3.3-70b-versatile';
+const GROQ_MODEL = 'llama-3.3-70b-specdec';
 const MAX_TURNS = 8;          // колко последни съобщения пазим (потребител + бот)
 const MAX_MSG_LEN = 600;      // макс. дължина на едно съобщение от потребителя
 const MAX_TOKENS = 500;
