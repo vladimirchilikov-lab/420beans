@@ -48,7 +48,7 @@ function sendError(res, status, message) {
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST');
-    return sendError(res, 405, 'Методът не е разрешен.');
+    return sendError(res, 405, 'Методът не е разрешен. [v2]');
   }
 
   const GROQ_API_KEY = process.env.GROQ_API_KEY;
