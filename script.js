@@ -116,8 +116,12 @@ function applySiteSettings(s) {
     } else if (Array.isArray(window._productsForMarquee) && window._productsForMarquee.length) {
       const lang = document.documentElement.lang || 'en';
       items = window._productsForMarquee
-        .map(p => (lang === 'bg' && p._bg?.region) ? p._bg.region : (p._en?.region || p.region || ''))
-        .map(r => r.trim()).filter(Boolean);
+        .map(p => {
+          const region = (lang === 'bg' && p._bg?.region) ? p._bg.region : (p._en?.region || p.region || '');
+          // fallback to product name if region is missing
+          return region.trim() || (lang === 'bg' ? (p.bg || p._bg?.name || p.en || '') : (p.en || p._en?.name || ''));
+        })
+        .map(r => String(r).trim()).filter(Boolean);
     }
     if (items.length) {
       const once = items
