@@ -3,6 +3,9 @@ const { createClient } = require('@supabase/supabase-js');
 const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
 const GROQ_MODEL = 'openai/gpt-oss-120b';
 
+const OPENROUTER_API_URL = 'https://openrouter.ai/api/v1/chat/completions';
+const OPENROUTER_MODEL = 'openai/gpt-4o-mini';
+
 const MAX_MESSAGES = 20;
 const MAX_MESSAGE_LENGTH = 2000;
 
@@ -90,6 +93,35 @@ function formatPrice(product) {
   return '€' + (cents / 100).toFixed(2) + ' за ' + PRICE_UNIT_GRAMS + ' г';
 }
 
+async function requestCompletion(url, apiKey, payload) {
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        Authorization: 'Bearer ' + apiKey,
+        'Content-Type': 'application/json',
+        'HTTP-Referer': 'https://420beans.vercel.app',
+        'X-Title': '420 Beans chat'
+      },
+      body: JSON.stringify(payload)
+    });
+
+    const result = await response.json();
+
+    return {
+      ok: response.ok,
+      status: response.status,
+      result: result
+    };
+  } catch (error) {
+    return {
+      ok: false,
+      status: 0,
+      result: { error: error && error.message ? error.message : String(error) }
+    };
+  }
+}
+
 function sendError(res, status, message) {
   return res.status(status).json({ error: message });
 }
@@ -101,11 +133,12 @@ module.exports = async function handler(req, res) {
   }
 
   const GROQ_API_KEY = process.env.GROQ_API_KEY;
+  const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
   const SUPABASE_URL = process.env.SUPABASE_URL;
   const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
 
-  if (!GROQ_API_KEY) {
-    console.error('Missing GROQ_API_KEY');
+  if (!GROQ_API_KEY && !OPENROUTER_API_KEY) {
+    console.error('Missing GROQ_API_KEY and OPENROUTER_API_KEY');
     return sendError(res, 500, 'Чатът временно не е конфигуриран.');
   }
 
@@ -178,43 +211,73 @@ module.exports = async function handler(req, res) {
 
     const systemPrompt = buildSystemPrompt(catalogBlock, lang);
 
-    const groqResponse = await fetch(GROQ_API_URL, {
-      method: 'POST',
-      headers: {
-        Authorization: 'Bearer ' + GROQ_API_KEY,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
+    stage = 'llm-call';
+
+    const providerMessages = [
+      {
+        role: 'system',
+        content: systemPrompt
+      }
+    ].concat(validMessages);
+
+    let result = null;
+    let usedProvider = null;
+
+    if (OPENROUTER_API_KEY) {
+      const openRouter = await requestCompletion(
+        OPENROUTER_API_URL,
+        OPENROUTER_API_KEY,
+        {
+          model: OPENROUTER_MODEL,
+          messages: providerMessages,
+          temperature: 0.5,
+          max_tokens: 800,
+          stream: false
+        }
+      );
+
+      if (openRouter.ok) {
+        result = openRouter.result;
+        usedProvider = 'openrouter';
+      } else {
+        console.error(
+          'OpenRouter failed, falling back to Groq:',
+          openRouter.status,
+          JSON.stringify(openRouter.result).slice(0, 500)
+        );
+      }
+    }
+
+    if (!result) {
+      const groq = await requestCompletion(GROQ_API_URL, GROQ_API_KEY, {
         model: GROQ_MODEL,
-        messages: [
-          {
-            role: 'system',
-            content: systemPrompt
-          }
-        ].concat(validMessages),
+        messages: providerMessages,
         temperature: 0.5,
         max_completion_tokens: 4096,
         reasoning_effort: 'medium',
         include_reasoning: false,
         stream: false
-      })
-    });
+      });
 
-    const result = await groqResponse.json();
+      if (!groq.ok) {
+        console.error(
+          'Groq API error:',
+          groq.status,
+          JSON.stringify(groq.result).slice(0, 2000)
+        );
 
-    if (!groqResponse.ok) {
-      console.error(
-        'Groq API error:',
-        groqResponse.status,
-        JSON.stringify(result).slice(0, 2000)
-      );
+        return sendError(
+          res,
+          502,
+          'В момента не мога да отговоря. Моля, опитай отново след малко.'
+        );
+      }
 
-      return sendError(
-        res,
-        502,
-        'В момента не мога да отговоря. Моля, опитай отново след малко.'
-      );
+      result = groq.result;
+      usedProvider = 'groq';
     }
+
+    res.setHeader('X-Chat-Provider', usedProvider || 'none');
 
     const choice =
       result && Array.isArray(result.choices) && result.choices.length > 0
