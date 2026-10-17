@@ -83,14 +83,20 @@ function toPlainText(text) {
     .trim();
 }
 
-function formatPrice(product) {
+function formatPrice(product, lang) {
   const cents = product && product.price;
 
   if (typeof cents !== 'number' || !isFinite(cents)) {
-    return 'Няма посочена цена';
+    return lang === 'en' ? 'no price listed' : 'няма посочена цена';
   }
 
-  return '€' + (cents / 100).toFixed(2) + ' за ' + PRICE_UNIT_GRAMS + ' г';
+  const amount = (cents / 100).toFixed(2);
+
+  if (lang === 'en') {
+    return '€' + amount + ' for ' + PRICE_UNIT_GRAMS + ' g';
+  }
+
+  return amount.replace('.', ',') + ' € за ' + PRICE_UNIT_GRAMS + ' г';
 }
 
 async function requestCompletion(url, apiKey, payload) {
@@ -194,16 +200,21 @@ module.exports = async function handler(req, res) {
 
     let catalogBlock = '';
 
+    const labels =
+      lang === 'en'
+        ? { product: 'Product', description: 'Description', price: 'Price', category: 'Category', missing: 'not specified' }
+        : { product: 'Продукт', description: 'Описание', price: 'Цена', category: 'Категория', missing: 'не е посочена' };
+
     if (productsError) {
       console.error('Supabase products error:', productsError.message);
     } else if (Array.isArray(products) && products.length > 0) {
       catalogBlock = products
         .map(function (product) {
           return [
-            'Продукт: ' + (product.name || 'Без име'),
-            'Описание: ' + (product.description || 'Няма описание'),
-            'Цена: ' + formatPrice(product),
-            'Категория: ' + (product.category || 'Не е посочена')
+            labels.product + ': ' + (product.name || labels.missing),
+            labels.description + ': ' + (product.description || labels.missing),
+            labels.price + ': ' + formatPrice(product, lang),
+            labels.category + ': ' + (product.category || labels.missing)
           ].join('\n');
         })
         .join('\n\n');
