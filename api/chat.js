@@ -48,7 +48,7 @@ function sendError(res, status, message) {
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST');
-    return sendError(res, 405, 'Методът не е разрешен. [v2]');
+    return sendError(res, 405, 'Методът не е разрешен.');
   }
 
   const GROQ_API_KEY = process.env.GROQ_API_KEY;
@@ -65,13 +65,10 @@ module.exports = async function handler(req, res) {
     return sendError(res, 500, 'Каталогът временно не е достъпен.');
   }
 
-  let stage = 'start';
-
   try {
     const body = req.body || {};
     const messages = body.messages;
     const lang = body.lang === 'en' ? 'en' : 'bg';
-    stage = 'input-read';
 
     if (!Array.isArray(messages) || messages.length === 0) {
       return sendError(res, 400, 'Изпрати съобщение, за да започнем.');
@@ -100,8 +97,6 @@ module.exports = async function handler(req, res) {
     ) {
       return sendError(res, 400, 'Не открих валидно клиентско съобщение.');
     }
-
-    stage = 'supabase-init';
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY, {
       auth: {
@@ -135,11 +130,7 @@ module.exports = async function handler(req, res) {
         .join('\n\n');
     }
 
-    stage = 'supabase-done';
-
     const systemPrompt = buildSystemPrompt(catalogBlock, lang);
-
-    stage = 'groq-call';
 
     const groqResponse = await fetch(GROQ_API_URL, {
       method: 'POST',
@@ -232,16 +223,6 @@ module.exports = async function handler(req, res) {
       'Chat API error:',
       error && error.message ? error.message : error
     );
-
-    if (req.headers['x-debug'] === '9f2a') {
-      return res.status(500).json({
-        error: 'Възникна временна грешка. Моля, опитай отново.',
-        stage: stage,
-        detail: error && error.message ? error.message : String(error),
-        stack: error && error.stack ? String(error.stack).split('\n')[0] : null,
-        bodyType: typeof req.body
-      });
-    }
 
     return sendError(
       res,
