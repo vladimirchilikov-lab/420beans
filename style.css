@@ -268,7 +268,10 @@ nav.scrolled {
   border-top: 1px solid rgba(255,255,255,0.06);
 }
 .marquee-track {
-  display: flex; animation: marquee 22s linear infinite; white-space: nowrap;
+  display: flex; white-space: nowrap;
+}
+.marquee-track.is-ready {
+  animation: marquee 22s linear infinite;
 }
 .marquee-item {
   font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase;

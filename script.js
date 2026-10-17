@@ -124,10 +124,8 @@ function applySiteSettings(s) {
         .map(x => `<span class="marquee-item">${escapeHtml(x)}</span><span class="marquee-dot">·</span>`)
         .join('');
       track.innerHTML = once + once;
-      // Restart animation so it runs on the newly populated content
-      track.style.animation = 'none';
-      track.offsetHeight; // force reflow
-      track.style.animation = '';
+      // Start animation only after content is populated
+      track.classList.add('is-ready');
     }
   }
 }
