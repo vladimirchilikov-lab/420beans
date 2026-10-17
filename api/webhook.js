@@ -2,6 +2,11 @@ const Stripe = require('stripe');
 const { createClient } = require('@supabase/supabase-js');
 
 async function getRawBody(req) {
+  if (Buffer.isBuffer(req.body)) return req.body;
+  if (typeof req.body === 'string') return Buffer.from(req.body);
+
+  // Ако runtime-ът вече е парснал JSON-а, точните байтове са загубени и
+  // подписът не може да се провери. Затова парсването се изключва по-долу.
   return new Promise((resolve, reject) => {
     const chunks = [];
     req.on('data', chunk => chunks.push(chunk));
@@ -64,3 +69,6 @@ module.exports = async (req, res) => {
 
   return res.status(200).json({ received: true });
 };
+
+// Stripe подписва суровите байтове, затова парсването на тялото трябва да е изключено.
+module.exports.config = { api: { bodyParser: false } };
