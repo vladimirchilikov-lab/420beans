@@ -1,6 +1,6 @@
 const { createClient } = require('@supabase/supabase-js');
 
-const ANTHROPIC_MODEL = 'claude-sonnet-5';
+const OPENROUTER_MODEL = 'meta-llama/llama-3.3-8b-instruct:free';
 const MAX_TURNS = 8;          // колко последни съобщения пазим (потребител + бот)
 const MAX_MSG_LEN = 600;      // макс. дължина на едно съобщение от потребителя
 const MAX_TOKENS = 500;
@@ -52,8 +52,8 @@ module.exports = async (req, res) => {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   try {
-    if (!process.env.ANTHROPIC_API_KEY) {
-      throw new Error('Missing ANTHROPIC_API_KEY env variable');
+    if (!process.env.OPENROUTER_API_KEY) {
+      throw new Error('Missing OPENROUTER_API_KEY env variable');
     }
 
     const { messages, lang } = req.body || {};
@@ -88,33 +88,32 @@ module.exports = async (req, res) => {
 
     const systemPrompt = buildSystemPrompt(buildCatalogBlock(products), lang === 'en' ? 'en' : 'bg');
 
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': process.env.ANTHROPIC_API_KEY,
-        'anthropic-version': '2023-06-01',
+        'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
+        'HTTP-Referer': 'https://420beans.vercel.app',
+        'X-Title': '420 Beans Coffee Advisor',
       },
       body: JSON.stringify({
-        model: ANTHROPIC_MODEL,
+        model: OPENROUTER_MODEL,
         max_tokens: MAX_TOKENS,
-        system: systemPrompt,
-        messages: cleanMessages,
+        messages: [
+          { role: 'system', content: systemPrompt },
+          ...cleanMessages,
+        ],
       }),
     });
 
     if (!response.ok) {
       const errText = await response.text();
-      console.error('Anthropic API error:', response.status, errText);
+      console.error('OpenRouter API error:', response.status, errText);
       throw new Error('AI service error');
     }
 
     const data = await response.json();
-    const reply = (data.content || [])
-      .filter((block) => block.type === 'text')
-      .map((block) => block.text)
-      .join('\n')
-      .trim();
+    const reply = data.choices?.[0]?.message?.content?.trim() || '';
 
     return res.status(200).json({ reply: reply || '…' });
   } catch (err) {
