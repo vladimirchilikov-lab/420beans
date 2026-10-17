@@ -44,6 +44,18 @@ ${catalogBlock || 'В момента няма достъпна информац�
 `;
 }
 
+const PRICE_UNIT_GRAMS = 250;
+
+function formatPrice(product) {
+  const cents = product && product.price;
+
+  if (typeof cents !== 'number' || !isFinite(cents)) {
+    return 'Няма посочена цена';
+  }
+
+  return '€' + (cents / 100).toFixed(2) + ' за ' + PRICE_UNIT_GRAMS + ' г';
+}
+
 function sendError(res, status, message) {
   return res.status(status).json({ error: message });
 }
@@ -123,10 +135,7 @@ module.exports = async function handler(req, res) {
           return [
             'Продукт: ' + (product.name || 'Без име'),
             'Описание: ' + (product.description || 'Няма описание'),
-            'Цена: ' +
-              (product.price !== null && product.price !== undefined
-                ? product.price + ' EUR'
-                : 'Няма посочена цена'),
+            'Цена: ' + formatPrice(product),
             'Категория: ' + (product.category || 'Не е посочена')
           ].join('\n');
         })
