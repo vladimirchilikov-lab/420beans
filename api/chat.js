@@ -28,7 +28,7 @@ function buildSystemPrompt(catalogBlock, lang) {
 * Не измисляй URL адреси. Ако не знаеш конкретния адрес на продукт, насочи клиента към каталога на сайта.
 * Отговаряй кратко — до 150 думи, освен ако клиентът изрично не поиска повече.
 * Никога не повтаряй една и съща дума или изречение. Ако усетиш, че започваш да се повтаряш, спри и завърши с едно кратко изречение.
-* За рецепти и стъпки използвай кратък номериран списък, не таблици.
+* Пиши в чист текст, без Markdown: без **, без #, без таблици с |. За стъпки използвай кратък номериран списък.
 
 ПОЛЕЗНИ НАСОКИ ЗА КАФЕТО:
 
@@ -45,6 +45,28 @@ ${catalogBlock || 'В момента няма достъпна информац�
 }
 
 const PRICE_UNIT_GRAMS = 250;
+
+function toPlainText(text) {
+  return String(text)
+    .replace(/^\s*\|?[\s:-]*-{2,}[\s|:-]*$/gm, '')
+    .replace(/\*\*([^*]+)\*\*/g, '$1')
+    .replace(/__([^_]+)__/g, '$1')
+    .replace(/`([^`]+)`/g, '$1')
+    .replace(/^#{1,6}\s+/gm, '')
+    .replace(/^\s*\|(.+?)\|\s*$/gm, function (match, cells) {
+      return cells
+        .split('|')
+        .map(function (cell) {
+          return cell.trim();
+        })
+        .filter(Boolean)
+        .join(' — ');
+    })
+    .replace(/\s*\|\s*/g, ' — ')
+    .replace(/(\s—\s){2,}/g, ' — ')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+}
 
 function formatPrice(product) {
   const cents = product && product.price;
@@ -209,6 +231,8 @@ module.exports = async function handler(req, res) {
         })
         .join('');
     }
+
+    answer = toPlainText(answer);
 
     if (!answer.trim()) {
       console.error(

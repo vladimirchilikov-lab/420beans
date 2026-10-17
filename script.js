@@ -294,6 +294,7 @@ function applyTranslations() {
   $$('[data-i18n]').forEach(el => { el.textContent = t(el.getAttribute('data-i18n')); });
   $$('[data-i18n-html]').forEach(el => { el.innerHTML = t(el.getAttribute('data-i18n-html')); });
   $$('[data-i18n-placeholder]').forEach(el => { el.placeholder = t(el.getAttribute('data-i18n-placeholder')); });
+  $$('[data-i18n-aria-label]').forEach(el => { el.setAttribute('aria-label', t(el.getAttribute('data-i18n-aria-label'))); });
 }
 
 function setLang(l) {
@@ -305,6 +306,7 @@ function setLang(l) {
   applyTranslations();
   applyProductLanguage();
   updateCartUI();
+  resetChat();
 }
 
 /* ─────────────────────────────────────────────────────
@@ -610,12 +612,21 @@ function hideChatTyping() {
   $('#chatTyping')?.remove();
 }
 
+function resetChat() {
+  chatHistory = [];
+  chatGreeted = false;
+  const body = $('#chatBody');
+  if (body) body.innerHTML = '';
+}
+
 function toggleChat() { chatOpen ? closeChat() : openChat(); }
 
 function openChat() {
   chatOpen = true;
   $('#chatDrawer')?.classList.add('open');
   $('#chatLauncher')?.classList.add('open');
+  const dot = $('#chatLauncherDot');
+  if (dot) dot.style.display = 'none';
   if (!chatGreeted) {
     chatGreeted = true;
     appendChatMessage('bot', t('chat.greeting'));
@@ -671,6 +682,10 @@ function initChat() {
       e.preventDefault();
       sendChatMessage();
     }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && chatOpen) closeChat();
   });
 }
 
