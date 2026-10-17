@@ -1,6 +1,6 @@
 const { createClient } = require('@supabase/supabase-js');
 
-const OPENROUTER_MODEL = 'google/gemma-3-12b-it:free';
+const OPENROUTER_MODEL = 'mistralai/mistral-7b-instruct:free';
 const MAX_TURNS = 8;          // колко последни съобщения пазим (потребител + бот)
 const MAX_MSG_LEN = 600;      // макс. дължина на едно съобщение от потребителя
 const MAX_TOKENS = 500;
