@@ -24,7 +24,6 @@ function buildSystemPrompt(catalogBlock, lang) {
 * Пиши на правилен книжовен български. Използвай само думи, в чието значение и правопис си сигурен. Ако не се сещаш за точната дума, опиши нещото с прости думи вместо да измисляш нова.
 * Не твърди причинно-следствени връзки, ако не си сигурен в тях.
 * Обръщай се на клиента с „ти“ и не сменяй на „вие“ в рамките на един отговор.
-* Когато отговаряш на английски и продуктът има само българско име, изписвай името на латиница („Етиопия Сидамо“ → „Ethiopia Sidamo“).
 * Помагай и с оборудване и техника — мелачки, везни, методи за приготвяне, — не само с избор на кафе.
 * Не измисляй продукти, цени, наличности, произход или вкусови характеристики.
 * Информацията за продуктите по-долу е единственият източник за конкретните продукти.
@@ -61,6 +60,27 @@ ${catalogBlock || 'В момента няма достъпна информац�
 }
 
 const PRICE_UNIT_GRAMS = 250;
+
+const CYRILLIC_TO_LATIN = {
+  а: 'a', б: 'b', в: 'v', г: 'g', д: 'd', е: 'e', ж: 'zh', з: 'z', и: 'i',
+  й: 'y', к: 'k', л: 'l', м: 'm', н: 'n', о: 'o', п: 'p', р: 'r', с: 's',
+  т: 't', у: 'u', ф: 'f', х: 'h', ц: 'ts', ч: 'ch', ш: 'sh', щ: 'sht',
+  ъ: 'a', ь: 'y', ю: 'yu', я: 'ya'
+};
+
+function transliterate(text) {
+  return String(text).replace(/[а-яА-Я]/g, function (character) {
+    const latin = CYRILLIC_TO_LATIN[character.toLowerCase()];
+
+    if (!latin) {
+      return character;
+    }
+
+    return character === character.toLowerCase()
+      ? latin
+      : latin.charAt(0).toUpperCase() + latin.slice(1);
+  });
+}
 
 function toPlainText(text) {
   return String(text)
@@ -218,8 +238,12 @@ module.exports = async function handler(req, res) {
     } else if (Array.isArray(products) && products.length > 0) {
       catalogBlock = products
         .map(function (product) {
+          const name = localized(product, 'name');
+          const displayName =
+            lang === 'en' && /[а-яА-Я]/.test(name) ? transliterate(name) : name;
+
           return [
-            labels.product + ': ' + (localized(product, 'name') || labels.missing),
+            labels.product + ': ' + (displayName || labels.missing),
             labels.description + ': ' + (localized(product, 'description') || labels.missing),
             labels.price + ': ' + formatPrice(product, lang),
             labels.category + ': ' + (product.category || labels.missing)
