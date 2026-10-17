@@ -28,7 +28,7 @@ async function getCatalog() {
   const supabase = getSupabase();
 
   if (!supabase) {
-    console.error('Missing Supabase environment variables');
+    console.error('Supabase environment variables are missing');
     return 'Каталогът временно не е достъпен.';
   }
 
@@ -37,14 +37,14 @@ async function getCatalog() {
     .select('name, description, price, category');
 
   if (result.error) {
-    console.error('Supabase error:', result.error.message);
+    console.error('Supabase catalog error:', result.error.message);
     return 'Каталогът временно не е достъпен.';
   }
 
   const products = Array.isArray(result.data) ? result.data : [];
 
   if (products.length === 0) {
-    return 'В каталога няма върнати продукти. Не измисляй продукти.';
+    return 'Каталогът е празен. Не измисляй продукти.';
   }
 
   return products.map(function (product) {
@@ -55,7 +55,7 @@ async function getCatalog() {
     let price = 'Не е посочена';
 
     if (product.price !== null && product.price !== undefined) {
-      price = String(product.price) + ' EUR';
+      price = String(product.price);
     }
 
     return [
@@ -68,20 +68,20 @@ async function getCatalog() {
 }
 
 function buildSystemPrompt(catalogBlock, lang) {
-  const langInstruction = lang === 'en'
+  const languageInstruction = lang === 'en'
     ? 'Reply in natural, fluent English. Match the customer language.'
     : 'Отговаряй на естествен, граматически правилен български език. Не превеждай буквално от английски.';
 
   const sections = [
     'Ти си Бийн — консултант по специално кафе в онлайн магазина 420 Beans.',
-    langInstruction,
+    languageInstruction,
     '',
     'СТИЛ НА ОБЩУВАНЕ:',
     '- Говори естествено, приятелски и компетентно, като опитен бариста.',
-    '- Използвай правилен, съвременен и разговорен български език.',
+    '- Използвай правилен и съвременен български език.',
     '- Отговаряй кратко и конкретно, обикновено в 2–5 изречения.',
     '- Не започвай всеки отговор с „Разбира се!“ или „Благодарим за въпроса!“.',
-    '- Не прави таблици, освен ако клиентът не ги поиска.',
+    '- Не използвай таблици, освен ако клиентът не ги поиска.',
     '- Не задавай излишни уточняващи въпроси.',
     '- Не измисляй думи и не превеждай буквално от английски.',
     '',
@@ -105,8 +105,8 @@ function buildSystemPrompt(catalogBlock, lang) {
     '1. Помагаш на клиентите да изберат кафе според вкуса и метода на приготвяне.',
     '2. Препоръчваш само продукти от каталога по-долу.',
     '3. Не измисляш цени, наличности, произход, обработка или вкусови нотки.',
-    '4. Ако информацията липсва в каталога, казваш го честно.',
-    '5. При рецепта посочваш подходящи количества, температура, едрина на смилане и ориентировъчно време.',
+    '4. Ако информацията липсва, казваш го честно.',
+    '5. При рецепта посочваш количества, температура, едрина на смилане и ориентировъчно време.',
     '6. При V60 обясняваш дозата кафе, количеството вода, температурата, смилането и времето.',
     '7. При еспресо обясняваш дозата кафе, количеството готово еспресо и времето за екстракция.',
     '8. Представяш рецептите като отправна точка, а не като абсолютни правила.',
@@ -114,30 +114,30 @@ function buildSystemPrompt(catalogBlock, lang) {
     '10. Ако въпросът е извън темата на кафето, учтиво насочваш разговора към магазина.',
     '',
     'ПРАВИЛА ЗА КАТАЛОГА:',
-    '- Използвай каталога като източник на продуктова информация.',
+    '- Използвай само предоставените продуктови данни.',
     '- Не измисляй продукти или липсващи характеристики.',
     '- Не твърди, че продукт е наличен, ако нямаш данни за наличността.',
-    '- Не приемай, че цената е в евро, ако данните в базата не са съобразени с това.',
+    '- Не добавяй валута към цената, ако не знаеш в каква валута е записана.',
     '',
     'ПРОДУКТОВ КАТАЛОГ:',
     catalogBlock,
     '',
-    'Ако не разполагаш с необходимата информация, кажи го честно.'
+    'Използвай каталога като източник на информация. Не измисляй липсващи данни.'
   ];
 
   return sections.join('\n');
 }
 
 function detectLanguage(messages) {
-  const lastUserMessage = messages.slice().reverse().find(function (message) {
+  const lastMessage = messages.slice().reverse().find(function (message) {
     return message.role === 'user';
   });
 
-  if (!lastUserMessage) {
+  if (!lastMessage) {
     return 'bg';
   }
 
-  const text = lastUserMessage.content;
+  const text = lastMessage.content;
   const cyrillicCount = (text.match(/[А-Яа-яЁё]/g) || []).length;
   const latinCount = (text.match(/[A-Za-z]/g) || []).length;
 
@@ -153,8 +153,10 @@ module.exports = async function handler(req, res) {
     });
   }
 
-  if (!process.env.GROQ_API_KEY) {
-    console.error('Missing GROQ_API_KEY');
+  const groqApiKey = process.env.GROQ_API_KEY;
+
+  if (!groqApiKey) {
+    console.error('GROQ_API_KEY is missing');
 
     return res.status(500).json({
       error: 'Чатботът временно не е достъпен.'
@@ -210,7 +212,7 @@ module.exports = async function handler(req, res) {
       {
         method: 'POST',
         headers: {
-          'Authorization': 'Bearer ' + process.env.GROQ_API_KEY,
+          'Authorization': 'Bearer ' + groqApiKey,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
@@ -268,4 +270,3 @@ module.exports = async function handler(req, res) {
     });
   }
 };
-```
