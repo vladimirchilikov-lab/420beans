@@ -17,58 +17,55 @@ function getSupabase() {
   return createClient(url, key);
 }
 
-function cleanText(value, maxLength = 300) {
+function cleanText(value, maxLength) {
   if (typeof value !== 'string') {
     return '';
   }
 
-  return value.trim().slice(0, maxLength);
+  return value.trim().slice(0, maxLength || MAX_MSG_LEN);
 }
 
 async function getCatalog() {
   const supabase = getSupabase();
 
   if (!supabase) {
-    return {
-      products: [],
-      text: 'Продуктовият каталог временно не е достъпен.'
-    };
+    console.error('Missing Supabase environment variables');
+    return 'Каталогът временно не е достъпен.';
   }
 
-  const { data, error } = await supabase
+  const result = await supabase
     .from('products')
     .select('name, description, price, category');
 
-  if (error) {
-    console.error('Supabase catalog error:', error.message);
-
-    return {
-      products: [],
-      text: 'Продуктовият каталог временно не е достъпен.'
-    };
+  if (result.error) {
+    console.error('Supabase error:', result.error.message);
+    return 'Каталогът временно не е достъпен.';
   }
 
-  const products = Array.isArray(data) ? data : [];
+  const products = Array.isArray(result.data) ? result.data : [];
 
-  const text = products.length
-    ? products.map(function (product) {
-        return [
-          'Име: ' + (product.name || 'Не е посочено'),
-          'Описание: ' + (product.description || 'Няма описание'),
-          'Цена: ' + (
-            product.price !== null && product.price !== undefined
-              ? String(product.price) + ' EUR'
-              : 'Не е посочена'
-          ),
-          'Категория: ' + (product.category || 'Не е посочена')
-        ].join('\n');
-      }).join('\n\n')
-    : 'В каталога няма върнати продукти. Не измисляй продукти.';
+  if (products.length === 0) {
+    return 'В каталога няма върнати продукти. Не измисляй продукти.';
+  }
 
-  return {
-    products: products,
-    text: text
-  };
+  return products.map(function (product) {
+    const name = product.name || 'Не е посочено';
+    const description = product.description || 'Няма описание';
+    const category = product.category || 'Не е посочена';
+
+    let price = 'Не е посочена';
+
+    if (product.price !== null && product.price !== undefined) {
+      price = String(product.price) + ' EUR';
+    }
+
+    return [
+      'Име: ' + name,
+      'Описание: ' + description,
+      'Цена: ' + price,
+      'Категория: ' + category
+    ].join('\n');
+  }).join('\n\n');
 }
 
 function buildSystemPrompt(catalogBlock, lang) {
@@ -82,18 +79,18 @@ function buildSystemPrompt(catalogBlock, lang) {
     '',
     'СТИЛ НА ОБЩУВАНЕ:',
     '- Говори естествено, приятелски и компетентно, като опитен бариста.',
-    '- Използвай съвременен, граматически правилен български език.',
+    '- Използвай правилен, съвременен и разговорен български език.',
     '- Отговаряй кратко и конкретно, обикновено в 2–5 изречения.',
     '- Не започвай всеки отговор с „Разбира се!“ или „Благодарим за въпроса!“.',
-    '- Не използвай таблици, освен ако клиентът изрично не ги поиска.',
+    '- Не прави таблици, освен ако клиентът не ги поиска.',
     '- Не задавай излишни уточняващи въпроси.',
     '- Не измисляй думи и не превеждай буквално от английски.',
     '',
-    'ПРАВИЛНА КАФЕ ТЕРМИНОЛОГИЯ:',
+    'КАФЕ ТЕРМИНОЛОГИЯ:',
     '- grind size: едрина на смилане;',
     '- medium grind: средно смилане;',
     '- medium-fine grind: средно фино смилане;',
-    '- body: плътност на кафето или тяло;',
+    '- body: плътност или тяло на кафето;',
     '- brew time: време за приготвяне;',
     '- pouring technique: техника на наливане;',
     '- drawdown: оттичане на водата;',
@@ -109,42 +106,39 @@ function buildSystemPrompt(catalogBlock, lang) {
     '1. Помагаш на клиентите да изберат кафе според вкуса и метода на приготвяне.',
     '2. Препоръчваш само продукти от каталога по-долу.',
     '3. Не измисляш цени, наличности, произход, обработка или вкусови нотки.',
-    '4. Ако информацията липсва в каталога, кажи го честно.',
-    '5. При рецепта посочвай подходящи количества, температура, едрина на смилане и ориентировъчно време.',
-    '6. При V60 обяснявай дозата кафе, количеството вода, температурата, смилането и времето.',
-    '7. При еспресо обяснявай дозата кафе, количеството готово еспресо и времето за екстракция.',
-    '8. Представяй рецептите като отправна точка, а не като абсолютни правила.',
-    '9. Не давай медицински съвети.',
-    '10. Ако въпросът е извън темата на кафето, учтиво насочи разговора към магазина.',
+    '4. Ако информацията липсва в каталога, казваш го честно.',
+    '5. При рецепта посочваш подходящи количества, температура, едрина на смилане и ориентировъчно време.',
+    '6. При V60 обясняваш дозата кафе, количеството вода, температурата, смилането и времето.',
+    '7. При еспресо обясняваш дозата кафе, количеството готово еспресо и времето за екстракция.',
+    '8. Представяш рецептите като отправна точка, а не като абсолютни правила.',
+    '9. Не даваш медицински съвети.',
+    '10. Ако въпросът е извън темата на кафето, учтиво насочваш разговора към магазина.',
     '',
-    'ВАЖНО ЗА КАТАЛОГА:',
-    '- Използвай само информацията, която действително присъства в каталога.',
-    '- Не твърди, че продукт е наличен, ако нямаш надеждна информация за наличността.',
-    '- Цените са в евро само когато са посочени в каталога.',
+    'ПРАВИЛА ЗА КАТАЛОГА:',
+    '- Използвай каталога като източник на продуктова информация.',
+    '- Не измисляй продукти или липсващи характеристики.',
+    '- Не твърди, че продукт е наличен, ако нямаш данни за наличността.',
+    '- Не приемай, че цената е в евро, ако данните в базата не са съобразени с това.',
     '',
     'ПРОДУКТОВ КАТАЛОГ:',
     catalogBlock,
     '',
-    'Използвай каталога като източник на информация. Не измисляй липсващи данни.'
+    'Ако не разполагаш с необходимата информация, кажи го честно.'
   ];
 
   return sections.join('\n');
 }
 
 function detectLanguage(messages) {
-  const lastUserMessage = messages
-    .slice()
-    .reverse()
-    .find(function (message) {
-      return message.role === 'user';
-    });
+  const lastUserMessage = messages.slice().reverse().find(function (message) {
+    return message.role === 'user';
+  });
 
   if (!lastUserMessage) {
     return 'bg';
   }
 
   const text = lastUserMessage.content;
-
   const cyrillicCount = (text.match(/[А-Яа-яЁё]/g) || []).length;
   const latinCount = (text.match(/[A-Za-z]/g) || []).length;
 
@@ -154,14 +148,13 @@ function detectLanguage(messages) {
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST');
+
     return res.status(405).json({
       error: 'Методът не е разрешен.'
     });
   }
 
-  const groqApiKey = process.env.GROQ_API_KEY;
-
-  if (!groqApiKey) {
+  if (!process.env.GROQ_API_KEY) {
     console.error('Missing GROQ_API_KEY');
 
     return res.status(500).json({
@@ -170,18 +163,27 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    const body = req.body || {};
+    let body = req.body || {};
+
+    if (typeof body === 'string') {
+      try {
+        body = JSON.parse(body);
+      } catch (parseError) {
+        return res.status(400).json({
+          error: 'Невалидно съдържание на заявката.'
+        });
+      }
+    }
+
     const incomingMessages = Array.isArray(body.messages)
       ? body.messages
       : [];
 
     const messages = incomingMessages
       .filter(function (message) {
-        return (
-          message &&
+        return message &&
           (message.role === 'user' || message.role === 'assistant') &&
-          typeof message.content === 'string'
-        );
+          typeof message.content === 'string';
       })
       .slice(-MAX_TURNS)
       .map(function (message) {
@@ -194,22 +196,22 @@ module.exports = async function handler(req, res) {
         return message.content.length > 0;
       });
 
-    if (!messages.length) {
+    if (messages.length === 0) {
       return res.status(400).json({
         error: 'Моля, напишете съобщение.'
       });
     }
 
-    const lang = detectLanguage(messages);
-    const catalog = await getCatalog();
-    const systemPrompt = buildSystemPrompt(catalog.text, lang);
+    const language = detectLanguage(messages);
+    const catalogBlock = await getCatalog();
+    const systemPrompt = buildSystemPrompt(catalogBlock, language);
 
     const groqResponse = await fetch(
       'https://api.groq.com/openai/v1/chat/completions',
       {
         method: 'POST',
         headers: {
-          'Authorization': 'Bearer ' + groqApiKey,
+          'Authorization': 'Bearer ' + process.env.GROQ_API_KEY,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
@@ -241,8 +243,8 @@ module.exports = async function handler(req, res) {
     }
 
     const result = await groqResponse.json();
-    const answer =
-      result &&
+
+    const answer = result &&
       result.choices &&
       result.choices[0] &&
       result.choices[0].message &&
