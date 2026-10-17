@@ -1,11 +1,23 @@
 const Stripe = require('stripe');
 const { createClient } = require('@supabase/supabase-js');
+const { rateLimit } = require('../lib/rate-limit');
+
 module.exports = async (req, res) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  const siteOrigin = process.env.SITE_URL || 'https://420beans.vercel.app';
+  res.setHeader('Access-Control-Allow-Origin', siteOrigin);
+  res.setHeader('Vary', 'Origin');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+
+  const limit = rateLimit(req, { limit: 10 });
+
+  if (!limit.allowed) {
+    res.setHeader('Retry-After', String(limit.retryAfterSec));
+    return res.status(429).json({ error: 'Твърде много заявки. Опитай отново след малко.' });
+  }
+
   try {
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
     const supabase = createClient(
@@ -16,6 +28,11 @@ module.exports = async (req, res) => {
     if (!items || !Array.isArray(items) || items.length === 0) {
       return res.status(400).json({ error: 'No items provided' });
     }
+
+    const cleanEmail =
+      typeof email === 'string' && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.trim())
+        ? email.trim()
+        : undefined;
     const productIds = items.map(i => i.id);
     const { data: products, error } = await supabase
       .from('products')
@@ -60,7 +77,7 @@ module.exports = async (req, res) => {
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
       line_items: lineItems,
-      customer_email: email || undefined,
+      customer_email: cleanEmail,
       shipping_address_collection: {
         allowed_countries: ['BG', 'DE', 'FR', 'GB', 'GR', 'RO'],
       },
@@ -74,7 +91,7 @@ module.exports = async (req, res) => {
     });
     return res.status(200).json({ url: session.url });
   } catch (err) {
-    console.error('Checkout error:', err.message);
-    return res.status(500).json({ error: err.message || 'Checkout failed' });
+    console.error('Checkout error:', err && err.message ? err.message : err);
+    return res.status(500).json({ error: 'Плащането не можа да стартира. Опитай отново.' });
   }
 };

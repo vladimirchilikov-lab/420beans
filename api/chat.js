@@ -1,4 +1,5 @@
 const { createClient } = require('@supabase/supabase-js');
+const { rateLimit } = require('../lib/rate-limit');
 
 const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
 const GROQ_MODEL = 'openai/gpt-oss-120b';
@@ -173,6 +174,17 @@ module.exports = async function handler(req, res) {
   const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
   const SUPABASE_URL = process.env.SUPABASE_URL;
   const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
+
+  const limit = rateLimit(req, { limit: 30 });
+
+  if (!limit.allowed) {
+    res.setHeader('Retry-After', String(limit.retryAfterSec));
+    return sendError(
+      res,
+      429,
+      'Твърде много съобщения за кратко време. Изчакай няколко минути и опитай пак.'
+    );
+  }
 
   if (!GROQ_API_KEY && !OPENROUTER_API_KEY) {
     console.error('Missing GROQ_API_KEY and OPENROUTER_API_KEY');

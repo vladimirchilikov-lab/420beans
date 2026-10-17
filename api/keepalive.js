@@ -1,6 +1,10 @@
 const { createClient } = require('@supabase/supabase-js');
 
 module.exports = async (req, res) => {
+  if (req.method !== 'GET') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+
   const supabase = createClient(
     process.env.SUPABASE_URL,
     process.env.SUPABASE_SERVICE_KEY
@@ -12,7 +16,8 @@ module.exports = async (req, res) => {
     .limit(1);
 
   if (error) {
-    return res.status(500).json({ error: error.message });
+    console.error('Keepalive error:', error.message);
+    return res.status(500).json({ error: 'Database check failed' });
   }
 
   res.status(200).json({ ok: true, ts: new Date().toISOString() });

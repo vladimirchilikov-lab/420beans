@@ -146,6 +146,8 @@ function renderProducts(products) {
   const delays = ['', 'reveal-delay-1', 'reveal-delay-2'];
 
   grid.innerHTML = products.map((p, i) => {
+    const pid = safeId(p.id);
+    if (!pid) return '';
     const isMerch = p.category === 'merch';
     const delay   = delays[i % 3];
     const badge   = p.badge === 'bestseller'
@@ -155,59 +157,63 @@ function renderProducts(products) {
         : '';
 
     let visual = '';
-    const productImage = p.image || p.image_url || '';
+    const productImage = safeImageUrl(p.image || p.image_url || '');
     const enName = p.en?.name || p.name || '';
     if (productImage) {
-      visual = `<div class="product-visual"><img src="${productImage}" alt="${enName}" class="product-img" loading="lazy"></div>`;
+      visual = `<div class="product-visual"><img src="${escapeAttr(productImage)}" alt="${escapeAttr(enName)}" class="product-img" loading="lazy"></div>`;
     } else if (isMerch) {
-      visual = `<div class="product-visual merch-visual merch-${p.id}"><div class="merch-shape"><span class="merch-brand-tag">420 Beans</span><span class="merch-sub-tag">${enName}</span></div></div>`;
+      visual = `<div class="product-visual merch-visual merch-${escapeAttr(p.id)}"><div class="merch-shape"><span class="merch-brand-tag">420 Beans</span><span class="merch-sub-tag">${escapeHtml(enName)}</span></div></div>`;
     } else {
       const bagClass = bagStyles[bagIdx % bagStyles.length];
       bagIdx++;
       visual = `<div class="product-visual ${bagClass}"><div class="bag-shape"><div class="bag-stripe"></div><div class="bag-circle"><div class="bag-circle-inner"></div></div><div class="bag-label">420B</div></div></div>`;
     }
 
-    const roastBar = (!isMerch && p.roast > 0) ? `
+    const roast = Number(p.roast) || 0;
+    const roastBar = (!isMerch && roast > 0) ? `
       <div class="product-roast-bar">
         <span class="roast-label" data-i18n="shop.roastLevel">Roast</span>
-        <div class="roast-track"><div class="roast-fill" data-roast="${p.roast}"></div></div>
+        <div class="roast-track"><div class="roast-fill" data-roast="${roast}"></div></div>
       </div>` : '';
 
     const enProcess = p.en?.process || '';
-    const processTag = (!isMerch && enProcess) ? `<p class="product-process" data-product-id="${p.id}" data-field="process">${enProcess}</p>` : '';
+    const processTag = (!isMerch && enProcess) ? `<p class="product-process" data-product-id="${escapeAttr(p.id)}" data-field="process">${escapeHtml(enProcess)}</p>` : '';
     const enRegion = p.en?.region || p.category || '';
     const enNotes  = p.en?.notes  || p.description || '';
 
     // Weight selector — само за кафе, не мърч
-    const price250 = (p.price || 0) / 100;
-    const price500 = (p.price_500 || p.price * 2 || 0) / 100;
-    const price1000 = (p.price_1000 || p.price * 4 || 0) / 100;
+    const priceCents = Number(p.price) || 0;
+    const price500Cents = Number(p.price_500) || priceCents * 2;
+    const price1000Cents = Number(p.price_1000) || priceCents * 4;
+    const price250 = priceCents / 100;
+    const price500 = price500Cents / 100;
+    const price1000 = price1000Cents / 100;
 
     const weightSelector = !isMerch ? `
       <div class="weight-selector" onclick="event.stopPropagation()">
-        <button class="weight-btn active" data-weight="250" data-price="${p.price}" onclick="selectWeight(this, '${p.id}')">250г</button>
-        <button class="weight-btn" data-weight="500" data-price="${p.price_500 || p.price * 2}" onclick="selectWeight(this, '${p.id}')">500г</button>
-        <button class="weight-btn" data-weight="1000" data-price="${p.price_1000 || p.price * 4}" onclick="selectWeight(this, '${p.id}')">1кг</button>
+        <button class="weight-btn active" data-weight="250" data-price="${priceCents}" onclick="selectWeight(this, '${pid}')">250г</button>
+        <button class="weight-btn" data-weight="500" data-price="${price500Cents}" onclick="selectWeight(this, '${pid}')">500г</button>
+        <button class="weight-btn" data-weight="1000" data-price="${price1000Cents}" onclick="selectWeight(this, '${pid}')">1кг</button>
       </div>` : '';
 
     return `
     <article class="product-card ${isMerch ? 'product-card-merch' : ''} reveal ${delay}"
-             data-category="${p.category || 'filter'}"
-             data-product-id="${p.id}"
-             onclick="addToCart('${p.id}')">
+             data-category="${escapeAttr(p.category || 'filter')}"
+             data-product-id="${pid}"
+             onclick="addToCart('${pid}')">
       ${visual}
       ${badge}
       <div class="product-info">
-        <p class="product-region" data-product-id="${p.id}" data-field="region">${enRegion}</p>
-        <h3 class="product-name" data-product-id="${p.id}" data-field="name">${enName}</h3>
+        <p class="product-region" data-product-id="${pid}" data-field="region">${escapeHtml(enRegion)}</p>
+        <h3 class="product-name" data-product-id="${pid}" data-field="name">${escapeHtml(enName)}</h3>
         ${processTag}
-        <p class="product-notes" data-product-id="${p.id}" data-field="notes">${enNotes}</p>
+        <p class="product-notes" data-product-id="${pid}" data-field="notes">${escapeHtml(enNotes)}</p>
         ${roastBar}
         ${weightSelector}
         <div class="product-footer">
-          <span class="product-price" id="price-${p.id}">€${price250.toFixed(2)}</span>
+          <span class="product-price" id="price-${pid}">€${price250.toFixed(2)}</span>
           <button class="product-add"
-                  onclick="event.stopPropagation(); addToCart('${p.id}')"
+                  onclick="event.stopPropagation(); addToCart('${pid}')"
                   aria-label="Add to cart">+</button>
         </div>
       </div>
@@ -473,24 +479,30 @@ function updateCartUI() {
   body.innerHTML = cart.map(item => {
     const p    = CATALOG[item.id];
     if (!p) return '';
+    const id   = safeId(item.id);
+    if (!id) return '';
     const name = lang === 'bg' ? p.bg : p.en;
-    const img  = p.image
-      ? `<img src="${p.image}" alt="${name}" class="cart-item-visual" style="object-fit:cover">`
-      : `<div class="cart-item-visual" style="background:${p.color}"></div>`;
-    const weightLabel = item.weight === 1000 ? '1кг' : `${item.weight}г`;
+    const imgUrl = safeImageUrl(p.image);
+    const color = /^[#a-zA-Z0-9(),.%\s-]{1,60}$/.test(String(p.color || '')) ? p.color : '#e8e0d8';
+    const img  = imgUrl
+      ? `<img src="${escapeAttr(imgUrl)}" alt="${escapeAttr(name)}" class="cart-item-visual" style="object-fit:cover">`
+      : `<div class="cart-item-visual" style="background:${escapeAttr(color)}"></div>`;
+    const weight = Number(item.weight) || 250;
+    const qty = Number(item.qty) || 1;
+    const weightLabel = weight === 1000 ? '1кг' : `${weight}г`;
     return `
       <div class="cart-item">
         ${img}
         <div class="cart-item-info">
-          <div class="cart-item-name">${name} <span style="opacity:0.5;font-size:11px">${weightLabel}</span></div>
+          <div class="cart-item-name">${escapeHtml(name)} <span style="opacity:0.5;font-size:11px">${weightLabel}</span></div>
           <div class="cart-item-price">€${(item.price / 100).toFixed(2)}</div>
           <div class="qty-controls">
-            <button class="qty-btn" onclick="changeQty('${item.id}', ${item.weight}, -1)">−</button>
-            <span class="qty-num">${item.qty}</span>
-            <button class="qty-btn" onclick="changeQty('${item.id}', ${item.weight}, 1)">+</button>
+            <button class="qty-btn" onclick="changeQty('${id}', ${weight}, -1)">−</button>
+            <span class="qty-num">${qty}</span>
+            <button class="qty-btn" onclick="changeQty('${id}', ${weight}, 1)">+</button>
           </div>
         </div>
-        <button class="cart-item-remove" onclick="removeFromCart('${item.id}', ${item.weight})">×</button>
+        <button class="cart-item-remove" onclick="removeFromCart('${id}', ${weight})">×</button>
       </div>`;
   }).join('');
 
@@ -584,6 +596,28 @@ function escapeHtml(str) {
   const div = document.createElement('div');
   div.textContent = str;
   return div.innerHTML;
+}
+
+// За стойности в HTML атрибути (кавичките също трябва да се екранират).
+function escapeAttr(value) {
+  return String(value === null || value === undefined ? '' : value)
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+// Позволява само http(s) и относителни пътища — блокира javascript: и data: URL-и.
+function safeImageUrl(value) {
+  const url = String(value === null || value === undefined ? '' : value).trim();
+  return /^(https?:\/\/|\/(?!\/))/i.test(url) ? url : '';
+}
+
+// ID-та влизат и в inline onclick, затова се допускат само безопасни знаци.
+function safeId(value) {
+  const id = String(value === null || value === undefined ? '' : value);
+  return /^[A-Za-z0-9_-]{1,64}$/.test(id) ? id : '';
 }
 
 function appendChatMessage(role, text) {
