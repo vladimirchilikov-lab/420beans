@@ -119,7 +119,7 @@ function applySiteSettings(s) {
         .map(p => {
           const region = (lang === 'bg' && p._bg?.region) ? p._bg.region : (p._en?.region || p.region || '');
           // fallback to product name if region is missing
-          return region.trim() || (lang === 'bg' ? (p.bg || p._bg?.name || p.en || '') : (p.en || p._en?.name || ''));
+          return region.trim() || (lang === 'bg' ? (p._bg?.name || p.bg?.name || p._en?.name || '') : (p._en?.name || p.en?.name || ''));
         })
         .map(r => String(r).trim()).filter(Boolean);
     }
