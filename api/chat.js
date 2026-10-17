@@ -1,6 +1,6 @@
 const { createClient } = require('@supabase/supabase-js');
 
-const OPENROUTER_MODEL = 'meta-llama/llama-3.3-8b-instruct:free';
+const OPENROUTER_MODEL = 'google/gemma-3-12b-it:free';
 const MAX_TURNS = 8;          // колко последни съобщения пазим (потребител + бот)
 const MAX_MSG_LEN = 600;      // макс. дължина на едно съобщение от потребителя
 const MAX_TOKENS = 500;
@@ -109,7 +109,7 @@ module.exports = async (req, res) => {
     if (!response.ok) {
       const errText = await response.text();
       console.error('OpenRouter API error:', response.status, errText);
-      throw new Error('AI service error');
+      throw new Error(`AI service error ${response.status}: ${errText.slice(0, 200)}`);
     }
 
     const data = await response.json();
