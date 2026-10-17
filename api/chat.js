@@ -1,4 +1,3 @@
-```javascript
 const { createClient } = require('@supabase/supabase-js');
 
 const GROQ_MODEL = 'openai/gpt-oss-20b';
