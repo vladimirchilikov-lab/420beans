@@ -1,7 +1,7 @@
 const { createClient } = require('@supabase/supabase-js');
 
 const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
-const GROQ_MODEL = 'llama-3.3-70b-versatile';
+const GROQ_MODEL = 'openai/gpt-oss-20b';
 
 const MAX_MESSAGES = 20;
 const MAX_MESSAGE_LENGTH = 2000;
@@ -149,10 +149,10 @@ module.exports = async function handler(req, res) {
             content: systemPrompt
           }
         ].concat(validMessages),
-        temperature: 0.3,
-        max_tokens: 700,
-        frequency_penalty: 0.4,
-        presence_penalty: 0.2,
+        temperature: 0.5,
+        max_completion_tokens: 4096,
+        reasoning_effort: 'medium',
+        include_reasoning: false,
         stream: false
       })
     });
