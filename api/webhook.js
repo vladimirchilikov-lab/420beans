@@ -36,7 +36,7 @@ module.exports = async (req, res) => {
     );
   } catch (err) {
     console.error('Webhook signature failed:', err.message);
-    return res.status(400).json({ error: `Webhook Error: ${err.message}` });
+    return res.status(400).json({ error: 'Invalid signature' });
   }
 
   if (event.type === 'checkout.session.completed') {

@@ -66,9 +66,6 @@ module.exports = async (req, res) => {
 
   } catch (err) {
     console.error('Products error:', err);
-    return res.status(500).json({
-      error: 'Failed to load products',
-      detail: err.message
-    });
+    return res.status(500).json({ error: 'Failed to load products' });
   }
 };
