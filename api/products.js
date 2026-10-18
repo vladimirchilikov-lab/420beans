@@ -1,4 +1,5 @@
 const { createClient } = require('@supabase/supabase-js');
+const { toLatin } = require('../lib/translit');
 
 module.exports = async (req, res) => {
   try {
@@ -48,8 +49,8 @@ module.exports = async (req, res) => {
       roast: p.roast === null || p.roast === undefined ? 50 : p.roast,
       stripeLink: '',
       en: {
-        name: p.name || '',
-        region: p.region || p.category || '',
+        name: toLatin(p.name || ''),
+        region: toLatin(p.region || p.category || ''),
         notes: p.description || '',
         process: p.process || ''
       },

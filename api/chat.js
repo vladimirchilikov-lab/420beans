@@ -1,5 +1,6 @@
 const { createClient } = require('@supabase/supabase-js');
 const { rateLimit } = require('../lib/rate-limit');
+const { toLatin } = require('../lib/translit');
 
 const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
 const GROQ_MODEL = 'openai/gpt-oss-120b';
@@ -71,27 +72,6 @@ ${catalogBlock || 'В момента няма достъпна информац�
 }
 
 const PRICE_UNIT_GRAMS = 250;
-
-const CYRILLIC_TO_LATIN = {
-  а: 'a', б: 'b', в: 'v', г: 'g', д: 'd', е: 'e', ж: 'zh', з: 'z', и: 'i',
-  й: 'y', к: 'k', л: 'l', м: 'm', н: 'n', о: 'o', п: 'p', р: 'r', с: 's',
-  т: 't', у: 'u', ф: 'f', х: 'h', ц: 'ts', ч: 'ch', ш: 'sh', щ: 'sht',
-  ъ: 'a', ь: 'y', ю: 'yu', я: 'ya'
-};
-
-function transliterate(text) {
-  return String(text).replace(/[а-яА-Я]/g, function (character) {
-    const latin = CYRILLIC_TO_LATIN[character.toLowerCase()];
-
-    if (!latin) {
-      return character;
-    }
-
-    return character === character.toLowerCase()
-      ? latin
-      : latin.charAt(0).toUpperCase() + latin.slice(1);
-  });
-}
 
 function toPlainText(text) {
   return String(text)
@@ -262,7 +242,7 @@ module.exports = async function handler(req, res) {
         .map(function (product) {
           const name = localized(product, 'name');
           const displayName =
-            lang === 'en' && /[а-яА-Я]/.test(name) ? transliterate(name) : name;
+            lang === 'en' && /[а-яА-Я]/.test(name) ? toLatin(name) : name;
 
           return [
             labels.product + ': ' + (displayName || labels.missing),
