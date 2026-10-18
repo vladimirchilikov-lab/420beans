@@ -16,6 +16,17 @@
 <meta property="og:locale:alternate" content="en_US">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="canonical" href="https://420beans.vercel.app/">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "420 Beans",
+  "alternateName": "420 зърна",
+  "url": "https://420beans.vercel.app/",
+  "email": "hello@420beans.com",
+  "description": "Specialty coffee with traceable single-farm origin."
+}
+</script>
 <meta name="theme-color" content="#1A1512">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -144,7 +155,7 @@
   </div>
   <div class="chat-body" id="chatBody"></div>
   <div class="chat-input-row">
-    <input type="text" id="chatInput" class="chat-input" data-i18n-placeholder="chat.placeholder" placeholder="Ask about a coffee or a brew method…" maxlength="600" />
+    <input type="text" id="chatInput" class="chat-input" data-i18n-placeholder="chat.placeholder" data-i18n-aria-label="chat.inputLabel" aria-label="Message to the coffee advisor" placeholder="Ask about a coffee or a brew method…" maxlength="600" />
     <button class="chat-send" id="chatSendBtn" onclick="sendChatMessage()" aria-label="Send message" data-i18n-aria-label="chat.send">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
@@ -362,6 +373,8 @@
     <div class="sub-form">
       <input class="sub-input" type="email" id="subEmail"
              data-i18n-placeholder="sub.placeholder"
+             data-i18n-aria-label="sub.emailLabel"
+             aria-label="Email for the subscription"
              placeholder="your@email.com"
              autocomplete="email">
       <button class="sub-btn" onclick="handleSubscribe()" data-i18n="sub.btn">Subscribe</button>

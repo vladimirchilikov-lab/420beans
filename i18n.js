@@ -38,6 +38,7 @@ const I18N = {
     'sub.title': 'Fresh coffee.<br><em>On repeat.</em>',
     'sub.desc': 'Subscribe and save 15% on every order. Weekly, bi-weekly, or monthly. Pause or cancel anytime.',
     'sub.placeholder': 'your@email.com', 'sub.btn': 'Subscribe',
+    'sub.emailLabel': 'Email for the subscription',
     'footer.tagline': 'Specialty coffee with clear single-farm origin. Roasted with obsession. Delivered with care.',
     'footer.col1': 'Shop', 'footer.col2': 'Learn', 'footer.col3': 'Info',
     'footer.allcoffee': 'All Coffee', 'footer.contact': 'Contact',
@@ -59,6 +60,7 @@ const I18N = {
     'chat.greeting': "Hey! I'm Bean, your coffee advisor. Tell me how you brew — V60, French press, moka, espresso machine, Aeropress — or what flavours you love, and I'll point you to the right bag and recipe.",
     'chat.error': "Sorry, I couldn't get a response. Please try again in a moment.",
     'chat.timeout': 'The answer is taking too long. Please try again.',
+    'chat.inputLabel': 'Message to the coffee advisor',
   },
   bg: {
     'nav.shop': 'Магазин', 'nav.process': 'Процес', 'nav.subscribe': 'Абонамент',
@@ -91,6 +93,7 @@ const I18N = {
     'sub.title': 'Прясно кафе.<br><em>Всеки път.</em>',
     'sub.desc': 'Абонирайте се и спестете 15% от всяка поръчка. Седмично, двуседмично или месечно. Спирайте по всяко време.',
     'sub.placeholder': 'вашият@имейл.bg', 'sub.btn': 'Абонирай се',
+    'sub.emailLabel': 'Имейл за абонамента',
     'footer.tagline': 'Специалти кафе с ясен произход. Изпечено с обсесия. Доставено с грижа.',
     'footer.col1': 'Магазин', 'footer.col2': 'Научи повече', 'footer.col3': 'Информация',
     'footer.allcoffee': 'Всички кафета', 'footer.contact': 'Контакт',
@@ -112,6 +115,7 @@ const I18N = {
     'chat.greeting': 'Здравей! Аз съм Бийн, твоят кафе консултант. Кажи ми как си правиш кафето — V60, френска преса, мока, машина за еспресо, AeroPress — или какви вкусове харесваш, и ще ти посоча правилното кафе и рецепта.',
     'chat.error': 'Извинявай, не успях да получа отговор. Опитай отново след малко.',
     'chat.timeout': 'Отговорът се бави твърде дълго. Опитай отново.',
+    'chat.inputLabel': 'Съобщение до кафе консултанта',
   },
 };
 
