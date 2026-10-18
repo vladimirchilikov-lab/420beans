@@ -659,6 +659,7 @@ function openChat() {
   chatOpen = true;
   $('#chatDrawer')?.classList.add('open');
   $('#chatLauncher')?.classList.add('open');
+  $('#chatLauncher')?.setAttribute('aria-expanded', 'true');
   const dot = $('#chatLauncherDot');
   if (dot) dot.style.display = 'none';
   if (!chatGreeted) {
@@ -672,6 +673,7 @@ function closeChat() {
   chatOpen = false;
   $('#chatDrawer')?.classList.remove('open');
   $('#chatLauncher')?.classList.remove('open');
+  $('#chatLauncher')?.setAttribute('aria-expanded', 'false');
 }
 
 async function sendChatMessage() {
@@ -688,22 +690,33 @@ async function sendChatMessage() {
   if (btn) btn.disabled = true;
   showChatTyping();
 
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 30000);
+
   try {
     const res = await fetch('/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ messages: chatHistory, lang }),
+      signal: controller.signal,
     });
     const data = await res.json();
     hideChatTyping();
-    if (!res.ok || !data.reply) throw new Error(data.error || 'Chat failed');
+
+    if (!res.ok || !data.reply) {
+      appendChatMessage('error', data && data.error ? data.error : t('chat.error'));
+      return;
+    }
+
     appendChatMessage('bot', data.reply);
     chatHistory.push({ role: 'assistant', content: data.reply });
   } catch (err) {
     hideChatTyping();
-    appendChatMessage('error', t('chat.error'));
-    console.warn('Chat error:', err.message);
+    const timedOut = err && err.name === 'AbortError';
+    appendChatMessage('error', timedOut ? t('chat.timeout') : t('chat.error'));
+    console.warn('Chat error:', err && err.message ? err.message : err);
   } finally {
+    clearTimeout(timer);
     chatBusy = false;
     if (btn) btn.disabled = false;
     input.focus();

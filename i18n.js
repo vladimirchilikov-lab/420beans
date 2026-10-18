@@ -58,6 +58,7 @@ const I18N = {
     'chat.launcher': 'Open coffee advisor chat',
     'chat.greeting': "Hey! I'm Bean, your coffee advisor. Tell me how you brew — V60, French press, moka, espresso machine, Aeropress — or what flavours you love, and I'll point you to the right bag and recipe.",
     'chat.error': "Sorry, I couldn't get a response. Please try again in a moment.",
+    'chat.timeout': 'The answer is taking too long. Please try again.',
   },
   bg: {
     'nav.shop': 'Магазин', 'nav.process': 'Процес', 'nav.subscribe': 'Абонамент',
@@ -110,6 +111,7 @@ const I18N = {
     'chat.launcher': 'Отвори чата с кафе консултанта',
     'chat.greeting': 'Здравей! Аз съм Бийн, твоят кафе консултант. Кажи ми как си правиш кафето — V60, френска преса, мока, машина за еспресо, AeroPress — или какви вкусове харесваш, и ще ти посоча правилното кафе и рецепта.',
     'chat.error': 'Извинявай, не успях да получа отговор. Опитай отново след малко.',
+    'chat.timeout': 'Отговорът се бави твърде дълго. Опитай отново.',
   },
 };
 
