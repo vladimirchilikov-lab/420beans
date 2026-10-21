@@ -2,11 +2,7 @@ const { createClient } = require('@supabase/supabase-js');
 const { rateLimit } = require('../lib/rate-limit');
 const { toLatin } = require('../lib/translit');
 
-const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
-const GROQ_MODEL = 'openai/gpt-oss-120b';
-
-const OPENROUTER_API_URL = 'https://openrouter.ai/api/v1/chat/completions';
-const OPENROUTER_MODEL = 'openai/gpt-4o-mini';
+const GEMINI_MODEL = 'gemini-2.0-flash';
 
 const MAX_MESSAGES = 20;
 const MAX_MESSAGE_LENGTH = 2000;
@@ -150,8 +146,7 @@ module.exports = async function handler(req, res) {
     return sendError(res, 405, 'Методът не е разрешен.');
   }
 
-  const GROQ_API_KEY = process.env.GROQ_API_KEY;
-  const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
+  const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
   const SUPABASE_URL = process.env.SUPABASE_URL;
   const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
 
@@ -166,8 +161,8 @@ module.exports = async function handler(req, res) {
     );
   }
 
-  if (!GROQ_API_KEY && !OPENROUTER_API_KEY) {
-    console.error('Missing GROQ_API_KEY and OPENROUTER_API_KEY');
+  if (!GEMINI_API_KEY) {
+    console.error('Missing GEMINI_API_KEY');
     return sendError(res, 500, 'Чатът временно не е конфигуриран.');
   }
 
@@ -258,110 +253,64 @@ module.exports = async function handler(req, res) {
 
     stage = 'llm-call';
 
-    const providerMessages = [
-      {
-        role: 'system',
-        content: systemPrompt
-      }
-    ].concat(validMessages);
+    const geminiContents = validMessages.map(function (message) {
+      return {
+        role: message.role === 'assistant' ? 'model' : 'user',
+        parts: [{ text: message.content }]
+      };
+    });
 
-    let result = null;
-    let usedProvider = null;
+    const geminiUrl =
+      'https://generativelanguage.googleapis.com/v1beta/models/' +
+      GEMINI_MODEL +
+      ':generateContent?key=' +
+      GEMINI_API_KEY;
 
-    if (OPENROUTER_API_KEY) {
-      const openRouter = await requestCompletion(
-        OPENROUTER_API_URL,
-        OPENROUTER_API_KEY,
-        {
-          model: OPENROUTER_MODEL,
-          messages: providerMessages,
-          temperature: 0.5,
-          max_tokens: 800,
-          stream: false
-        }
+    const geminiResponse = await fetch(geminiUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        system_instruction: { parts: [{ text: systemPrompt }] },
+        contents: geminiContents,
+        generationConfig: { maxOutputTokens: 800, temperature: 0.5 }
+      })
+    });
+
+    if (!geminiResponse.ok) {
+      const errText = await geminiResponse.text();
+      console.error(
+        'Gemini API error:',
+        geminiResponse.status,
+        errText.slice(0, 500)
       );
 
-      if (openRouter.ok) {
-        result = openRouter.result;
-        usedProvider = 'openrouter';
-      } else {
-        console.error(
-          'OpenRouter failed, falling back to Groq:',
-          openRouter.status,
-          JSON.stringify(openRouter.result).slice(0, 500)
-        );
-      }
+      return sendError(
+        res,
+        502,
+        'В момента не мога да отговоря. Моля, опитай отново след малко.'
+      );
     }
 
-    if (!result) {
-      const groq = await requestCompletion(GROQ_API_URL, GROQ_API_KEY, {
-        model: GROQ_MODEL,
-        messages: providerMessages,
-        temperature: 0.5,
-        max_completion_tokens: 4096,
-        reasoning_effort: 'medium',
-        include_reasoning: false,
-        stream: false
-      });
+    const geminiData = await geminiResponse.json();
 
-      if (!groq.ok) {
-        console.error(
-          'Groq API error:',
-          groq.status,
-          JSON.stringify(groq.result).slice(0, 2000)
-        );
-
-        return sendError(
-          res,
-          502,
-          'В момента не мога да отговоря. Моля, опитай отново след малко.'
-        );
-      }
-
-      result = groq.result;
-      usedProvider = 'groq';
-    }
-
-    res.setHeader('X-Chat-Provider', usedProvider || 'none');
-
-    const choice =
-      result && Array.isArray(result.choices) && result.choices.length > 0
-        ? result.choices[0]
-        : null;
-
-    const message = choice && choice.message;
-    const content = message && message.content;
+    res.setHeader('X-Chat-Provider', 'gemini');
 
     let answer = '';
 
-    if (typeof content === 'string') {
-      answer = content;
-    } else if (Array.isArray(content)) {
-      answer = content
-        .map(function (part) {
-          if (typeof part === 'string') {
-            return part;
-          }
+    const candidate = geminiData.candidates && geminiData.candidates[0];
+    const parts =
+      candidate && candidate.content && candidate.content.parts;
 
-          if (part && typeof part.text === 'string') {
-            return part.text;
-          }
-
-          return '';
-        })
-        .join('');
+    if (Array.isArray(parts)) {
+      answer = parts.map(function (p) { return p.text || ''; }).join('');
     }
 
     answer = toPlainText(answer);
 
     if (!answer.trim()) {
       console.error(
-        'Groq empty response:',
-        JSON.stringify({
-          finish_reason: choice && choice.finish_reason,
-          message: message,
-          usage: result && result.usage
-        }).slice(0, 2000)
+        'Gemini empty response:',
+        JSON.stringify(geminiData).slice(0, 500)
       );
 
       return sendError(
