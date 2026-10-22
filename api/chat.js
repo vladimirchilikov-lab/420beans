@@ -2,7 +2,7 @@ const { createClient } = require('@supabase/supabase-js');
 const { rateLimit } = require('../lib/rate-limit');
 const { toLatin } = require('../lib/translit');
 
-const GEMINI_MODEL = 'gemini-2.5-flash';
+const GEMINI_MODEL = 'gemini-3.8-flash';
 
 const MAX_MESSAGES = 20;
 const MAX_MESSAGE_LENGTH = 2000;
