@@ -1,91 +1,81 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bg">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Payment Cancelled — 420 Beans</title>
-<meta name="description" content="Your payment was cancelled. Return to the shop anytime.">
-<meta name="robots" content="noindex, nofollow">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Mono:wght@300;400&display=swap">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>☕</text></svg>">
-<link rel="stylesheet" href="./style.css">
-<style>
-  body { font-family: 'DM Mono', 'Courier New', monospace; }
-  h1,.nav-logo { font-family: 'Playfair Display', Georgia, serif; }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Плащането е отказано — 420 Beans</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="/style.css">
 </head>
-<body class="page-simple">
+<body>
 
-<nav id="mainNav">
-  <a href="./" class="nav-logo">420 <span>Beans</span></a>
-  <div class="nav-right">
-    <div class="lang-switcher">
-      <button class="lang-btn" id="btnBG" onclick="switchLang('bg')">БГ</button>
-      <button class="lang-btn active" id="btnEN" onclick="switchLang('en')">EN</button>
+<div class="announcement-bar">
+  <span data-i18n="announcementBar">Прясно изпечено кафе • Доставка с куриер • Поръчай сега →</span>
+</div>
+
+<nav class="nav" id="main-nav">
+  <div class="container">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo">420 <span>Beans</span></a>
+      <div class="nav-links">
+        <a href="/shop" class="nav-link" data-i18n="shopCoffee">Разгледай кафетата</a>
+      </div>
+      <div class="nav-actions">
+        <button class="nav-lang lang-toggle">EN</button>
+        <button class="nav-btn" data-cart-open aria-label="Количка">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          <span class="cart-count" style="display:none">0</span>
+        </button>
+      </div>
     </div>
   </div>
 </nav>
 
-<main class="page-main">
-  <div class="status-box">
-    <div class="status-icon cancel">✕</div>
-    <p class="status-eyebrow" id="eyebrow">Payment Cancelled</p>
-    <h1 class="status-heading" id="heading">No <em>worries.</em></h1>
-    <p class="status-desc" id="desc">
-      Your payment was cancelled. Your cart items are still waiting for you — head back whenever you're ready.
-    </p>
-    <div class="status-actions">
-      <a href="./#shop" class="btn-primary" id="shopBtn">Back to Shop</a>
-      <a href="./"      class="btn-ghost"   id="homeBtn">← Home</a>
+<main>
+  <div class="container">
+    <div class="cancel-page">
+      <div class="cancel-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="15" y1="9" x2="9" y2="15"/>
+          <line x1="9" y1="9" x2="15" y2="15"/>
+        </svg>
+      </div>
+      <h1 class="cancel-title" data-i18n="cancelTitle">Плащането е отказано</h1>
+      <p class="cancel-sub" data-i18n="cancelSub">Нищо не е таксувано. Продуктите са запазени в количката ти.</p>
+
+      <div class="cancel-actions">
+        <button class="btn btn-primary btn-lg" data-cart-open data-i18n="retryCheckout">Опитай отново</button>
+        <a href="/shop" class="btn btn-ghost" data-i18n="continueShopping">Продължи пазаруването</a>
+      </div>
     </div>
   </div>
 </main>
 
-<footer class="page-footer">
-  <p>© 2024 420 Beans. All rights reserved.</p>
-</footer>
+<!-- Cart Drawer -->
+<div class="cart-overlay" id="cart-overlay"></div>
+<aside class="cart-drawer" id="cart-drawer" role="dialog" aria-label="Количка" aria-modal="true">
+  <div class="cart-header">
+    <h2 class="cart-title" data-i18n="cartTitle">Количка</h2>
+    <button class="cart-close" data-cart-close><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+  </div>
+  <div class="cart-items" id="cart-items"></div>
+  <div class="cart-footer">
+    <div class="cart-totals">
+      <div class="cart-row"><span>Стойност</span><span id="cart-subtotal">€0.00</span></div>
+      <div class="cart-row"><span>Доставка</span><span id="cart-shipping">€4.99</span></div>
+      <div class="cart-row total"><span>Общо</span><span id="cart-total">€0.00</span></div>
+    </div>
+    <button class="btn btn-primary btn-full btn-lg" id="checkout-btn">Към плащане</button>
+  </div>
+</aside>
 
+<div class="toast-stack" id="toast-stack"></div>
+<script src="/app.js"></script>
 <script>
-  const translations = {
-    en: {
-      title:   'Payment Cancelled — 420 Beans',
-      eyebrow: 'Payment Cancelled',
-      heading: 'No <em>worries.</em>',
-      desc:    "Your payment was cancelled. Your cart items are still waiting for you — head back whenever you're ready.",
-      shop:    'Back to Shop',
-      home:    '← Home',
-    },
-    bg: {
-      title:   'Плащането е отказано — 420 Beans',
-      eyebrow: 'Плащането е отказано',
-      heading: 'Няма <em>проблем.</em>',
-      desc:    'Плащането беше отказано. Продуктите в количката ви все още ви чакат — върнете се когато сте готови.',
-      shop:    'Обратно в магазина',
-      home:    '← Начало',
-    },
-  };
-
-  let currentLang = navigator.language?.startsWith('bg') ? 'bg' : 'en';
-
-  function applyLang(l) {
-    const tr = translations[l] || translations.en;
-    document.title = tr.title;
-    document.getElementById('eyebrow').textContent  = tr.eyebrow;
-    document.getElementById('heading').innerHTML    = tr.heading;
-    document.getElementById('desc').textContent     = tr.desc;
-    document.getElementById('shopBtn').textContent  = tr.shop;
-    document.getElementById('homeBtn').textContent  = tr.home;
-    document.getElementById('btnBG').classList.toggle('active', l === 'bg');
-    document.getElementById('btnEN').classList.toggle('active', l === 'en');
-    document.documentElement.lang = l;
-    currentLang = l;
-  }
-
-  function switchLang(l) { applyLang(l); }
-
-  applyLang(currentLang);
+  // Cart is preserved on cancel — open it automatically after a moment
+  setTimeout(() => openCart(), 800);
 </script>
 </body>
 </html>

@@ -1,477 +1,303 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bg">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<!-- ── SEO ── -->
-<title>420 Beans — Specialty Coffee | Специалти Кафе</title>
-<meta name="description" content="420 Beans — specialty coffee with verified farm-to-cup traceability. Light, medium and dark roasts delivered fresh. Специалти кафе с проследим произход. Доставено прясно.">
-<meta name="keywords" content="specialty coffee, coffee Bulgaria, 420 beans, single origin, специално кафе, кафе България">
-<meta property="og:title" content="420 Beans — Specialty Coffee">
-<meta property="og:description" content="Carefully selected high-quality coffee focused on flavour profile and traceable single-farm origin.">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://420beans.vercel.app/">
-<meta property="og:locale" content="bg_BG">
-<meta property="og:locale:alternate" content="en_US">
-<meta name="twitter:card" content="summary_large_image">
-<link rel="canonical" href="https://420beans.vercel.app/">
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  "name": "420 Beans",
-  "alternateName": "420 зърна",
-  "url": "https://420beans.vercel.app/",
-  "email": "hello@420beans.com",
-  "description": "Specialty coffee with traceable single-farm origin."
-}
-</script>
-<meta name="theme-color" content="#1A1512">
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Mono:wght@300;400&display=swap">
-
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg stroke='%23C8A97A' stroke-width='4' stroke-linecap='round'%3E%3Cline x1='50' y1='6' x2='50' y2='16'/%3E%3Cline x1='32' y1='10' x2='36' y2='19'/%3E%3Cline x1='68' y1='10' x2='64' y2='19'/%3E%3Cline x1='18' y1='20' x2='25' y2='27'/%3E%3Cline x1='82' y1='20' x2='75' y2='27'/%3E%3Cline x1='10' y1='36' x2='19' y2='40'/%3E%3Cline x1='90' y1='36' x2='81' y2='40'/%3E%3C/g%3E%3Cellipse cx='50' cy='62' rx='18' ry='24' fill='%23C8A97A'/%3E%3Cpath d='M50 40 Q42 50 50 62 Q58 74 50 84' stroke='%23F5F0E8' stroke-width='3' fill='none'/%3E%3C/svg%3E">
-
-<script src="https://js.stripe.com/v3/" defer></script>
-
-<link rel="stylesheet" href="./style.css">
-
-<style>
-  body{font-family:'DM Mono','Courier New',monospace}
-  h1,h2,h3,.nav-logo,.product-name,.intro-heading,.process-title,.sub-title,.footer-brand,.hero-title,.cart-title,.testimonial-text{font-family:'Playfair Display',Georgia,'Times New Roman',serif}
-
-  .brand-mark {
-    display: inline-flex !important;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    line-height: 0;
-  }
-  .brand-mark svg {
-    display: block !important;
-    overflow: visible;
-  }
-  .brand-mark .ray   { stroke: #C8A97A; stroke-width: 4; stroke-linecap: round; opacity: 0.9; }
-  .brand-mark .bean  { fill: #C8A97A; }
-  .brand-mark .crack { stroke: #F5F0E8; stroke-width: 3; fill: none; }
-
-  .nav-logo { display: flex !important; align-items: center; gap: 12px; }
-  .nav-logo .brand-mark, .nav-logo .brand-mark svg { width: 44px !important; height: 44px !important; min-width: 44px; }
-
-  .footer-brand { display: flex !important; align-items: center; gap: 16px; }
-  .footer-brand .brand-mark, .footer-brand .brand-mark svg { width: 48px !important; height: 48px !important; min-width: 48px; }
-
-  .loader-logo { display: flex !important; align-items: center; gap: 14px; }
-  .loader-logo .brand-mark, .loader-logo .brand-mark svg { width: 40px !important; height: 40px !important; min-width: 40px; }
-
-  .sub-big-text-wrap { display: flex !important; flex-direction: column; align-items: center; gap: 18px; }
-  .sub-big-text-wrap .brand-mark, .sub-big-text-wrap .brand-mark svg { width: 110px !important; height: 110px !important; }
-  .sub-big-text-wrap .brand-mark .ray   { stroke: #C8A97A; opacity: 0.6; }
-  .sub-big-text-wrap .brand-mark .bean  { fill: #C8A97A; opacity: 0.6; }
-  .sub-big-text-wrap .brand-mark .crack { stroke: #F5F0E8; opacity: 0.4; }
-
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(12px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>420 Beans — Специалти кафе от Пловдив</title>
+  <meta name="description" content="420 Beans — специалти кафе с проследим произход. Прясно изпечено и доставено директно до теб.">
+  <meta property="og:title" content="420 Beans — Специалти кафе">
+  <meta property="og:description" content="Специалти кафе с проследим произход. Прясно изпечено и доставено директно до теб.">
+  <meta property="og:type" content="website">
+  <link rel="canonical" href="https://420beans.vercel.app/">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="/style.css">
 </head>
 <body>
 
-<div class="checkout-loader" id="checkoutLoader">
-  <div class="loader-logo">
-    <span class="brand-mark" aria-hidden="true">
-      <svg width="40" height="40" viewBox="0 0 100 100" fill="none">
-        <g class="ray">
-          <line x1="50" y1="6" x2="50" y2="16"/>
-          <line x1="32" y1="10" x2="36" y2="19"/>
-          <line x1="68" y1="10" x2="64" y2="19"/>
-          <line x1="18" y1="20" x2="25" y2="27"/>
-          <line x1="82" y1="20" x2="75" y2="27"/>
-          <line x1="10" y1="36" x2="19" y2="40"/>
-          <line x1="90" y1="36" x2="81" y2="40"/>
-        </g>
-        <ellipse class="bean" cx="50" cy="62" rx="18" ry="24"/>
-        <path class="crack" d="M50 40 Q42 50 50 62 Q58 74 50 84"/>
-      </svg>
-    </span>
-    420 <span>Beans</span>
-  </div>
-  <div class="loader-spinner"></div>
-  <p class="loader-text" id="loaderText">Redirecting to payment...</p>
+<!-- Announcement Bar -->
+<div class="announcement-bar">
+  <span data-i18n="announcementBar">Прясно изпечено кафе • Доставка с куриер • Поръчай сега →</span>
 </div>
 
-<div class="error-banner" id="errorBanner">
-  <span id="errorMsg">Payment error. Please try again.</span>
-  <button class="error-close" onclick="hideError()">×</button>
-</div>
-
-<div class="cursor" id="cursor"></div>
-<div class="cursor-ring" id="cursorRing"></div>
-
-<div class="overlay" id="overlay" onclick="closeCart()"></div>
-
-<div class="toast" id="toast"></div>
-
-<div class="cart-drawer" id="cartDrawer">
-  <div class="cart-header">
-    <div class="cart-title" data-i18n="cart.title">Your Cart</div>
-    <button class="cart-close" onclick="closeCart()">×</button>
-  </div>
-  <div class="cart-body" id="cartBody">
-    <div class="cart-empty">Your cart is empty.<br>Discover our collection below.</div>
-  </div>
-  <div class="cart-footer" id="cartFooter" style="display:none">
-    <div class="cart-total">
-      <span data-i18n="cart.total">Total</span>
-      <span class="cart-total-price" id="cartTotal">€0.00</span>
-    </div>
-    <button class="btn-checkout" id="checkoutBtn" onclick="startCheckout()" data-i18n="cart.checkout">
-      Proceed to Checkout
-    </button>
-  </div>
-</div>
-
-<button class="chat-launcher" id="chatLauncher" onclick="toggleChat()" aria-label="Coffee advisor chat" data-i18n-aria-label="chat.launcher" aria-controls="chatDrawer" aria-expanded="false">
-  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
-  </svg>
-  <span class="chat-launcher-dot" id="chatLauncherDot"></span>
-</button>
-
-<div class="chat-drawer" id="chatDrawer" role="dialog" aria-modal="false" aria-labelledby="chatTitle">
-  <div class="chat-header">
-    <div class="chat-header-info">
-      <span class="chat-avatar" aria-hidden="true">☕</span>
-      <div>
-        <div class="chat-title" id="chatTitle" data-i18n="chat.title">Coffee Advisor</div>
-        <div class="chat-subtitle" data-i18n="chat.subtitle">Ask me anything about coffee</div>
+<!-- Navigation -->
+<nav class="nav" id="main-nav" role="navigation" aria-label="Главна навигация">
+  <div class="container">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo" aria-label="420 Beans — начало">420 <span>Beans</span></a>
+      <div class="nav-links" role="menubar">
+        <a href="/shop" class="nav-link" role="menuitem" data-i18n="shopCoffee">Разгледай кафетата</a>
+        <a href="#discovery" class="nav-link" role="menuitem">Избери кафе</a>
+        <a href="#about" class="nav-link" role="menuitem" data-i18n="ourStory">Нашата история</a>
+      </div>
+      <div class="nav-actions">
+        <button class="nav-lang lang-toggle" aria-label="Смени езика">EN</button>
+        <div class="nav-cart-wrap">
+          <button class="nav-btn" data-cart-open aria-label="Отвори количката">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+            <span class="cart-count" aria-live="polite" style="display:none">0</span>
+          </button>
+        </div>
+        <button class="hamburger" id="hamburger" aria-label="Меню" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
       </div>
     </div>
-    <button class="chat-close" onclick="closeChat()" aria-label="Close chat" data-i18n-aria-label="chat.close">×</button>
-  </div>
-  <div class="chat-body" id="chatBody"></div>
-  <div class="chat-input-row">
-    <input type="text" id="chatInput" class="chat-input" data-i18n-placeholder="chat.placeholder" data-i18n-aria-label="chat.inputLabel" aria-label="Message to the coffee advisor" placeholder="Ask about a coffee or a brew method…" maxlength="600" />
-    <button class="chat-send" id="chatSendBtn" onclick="sendChatMessage()" aria-label="Send message" data-i18n-aria-label="chat.send">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
-      </svg>
-    </button>
-  </div>
-</div>
-
-<nav id="mainNav">
-  <a href="./" class="nav-logo">
-    <span class="brand-mark" aria-hidden="true">
-      <svg width="44" height="44" viewBox="0 0 100 100" fill="none">
-        <g class="ray">
-          <line x1="50" y1="6" x2="50" y2="16"/>
-          <line x1="32" y1="10" x2="36" y2="19"/>
-          <line x1="68" y1="10" x2="64" y2="19"/>
-          <line x1="18" y1="20" x2="25" y2="27"/>
-          <line x1="82" y1="20" x2="75" y2="27"/>
-          <line x1="10" y1="36" x2="19" y2="40"/>
-          <line x1="90" y1="36" x2="81" y2="40"/>
-        </g>
-        <ellipse class="bean" cx="50" cy="62" rx="18" ry="24"/>
-        <path class="crack" d="M50 40 Q42 50 50 62 Q58 74 50 84"/>
-      </svg>
-    </span>
-    420 <span>Beans</span>
-  </a>
-  <ul class="nav-links">
-    <li><a href="#shop"      data-i18n="nav.shop">Shop</a></li>
-    <li><a href="#process"   data-i18n="nav.process">Process</a></li>
-    <li><a href="#subscribe" data-i18n="nav.subscribe">Subscribe</a></li>
-    <li><a href="#about"     data-i18n="nav.about">About</a></li>
-  </ul>
-  <div class="nav-right">
-    <div class="lang-switcher">
-      <button class="lang-btn"        id="btnBG" onclick="setLang('bg')">БГ</button>
-      <button class="lang-btn active" id="btnEN" onclick="setLang('en')">EN</button>
-    </div>
-    <span class="nav-cart" onclick="openCart()">
-      <span data-i18n="nav.cart">Cart</span>&thinsp;(<span id="cartCount">0</span>)
-      <span class="cart-badge" id="cartBadge">0</span>
-    </span>
   </div>
 </nav>
 
-<section class="hero">
+<!-- Mobile Nav -->
+<nav class="mobile-nav" id="mobile-nav" aria-label="Мобилна навигация">
+  <a href="/shop" class="mobile-nav-link" data-i18n="shopCoffee">Разгледай кафетата</a>
+  <a href="#discovery" class="mobile-nav-link">Избери кафе</a>
+  <a href="#about" class="mobile-nav-link" data-i18n="ourStory">Нашата история</a>
+</nav>
+
+<!-- Hero -->
+<section class="hero" aria-label="Hero">
   <div class="hero-left">
-    <p class="hero-eyebrow" data-i18n="hero.eyebrow">Specialty Coffee — Est. 2024</p>
-    <h1 class="hero-title" data-i18n-html="hero.title">
-      Obsess<em>ively</em><br>Good<br>Coffee.
-    </h1>
-    <p class="hero-desc" data-i18n="hero.desc">
-      Carefully selected high-quality coffee, focused on flavour profile and traceable single-farm origin.
-    </p>
-    <div class="hero-cta">
-      <button class="btn-primary"
-        onclick="document.querySelector('#shop').scrollIntoView({behavior:'smooth'})"
-        data-i18n="hero.cta1">Shop Now</button>
-      <button class="btn-ghost"
-        onclick="document.querySelector('#process').scrollIntoView({behavior:'smooth'})"
-        data-i18n="hero.cta2">Our Process</button>
+    <p class="hero-eyebrow">Специалти кафе — Пловдив</p>
+    <h1 class="hero-headline">Кафе<br>с <em>характер</em><br>и произход</h1>
+    <p class="hero-desc">Избираме кафе с ясна история — от конкретни ферми, с интересен вкусов профил. Изпичаме го прясно и го изпращаме директно до теб.</p>
+    <div class="hero-ctas">
+      <a href="/shop" class="btn btn-primary btn-lg" data-i18n="shopCoffee">Разгледай кафетата</a>
+      <a href="#about" class="btn btn-outline btn-lg" data-i18n="ourStory">Нашата история</a>
     </div>
   </div>
-  <div class="hero-right">
-    <div class="hero-img-wrap">
-      <div class="hero-visual">
-        <div class="steam">
-          <div class="steam-line"></div>
-          <div class="steam-line"></div>
-          <div class="steam-line"></div>
+  <div class="hero-right" aria-hidden="true">
+    <div class="hero-visual-placeholder">
+      <span class="hero-420-mark">420</span>
+    </div>
+    <div class="hero-tag">
+      <div class="hero-tag-label">Прясно изпечено</div>
+      <div class="hero-tag-value">Single Origin ☕</div>
+    </div>
+  </div>
+</section>
+
+<!-- Marquee -->
+<div class="marquee-section" aria-hidden="true">
+  <div class="marquee-track" id="marquee-track">
+    <span class="marquee-item">Ethiopia<span class="marquee-dot"> · </span></span>
+    <span class="marquee-item">Colombia<span class="marquee-dot"> · </span></span>
+    <span class="marquee-item">Guatemala<span class="marquee-dot"> · </span></span>
+    <span class="marquee-item">Kenya<span class="marquee-dot"> · </span></span>
+    <span class="marquee-item">Peru<span class="marquee-dot"> · </span></span>
+    <span class="marquee-item">Ethiopia<span class="marquee-dot"> · </span></span>
+    <span class="marquee-item">Colombia<span class="marquee-dot"> · </span></span>
+    <span class="marquee-item">Guatemala<span class="marquee-dot"> · </span></span>
+    <span class="marquee-item">Kenya<span class="marquee-dot"> · </span></span>
+    <span class="marquee-item">Peru<span class="marquee-dot"> · </span></span>
+  </div>
+</div>
+
+<!-- Featured Products -->
+<section class="products-section" id="featured" aria-labelledby="featured-title">
+  <div class="container">
+    <div class="section-header">
+      <div>
+        <p class="section-label" data-i18n="featuredLabel">Специалти селекция</p>
+        <h2 class="section-title" id="featured-title" data-i18n="featuredTitle">Избрани кафета</h2>
+      </div>
+      <a href="/shop" class="btn btn-outline-dark" data-i18n="shopCoffee">Разгледай всички</a>
+    </div>
+    <div class="products-grid" id="featured-grid">
+      <!-- loaded by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- Discovery Section -->
+<section class="discovery-section" id="discovery" aria-labelledby="discovery-title">
+  <div class="container">
+    <div>
+      <p class="section-label" style="color:var(--accent)" data-i18n="discoveryLabel">Помощ при избор</p>
+      <h2 class="section-title light" id="discovery-title" data-i18n="discoveryTitle">Намери своето кафе</h2>
+    </div>
+    <div class="discovery-grid">
+      <div class="discovery-card" data-method="espresso" tabindex="0" role="button" aria-label="Еспресо кафета">
+        <div class="discovery-icon">☕</div>
+        <div class="discovery-title" data-i18n="espresso">Еспресо</div>
+        <div class="discovery-desc">Плътно, интензивно, с дълго послевкусие</div>
+      </div>
+      <div class="discovery-card" data-method="filter" tabindex="0" role="button" aria-label="Филтър кафета">
+        <div class="discovery-icon">🫗</div>
+        <div class="discovery-title" data-i18n="filter">Филтър</div>
+        <div class="discovery-desc">Нежно, ароматно, с деликатни нотки</div>
+      </div>
+      <div class="discovery-card" data-method="fruity" tabindex="0" role="button">
+        <div class="discovery-icon">🍒</div>
+        <div class="discovery-title" data-i18n="fruity">Плодово &amp; Флорално</div>
+        <div class="discovery-desc">Живи, ярки, изненадващи вкусове</div>
+      </div>
+      <div class="discovery-card" data-method="chocolate" tabindex="0" role="button">
+        <div class="discovery-icon">🍫</div>
+        <div class="discovery-title" data-i18n="chocolate">Шоколад &amp; Сладко</div>
+        <div class="discovery-desc">Топло, баланс, утешаващо</div>
+      </div>
+      <div class="discovery-card" data-method="experimental" tabindex="0" role="button">
+        <div class="discovery-icon">🌀</div>
+        <div class="discovery-title" data-i18n="experimental">Експериментално</div>
+        <div class="discovery-desc">Анаеробни, необичайни, авантюристични</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Brand Story -->
+<section class="brand-section" id="about" aria-labelledby="brand-title">
+  <div class="container">
+    <div class="brand-inner">
+      <div class="brand-content">
+        <div>
+          <p class="section-label">За нас</p>
+          <h2 class="section-title" id="brand-title" data-i18n="brandTitle">Кафе с характер</h2>
+        </div>
+        <p class="brand-body" data-i18n="brandBody">Подбираме специалти кафе от конкретни ферми по света — кафе с ясен произход, интересна история и изразен вкус. Изпичаме го прясно и го изпращаме директно до теб.</p>
+        <div class="brand-stats">
+          <div class="brand-stat">
+            <div class="brand-stat-num">Single</div>
+            <div class="brand-stat-label">Origin — конкретни ферми</div>
+          </div>
+          <div class="brand-stat">
+            <div class="brand-stat-num">Прясно</div>
+            <div class="brand-stat-label">Изпичаме след поръчка</div>
+          </div>
+          <div class="brand-stat">
+            <div class="brand-stat-num">€30+</div>
+            <div class="brand-stat-label">Безплатна доставка</div>
+          </div>
+          <div class="brand-stat">
+            <div class="brand-stat-num">BG</div>
+            <div class="brand-stat-label">Базирани в Пловдив</div>
+          </div>
+        </div>
+        <a href="/shop" class="btn btn-dark btn-lg">Разгледай кафетата →</a>
+      </div>
+      <div class="brand-visual" aria-hidden="true">
+        <div class="brand-visual-placeholder">
+          <span class="brand-visual-mark">420</span>
         </div>
       </div>
     </div>
-    <div class="hero-number" aria-hidden="true">420</div>
-  </div>
-  <div class="hero-scroll">
-    <div class="scroll-line"></div>
-    <span data-i18n="hero.scroll">Scroll</span>
   </div>
 </section>
 
-<div class="marquee-wrap" aria-hidden="true">
-  <div class="marquee-track is-ready">
-    <span class="marquee-item">Ethiopia Yirgacheffe</span><span class="marquee-dot">·</span>
-    <span class="marquee-item">Colombia Huila</span><span class="marquee-dot">·</span>
-    <span class="marquee-item">Guatemala Antigua</span><span class="marquee-dot">·</span>
-    <span class="marquee-item">Kenya AA</span><span class="marquee-dot">·</span>
-    <span class="marquee-item">Costa Rica Tarrazu</span><span class="marquee-dot">·</span>
-    <span class="marquee-item">Brazil Cerrado</span><span class="marquee-dot">·</span>
-    <span class="marquee-item">Ethiopia Yirgacheffe</span><span class="marquee-dot">·</span>
-    <span class="marquee-item">Colombia Huila</span><span class="marquee-dot">·</span>
-    <span class="marquee-item">Guatemala Antigua</span><span class="marquee-dot">·</span>
-    <span class="marquee-item">Kenya AA</span><span class="marquee-dot">·</span>
-    <span class="marquee-item">Costa Rica Tarrazu</span><span class="marquee-dot">·</span>
-    <span class="marquee-item">Brazil Cerrado</span><span class="marquee-dot">·</span>
-  </div>
-</div>
-
-<section class="intro" id="about">
-  <div class="intro-left reveal">
-    <p class="section-label" data-i18n="about.label">Our Philosophy</p>
-    <h2 class="intro-heading" data-i18n-html="about.heading">
-      Every cup<br>tells a <em>story.</em>
-    </h2>
-    <p class="intro-body" data-i18n="about.body">
-      We carefully select high-quality coffee with a focus on flavour profile and traceable origin down to specific farms.
-    </p>
-  </div>
-  <div class="intro-right reveal reveal-delay-2">
-    <div class="stat-box">
-      <div class="stat-icon">⬡</div>
-      <div class="stat-label" data-i18n="about.stat1">Interesting<br>Process Methods</div>
-    </div>
-    <div class="stat-box">
-      <div class="stat-icon">◉</div>
-      <div class="stat-label" data-i18n="about.stat2">Unique<br>Flavour Profiles</div>
-    </div>
-    <div class="stat-box">
-      <div class="stat-icon">↯</div>
-      <div class="stat-label" data-i18n="about.stat3">Farm-to-Roaster<br>Traceability</div>
-    </div>
-    <div class="stat-box">
-      <div class="stat-icon">◈</div>
-      <div class="stat-label" data-i18n="about.stat4">Precision<br>Roasting</div>
-    </div>
-  </div>
-</section>
-
-<section class="products" id="shop">
-  <div class="products-header reveal">
-    <h2 class="products-title">
-      <span data-i18n="shop.titleLine1">The</span><br>
-      <span class="italic" data-i18n="shop.titleLine2">Collection</span>
-    </h2>
-    <div class="products-filter">
-      <button class="filter-btn active" data-filter="all"   data-i18n="shop.all">All</button>
-      <button class="filter-btn"        data-filter="filter" data-i18n="shop.filter">Coffee</button>
-      <button class="filter-btn"        data-filter="espresso" data-i18n="shop.espresso">Coffee / Espresso</button>
-      <button class="filter-btn"        data-filter="merch" data-i18n="shop.merch">Merch</button>
-    </div>
-  </div>
-
-  <div class="product-grid" id="productGrid">
-    <div id="productsLoader" style="grid-column:1/-1;padding:80px;text-align:center;opacity:0.4;font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase">
-      Loading products...
-    </div>
-  </div>
-</section>
-
-<div class="feature-strip">
-  <div class="feature-item reveal">
-    <span class="feature-icon" aria-hidden="true">⬡</span>
-    <div class="feature-title" data-i18n="feat1.title">Direct Trade</div>
-    <p class="feature-desc" data-i18n="feat1.desc">We source directly from producers with verified traceability to specific farms.</p>
-  </div>
-  <div class="feature-item reveal reveal-delay-1">
-    <span class="feature-icon" aria-hidden="true">◈</span>
-    <div class="feature-title" data-i18n="feat2.title">Roasted Fresh</div>
-    <p class="feature-desc" data-i18n="feat2.desc">Every batch is roasted to order and ships within 24 hours of your purchase.</p>
-  </div>
-  <div class="feature-item reveal reveal-delay-2">
-    <span class="feature-icon" aria-hidden="true">◎</span>
-    <div class="feature-title" data-i18n="feat3.title">Traceable Origin</div>
-    <p class="feature-desc" data-i18n="feat3.desc">Full transparency — every bag is traceable to its specific farm and harvest.</p>
-  </div>
-  <div class="feature-item reveal reveal-delay-3">
-    <span class="feature-icon" aria-hidden="true">⬙</span>
-    <div class="feature-title" data-i18n="feat4.title">Free Shipping</div>
-    <p class="feature-desc" data-i18n="feat4.desc">Complimentary shipping on all orders over €30. No codes required.</p>
-  </div>
-</div>
-
-<section class="process" id="process">
-  <div class="process-header">
-    <h2 class="process-title reveal" data-i18n-html="process.title">
-      From<br>Field to<br><em class="text-warm">Cup.</em>
-    </h2>
-    <p class="process-body reveal reveal-delay-2" data-i18n="process.body">
-      We carefully select high-quality coffee with a focus on flavour profile and traceable origin — from careful selection to your doorstep.
-    </p>
-  </div>
-  <div class="process-steps">
-    <div class="step reveal">
-      <div class="step-num">01</div>
-      <h3 class="step-title" data-i18n="step1.title">Selection</h3>
-      <p class="step-desc" data-i18n="step1.desc">We carefully curate high-quality lots selected for flavour complexity, altitude, and verified farm traceability.</p>
-    </div>
-    <div class="step reveal reveal-delay-1">
-      <div class="step-num">02</div>
-      <h3 class="step-title" data-i18n="step2.title">Processing</h3>
-      <p class="step-desc" data-i18n="step2.desc">Natural, washed, or honey — each lot is processed using the method that best expresses its origin character.</p>
-    </div>
-    <div class="step reveal reveal-delay-2">
-      <div class="step-num">03</div>
-      <h3 class="step-title" data-i18n="step3.title">Roasting</h3>
-      <p class="step-desc" data-i18n="step3.desc">Small-batch drum roasters run precision profiles tuned to within 2°C, developing sweetness without sacrificing origin character.</p>
-    </div>
-    <div class="step reveal reveal-delay-3">
-      <div class="step-num">04</div>
-      <h3 class="step-title" data-i18n="step4.title">Delivery</h3>
-      <p class="step-desc" data-i18n="step4.desc">Nitrogen-flushed, heat-sealed, and shipped same-day. Your coffee arrives at peak freshness — ready to brew.</p>
-    </div>
-  </div>
-</section>
-
-<section class="subscription" id="subscribe">
-  <div class="sub-left">
-    <p class="sub-label" data-i18n="sub.label">Never Run Out</p>
-    <h2 class="sub-title" data-i18n-html="sub.title">
-      Fresh coffee.<br><em>On repeat.</em>
-    </h2>
-    <p class="sub-desc" data-i18n="sub.desc">
-      Subscribe and save 15% on every order. Choose your cadence — weekly, bi-weekly, or monthly. Pause or cancel anytime.
-    </p>
-    <div class="sub-form">
-      <input class="sub-input" type="email" id="subEmail"
-             data-i18n-placeholder="sub.placeholder"
-             data-i18n-aria-label="sub.emailLabel"
-             aria-label="Email for the subscription"
-             placeholder="your@email.com"
-             autocomplete="email">
-      <button class="sub-btn" onclick="handleSubscribe()" data-i18n="sub.btn">Subscribe</button>
-    </div>
-  </div>
-  <div class="sub-right" aria-hidden="true">
-    <div class="sub-visual">
-      <div class="sub-big-text-wrap">
-        <span class="brand-mark">
-          <svg width="110" height="110" viewBox="0 0 100 100" fill="none">
-            <g class="ray">
-              <line x1="50" y1="6" x2="50" y2="16"/>
-              <line x1="32" y1="10" x2="36" y2="19"/>
-              <line x1="68" y1="10" x2="64" y2="19"/>
-              <line x1="18" y1="20" x2="25" y2="27"/>
-              <line x1="82" y1="20" x2="75" y2="27"/>
-              <line x1="10" y1="36" x2="19" y2="40"/>
-              <line x1="90" y1="36" x2="81" y2="40"/>
-            </g>
-            <ellipse class="bean" cx="50" cy="62" rx="18" ry="24"/>
-            <path class="crack" d="M50 40 Q42 50 50 62 Q58 74 50 84"/>
-          </svg>
-        </span>
-        <div class="sub-big-text">420 BEANS</div>
+<!-- Trust Strip -->
+<section class="trust-section" aria-label="Предимства">
+  <div class="container">
+    <div class="trust-grid">
+      <div class="trust-item">
+        <div class="trust-icon" aria-hidden="true">🚚</div>
+        <div class="trust-title" data-i18n="trustShipping">Бърза доставка</div>
+        <div class="trust-desc" data-i18n="trustShippingDesc">Куриерска доставка 1-3 дни</div>
       </div>
-      <div class="sub-cups">
-        <div class="cup"><div class="cup-top"></div><div class="cup-liquid"></div></div>
-        <div class="cup"><div class="cup-top"></div><div class="cup-liquid"></div></div>
-        <div class="cup"><div class="cup-top"></div><div class="cup-liquid"></div></div>
+      <div class="trust-item">
+        <div class="trust-icon" aria-hidden="true">🔥</div>
+        <div class="trust-title" data-i18n="trustFresh">Прясно изпечено</div>
+        <div class="trust-desc" data-i18n="trustFreshDesc">Изпичаме след поръчка</div>
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon" aria-hidden="true">📍</div>
+        <div class="trust-title" data-i18n="trustOrigin">Проследим произход</div>
+        <div class="trust-desc" data-i18n="trustOriginDesc">До конкретна ферма</div>
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon" aria-hidden="true">🔒</div>
+        <div class="trust-title" data-i18n="trustPayment">Сигурно плащане</div>
+        <div class="trust-desc" data-i18n="trustPaymentDesc">Stripe • Карта • eBanking</div>
       </div>
     </div>
   </div>
 </section>
 
-<footer>
-  <div class="footer-top">
-    <div>
-      <div class="footer-brand">
-        <span class="brand-mark" aria-hidden="true">
-          <svg width="48" height="48" viewBox="0 0 100 100" fill="none">
-            <g class="ray">
-              <line x1="50" y1="6" x2="50" y2="16"/>
-              <line x1="32" y1="10" x2="36" y2="19"/>
-              <line x1="68" y1="10" x2="64" y2="19"/>
-              <line x1="18" y1="20" x2="25" y2="27"/>
-              <line x1="82" y1="20" x2="75" y2="27"/>
-              <line x1="10" y1="36" x2="19" y2="40"/>
-              <line x1="90" y1="36" x2="81" y2="40"/>
-            </g>
-            <ellipse class="bean" cx="50" cy="62" rx="18" ry="24"/>
-            <path class="crack" d="M50 40 Q42 50 50 62 Q58 74 50 84"/>
-          </svg>
-        </span>
-        420 <span>Beans</span>
+<!-- Footer -->
+<footer class="footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand-name">420 <span>Beans</span></div>
+        <p class="footer-tagline">Специалти кафе с проследим произход. Изпечено с обсесия. Доставено с грижа.</p>
       </div>
-      <p class="footer-tagline" data-i18n="footer.tagline">
-        Specialty coffee with traceable single-farm origin. Roasted with obsession. Delivered with care.
-      </p>
+      <div>
+        <div class="footer-col-title">Магазин</div>
+        <div class="footer-links">
+          <a href="/shop" class="footer-link">Всички кафета</a>
+          <a href="/shop" class="footer-link">Аксесоари</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Информация</div>
+        <div class="footer-links">
+          <a href="#about" class="footer-link">За нас</a>
+          <a href="#" class="footer-link">Доставка и връщане</a>
+          <a href="#" class="footer-link">Общи условия</a>
+          <a href="#" class="footer-link">Поверителност</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Контакт</div>
+        <div class="footer-links">
+          <span class="footer-link">Пловдив, България</span>
+          <a href="mailto:hello@420beans.bg" class="footer-link">hello@420beans.bg</a>
+        </div>
+      </div>
     </div>
-    <div>
-      <p class="footer-col-title" data-i18n="footer.col1">Shop</p>
-      <ul class="footer-links">
-        <li><a href="#shop" data-i18n="footer.allcoffee">All Coffee</a></li>
-        <li><a href="#shop" data-i18n="shop.filter">Filter Coffee</a></li>
-        <li><a href="#shop" data-i18n="shop.espresso">Coffee / Espresso</a></li>
-        <li><a href="#shop" data-i18n="shop.merch">Merch & Accessories</a></li>
-      </ul>
-    </div>
-    <div>
-      <p class="footer-col-title" data-i18n="footer.col2">Learn</p>
-      <ul class="footer-links">
-        <li><a href="#process"   data-i18n="nav.process">Process</a></li>
-        <li><a href="#about"     data-i18n="nav.about">About</a></li>
-        <li><a href="#subscribe" data-i18n="nav.subscribe">Subscribe</a></li>
-      </ul>
-    </div>
-    <div>
-      <p class="footer-col-title" data-i18n="footer.col3">Info</p>
-      <ul class="footer-links">
-        <li><a href="mailto:hello@420beans.com" data-i18n="footer.contact">Contact</a></li>
-        <li><a href="#" data-i18n="footer.shipping">Shipping Policy</a></li>
-        <li><a href="#" data-i18n="footer.returns">Returns</a></li>
-        <li><a href="#" data-i18n="footer.privacy">Privacy Policy</a></li>
-      </ul>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    <p class="footer-copy" data-i18n="footer.copy">© 2024 420 Beans. All rights reserved.</p>
-    <div class="footer-social">
-      <a href="#" aria-label="Instagram">Instagram</a>
-      <a href="#" aria-label="Facebook">Facebook</a>
-      <a href="#" aria-label="TikTok">TikTok</a>
+    <div class="footer-bottom">
+      <p class="footer-copy">© 2024 420 Beans. Всички права запазени.</p>
+      <button class="nav-lang lang-toggle" style="color:rgba(245,242,235,.5);border-color:rgba(245,242,235,.2)">EN</button>
     </div>
   </div>
 </footer>
 
-<script src="./i18n.js"></script>
-<script src="./script.js"></script>
+<!-- Cart Drawer -->
+<div class="cart-overlay" id="cart-overlay" aria-hidden="true"></div>
+<aside class="cart-drawer" id="cart-drawer" role="dialog" aria-label="Количка" aria-modal="true">
+  <div class="cart-header">
+    <h2 class="cart-title" data-i18n="cartTitle">Количка</h2>
+    <button class="cart-close" data-cart-close aria-label="Затвори количката">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="cart-items" id="cart-items"></div>
+  <div class="cart-footer">
+    <div class="cart-totals">
+      <div class="cart-row"><span data-i18n="cartSubtotal">Стойност</span><span id="cart-subtotal">€0.00</span></div>
+      <div class="cart-row"><span data-i18n="cartShipping">Доставка</span><span id="cart-shipping">€4.99</span></div>
+      <div class="cart-row total"><span data-i18n="cartTotal">Общо</span><span id="cart-total">€0.00</span></div>
+    </div>
+    <button class="btn btn-primary btn-full btn-lg" id="checkout-btn" data-i18n="cartCheckout">Към плащане</button>
+    <p class="cart-note" data-i18n="cartNote">Изпичаме след потвърждение на поръчката</p>
+  </div>
+</aside>
+
+<!-- Chat Widget -->
+<button class="chat-fab" id="chat-fab" aria-label="Отвори чат асистент">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+</button>
+<div class="chat-panel" id="chat-panel" role="dialog" aria-label="Кафе асистент">
+  <div class="chat-panel-header">
+    <div class="chat-avatar" aria-hidden="true">☕</div>
+    <div>
+      <div class="chat-panel-title">Кафе Асистент</div>
+      <div class="chat-panel-sub">420 Beans</div>
+    </div>
+    <button id="chat-close" aria-label="Затвори чат" style="margin-left:auto">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="chat-messages" id="chat-messages" aria-live="polite"></div>
+  <form class="chat-form" id="chat-form">
+    <input class="chat-input" id="chat-input" type="text" data-i18n="chatPlaceholder" placeholder="Попитай за кафе..." autocomplete="off">
+    <button class="chat-send" type="submit" aria-label="Изпрати">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+    </button>
+  </form>
+</div>
+
+<!-- Toast Stack -->
+<div class="toast-stack" id="toast-stack" aria-live="assertive"></div>
+
+<script src="/app.js"></script>
 </body>
 </html>
