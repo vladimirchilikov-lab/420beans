@@ -1,1264 +1,527 @@
-<title>420 Beans</title>
-<meta name="claude:viewport-fit-sides" content="cover">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap">
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>420 Beans — Специалти кафе от Пловдив</title>
+  <meta name="description" content="420 Beans — специалти кафе с проследим произход. Прясно изпечено и доставено директно до теб.">
+  <meta property="og:title" content="420 Beans — Специалти кафе">
+  <meta property="og:description" content="Специалти кафе с проследим произход. Прясно изпечено и доставено директно до теб.">
+  <meta property="og:type" content="website">
+  <link rel="canonical" href="https://420beans.vercel.app/">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="/style.css">
+  <style>
+    /* ---- Flame Bean Canvas ---- */
+    .bean-canvas-wrap {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-dark);
+      overflow: hidden;
+    }
+    #beanCanvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+    /* subtle vignette over the canvas */
+    .bean-canvas-wrap::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 45%, rgba(20,18,16,0.55) 100%);
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
 
-<style>
-/* ─── TOKENS ─────────────────────────────────────────────
-   Layout: full-bleed scroll storytelling, one hero bean,
-   alternating edge-to-edge text + visual sections        */
-:root {
-  --cream:   #F7F4EE;
-  --ink:     #1A1610;
-  --warm:    #3D2B1A;
-  --lime:    #C6FF3B;
-  --mid:     #8C7B68;
-  --line:    rgba(26,22,16,.1);
+<!-- Announcement Bar -->
+<div class="announcement-bar">
+  <span data-i18n="announcementBar">Прясно изпечено кафе • Доставка с куриер • Поръчай сега →</span>
+</div>
 
-  --f-serif: 'Instrument Serif', Georgia, serif;
-  --f-sans:  'DM Sans', system-ui, sans-serif;
-
-  --ease-out: cubic-bezier(.16,1,.3,1);
-
-  color-scheme: light;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --cream: #161310;
-    --ink:   #F0EDE6;
-    --warm:  #D4B896;
-    --mid:   #7A6B58;
-    --line:  rgba(240,237,230,.1);
-    color-scheme: dark;
-  }
-}
-:root[data-theme="dark"] {
-  --cream: #161310;
-  --ink:   #F0EDE6;
-  --warm:  #D4B896;
-  --mid:   #7A6B58;
-  --line:  rgba(240,237,230,.1);
-  color-scheme: dark;
-}
-
-*, *::before, *::after { box-sizing: border-box; margin: 0; }
-
-body {
-  background: var(--cream);
-  color: var(--ink);
-  font-family: var(--f-sans);
-  font-size: clamp(15px, 1.6vw, 17px);
-  line-height: 1.6;
-  overflow-x: hidden;
-}
-
-/* ─── UTILS ─────────────────────────────────────────────── */
-.wrap {
-  width: 100%;
-  max-width: 1280px;
-  margin-inline: auto;
-  padding-left: max(24px, env(safe-area-inset-left, 0px));
-  padding-right: max(24px, env(safe-area-inset-right, 0px));
-}
-.eyebrow {
-  font-family: var(--f-sans);
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  color: var(--mid);
-}
-
-/* ─── NAV ────────────────────────────────────────────────── */
-nav {
-  position: fixed;
-  inset: 0 0 auto;
-  z-index: 100;
-  padding-block: 18px;
-  padding-left: max(24px, env(safe-area-inset-left, 0px));
-  padding-right: max(24px, env(safe-area-inset-right, 0px));
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  transition: background .3s, backdrop-filter .3s;
-}
-nav.scrolled {
-  background: color-mix(in srgb, var(--cream) 85%, transparent);
-  backdrop-filter: blur(12px);
-}
-.nav-logo {
-  font-family: var(--f-serif);
-  font-size: 22px;
-  color: var(--ink);
-  text-decoration: none;
-  letter-spacing: -.02em;
-}
-.nav-logo em { font-style: italic; color: var(--mid); }
-.nav-links {
-  display: flex;
-  gap: 32px;
-  list-style: none;
-}
-.nav-links a {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--ink);
-  text-decoration: none;
-  opacity: .7;
-  transition: opacity .2s;
-}
-.nav-links a:hover { opacity: 1; }
-.nav-right { display: flex; align-items: center; gap: 16px; }
-.btn-cart {
-  display: flex; align-items: center; gap: 6px;
-  padding: 9px 18px;
-  background: var(--ink);
-  color: var(--cream);
-  border: none; border-radius: 100px;
-  font-size: 13px; font-weight: 500;
-  cursor: pointer;
-  transition: opacity .2s;
-}
-.btn-cart:hover { opacity: .8; }
-.btn-lang {
-  background: none; border: none;
-  font-size: 12px; font-weight: 500; letter-spacing: .06em;
-  color: var(--mid); cursor: pointer;
-}
-@media (max-width: 700px) {
-  .nav-links { display: none; }
-}
-
-/* ─── HERO ───────────────────────────────────────────────── */
-.hero {
-  min-height: 100svh;
-  display: grid;
-  grid-template-rows: 1fr auto;
-  padding-top: 80px;
-  overflow: hidden;
-  position: relative;
-}
-.hero-stage {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  gap: 0;
-  position: relative;
-  padding-block: 60px 40px;
-}
-/* Big display headline */
-.hero-line1 {
-  font-family: var(--f-serif);
-  font-size: clamp(64px, 12vw, 160px);
-  line-height: .92;
-  letter-spacing: -.04em;
-  color: var(--ink);
-  position: relative;
-  z-index: 2;
-}
-.hero-line1 em {
-  font-style: italic;
-  color: var(--mid);
-}
-
-/* 3D BEAN — the hero object */
-.bean-wrap {
-  position: relative;
-  width: clamp(220px, 38vw, 520px);
-  aspect-ratio: 1;
-  margin-block: -16px;
-  z-index: 3;
-  animation: float 6s ease-in-out infinite;
-}
-@keyframes float {
-  0%,100% { transform: translateY(0) rotate(-8deg); }
-  50%      { transform: translateY(-28px) rotate(-4deg); }
-}
-.bean-wrap canvas {
-  width: 100%; height: 100%;
-}
-
-.hero-line2 {
-  font-family: var(--f-serif);
-  font-size: clamp(64px, 12vw, 160px);
-  line-height: .92;
-  letter-spacing: -.04em;
-  color: var(--ink);
-  position: relative;
-  z-index: 2;
-}
-.hero-sub {
-  margin-top: 32px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  justify-content: center;
-  align-items: center;
-}
-.hero-cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 14px 28px;
-  background: var(--lime);
-  color: #0E0E0C;
-  border-radius: 100px;
-  font-weight: 600;
-  font-size: 14px;
-  text-decoration: none;
-  transition: transform .2s var(--ease-out), box-shadow .2s;
-}
-.hero-cta:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 32px color-mix(in srgb, var(--lime) 40%, transparent);
-}
-.hero-ghost {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 14px 28px;
-  border: 1.5px solid var(--line);
-  border-radius: 100px;
-  font-size: 14px;
-  font-weight: 400;
-  text-decoration: none;
-  color: var(--ink);
-  transition: border-color .2s;
-}
-.hero-ghost:hover { border-color: var(--mid); }
-
-/* Scroll hint */
-.hero-scroll {
-  padding-block: 20px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-}
-.hero-scroll span { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--mid); }
-.scroll-line {
-  width: 1px; height: 40px;
-  background: linear-gradient(to bottom, var(--mid), transparent);
-  animation: scroll-pulse 2s ease-in-out infinite;
-}
-@keyframes scroll-pulse {
-  0%,100% { opacity: .3; transform: scaleY(1); }
-  50%      { opacity: 1;  transform: scaleY(1.2); }
-}
-
-/* ─── MARQUEE ────────────────────────────────────────────── */
-.marquee-band {
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
-  overflow: hidden;
-  padding-block: 14px;
-}
-.marquee-track {
-  display: flex;
-  gap: 0;
-  width: max-content;
-  animation: marquee 22s linear infinite;
-}
-@keyframes marquee {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
-}
-.marquee-item {
-  font-family: var(--f-serif);
-  font-style: italic;
-  font-size: clamp(15px, 2vw, 20px);
-  color: var(--mid);
-  white-space: nowrap;
-  padding-right: 40px;
-}
-.marquee-dot { opacity: .4; }
-
-/* ─── REVEAL ANIMATION ───────────────────────────────────── */
-.reveal {
-  opacity: 0;
-  transform: translateY(40px);
-  transition: opacity .8s var(--ease-out), transform .8s var(--ease-out);
-}
-.reveal.visible {
-  opacity: 1;
-  transform: none;
-}
-.reveal-delay-1 { transition-delay: .1s; }
-.reveal-delay-2 { transition-delay: .2s; }
-.reveal-delay-3 { transition-delay: .3s; }
-.reveal-delay-4 { transition-delay: .4s; }
-
-/* ─── FEATURED PRODUCTS ─────────────────────────────────── */
-.products-section {
-  padding-block: clamp(80px, 10vw, 140px);
-}
-.section-intro {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  gap: 24px;
-  margin-bottom: 56px;
-  flex-wrap: wrap;
-}
-.section-intro h2 {
-  font-family: var(--f-serif);
-  font-size: clamp(36px, 5vw, 64px);
-  line-height: 1.05;
-  letter-spacing: -.03em;
-  max-width: 480px;
-  text-wrap: balance;
-}
-.section-intro h2 em { font-style: italic; color: var(--mid); }
-.btn-text {
-  font-size: 13px; font-weight: 500;
-  color: var(--ink);
-  text-decoration: none;
-  display: flex; align-items: center; gap: 6px;
-  opacity: .6;
-  transition: opacity .2s, gap .2s;
-  white-space: nowrap;
-}
-.btn-text:hover { opacity: 1; gap: 10px; }
-
-.products-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 2px;
-}
-.product-card {
-  background: color-mix(in srgb, var(--ink) 4%, var(--cream));
-  border-radius: 4px;
-  overflow: hidden;
-  cursor: pointer;
-  transition: transform .3s var(--ease-out);
-  display: flex;
-  flex-direction: column;
-}
-.product-card:hover { transform: translateY(-4px); }
-.product-img {
-  aspect-ratio: 4/3;
-  background: color-mix(in srgb, var(--warm) 12%, var(--cream));
-  display: flex; align-items: center; justify-content: center;
-  font-size: 64px;
-  position: relative;
-  overflow: hidden;
-}
-.product-img canvas { width: 100%; height: 100%; }
-.product-badge {
-  position: absolute;
-  top: 14px; left: 14px;
-  background: var(--lime);
-  color: #0E0E0C;
-  font-size: 10px; font-weight: 600; letter-spacing: .08em;
-  text-transform: uppercase;
-  padding: 4px 10px;
-  border-radius: 100px;
-}
-.product-body { padding: 20px 22px 22px; flex: 1; display: flex; flex-direction: column; gap: 6px; }
-.product-origin { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--mid); }
-.product-name { font-family: var(--f-serif); font-size: 22px; letter-spacing: -.02em; line-height: 1.2; }
-.product-notes { font-size: 13px; color: var(--mid); line-height: 1.4; flex: 1; }
-.product-footer {
-  margin-top: 16px;
-  display: flex; align-items: center; justify-content: space-between;
-}
-.product-price { font-weight: 600; font-size: 16px; }
-.btn-add {
-  width: 36px; height: 36px;
-  border-radius: 50%;
-  background: var(--ink);
-  color: var(--cream);
-  border: none; cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 20px; line-height: 1;
-  transition: background .2s, transform .15s;
-}
-.btn-add:hover { background: var(--warm); transform: scale(1.1); }
-
-/* ─── DISCOVERY ──────────────────────────────────────────── */
-.discovery-section {
-  background: var(--ink);
-  color: var(--cream);
-  padding-block: clamp(80px, 10vw, 140px);
-  --line: rgba(255,255,255,.08);
-}
-.discovery-section h2 {
-  font-family: var(--f-serif);
-  font-size: clamp(40px, 6vw, 80px);
-  letter-spacing: -.04em;
-  line-height: 1.05;
-  margin-bottom: 16px;
-  text-wrap: balance;
-}
-.discovery-section h2 em { font-style: italic; color: var(--mid); }
-.discovery-section .eyebrow { color: var(--lime); margin-bottom: 12px; }
-.discovery-intro { max-width: 520px; margin-bottom: 56px; }
-.discovery-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 2px;
-}
-.d-card {
-  background: rgba(255,255,255,.04);
-  border-radius: 4px;
-  padding: 28px 24px;
-  cursor: pointer;
-  transition: background .2s;
-  border: 1px solid transparent;
-  display: flex; flex-direction: column; gap: 10px;
-}
-.d-card:hover, .d-card:focus { background: rgba(255,255,255,.08); outline: none; border-color: var(--lime); }
-.d-icon { font-size: 32px; }
-.d-title { font-family: var(--f-serif); font-size: 20px; }
-.d-desc { font-size: 13px; color: rgba(240,237,230,.5); line-height: 1.4; }
-
-/* ─── BRAND STORY ────────────────────────────────────────── */
-.brand-section {
-  padding-block: clamp(80px, 10vw, 140px);
-  overflow: hidden;
-}
-.brand-inner {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 80px;
-  align-items: center;
-}
-@media (max-width: 800px) {
-  .brand-inner { grid-template-columns: 1fr; gap: 48px; }
-}
-.brand-text h2 {
-  font-family: var(--f-serif);
-  font-size: clamp(40px, 5.5vw, 72px);
-  letter-spacing: -.04em;
-  line-height: 1.05;
-  margin-bottom: 24px;
-  text-wrap: balance;
-}
-.brand-text h2 em { font-style: italic; color: var(--mid); }
-.brand-body { color: var(--mid); line-height: 1.75; margin-bottom: 40px; max-width: 440px; }
-.brand-stats {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px 32px;
-  margin-bottom: 44px;
-}
-.stat-num {
-  font-family: var(--f-serif);
-  font-size: 36px;
-  letter-spacing: -.03em;
-  line-height: 1;
-  margin-bottom: 4px;
-}
-.stat-label { font-size: 12px; color: var(--mid); }
-.btn-primary {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 14px 28px;
-  background: var(--ink); color: var(--cream);
-  border-radius: 100px; font-weight: 500; font-size: 14px;
-  text-decoration: none;
-  transition: opacity .2s;
-}
-.btn-primary:hover { opacity: .8; }
-
-/* big bean on brand side */
-.brand-bean {
-  display: flex; align-items: center; justify-content: center;
-}
-.brand-bean canvas {
-  width: clamp(260px, 36vw, 480px);
-  height: clamp(260px, 36vw, 480px);
-}
-
-/* ─── TRUST ──────────────────────────────────────────────── */
-.trust-section {
-  border-top: 1px solid var(--line);
-  padding-block: 56px;
-}
-.trust-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 40px;
-}
-.trust-item { display: flex; flex-direction: column; gap: 6px; }
-.trust-icon { font-size: 24px; margin-bottom: 4px; }
-.trust-title { font-weight: 600; font-size: 15px; }
-.trust-desc { font-size: 13px; color: var(--mid); }
-
-/* ─── FOOTER ─────────────────────────────────────────────── */
-footer {
-  border-top: 1px solid var(--line);
-  padding-block: 56px 40px;
-}
-.footer-grid {
-  display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr;
-  gap: 40px;
-  margin-bottom: 48px;
-}
-@media (max-width: 800px) {
-  .footer-grid { grid-template-columns: 1fr 1fr; }
-}
-@media (max-width: 500px) {
-  .footer-grid { grid-template-columns: 1fr; }
-}
-.footer-brand {
-  font-family: var(--f-serif);
-  font-size: 22px;
-  letter-spacing: -.02em;
-  margin-bottom: 10px;
-}
-.footer-brand em { font-style: italic; color: var(--mid); }
-.footer-tagline { font-size: 13px; color: var(--mid); line-height: 1.6; max-width: 240px; }
-.footer-col-title { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--mid); margin-bottom: 14px; }
-.footer-links { display: flex; flex-direction: column; gap: 8px; }
-.footer-links a, .footer-links span { font-size: 14px; color: var(--ink); text-decoration: none; opacity: .7; transition: opacity .2s; }
-.footer-links a:hover { opacity: 1; }
-.footer-bottom {
-  display: flex; justify-content: space-between; align-items: center;
-  border-top: 1px solid var(--line); padding-top: 24px;
-  font-size: 12px; color: var(--mid);
-}
-
-/* ─── CART DRAWER ────────────────────────────────────────── */
-.cart-overlay {
-  position: fixed; inset: 0; z-index: 200;
-  background: rgba(0,0,0,.4); backdrop-filter: blur(4px);
-  opacity: 0; pointer-events: none; transition: opacity .3s;
-}
-.cart-overlay.open { opacity: 1; pointer-events: all; }
-.cart-drawer {
-  position: fixed; top: 0; right: 0; bottom: 0; z-index: 201;
-  width: min(420px, 100vw);
-  background: var(--cream);
-  display: flex; flex-direction: column;
-  transform: translateX(100%);
-  transition: transform .4s var(--ease-out);
-  box-shadow: -16px 0 40px rgba(0,0,0,.12);
-}
-.cart-drawer.open { transform: none; }
-.cart-header {
-  padding: 24px max(24px, env(safe-area-inset-right, 0px)) 24px 24px;
-  border-bottom: 1px solid var(--line);
-  display: flex; justify-content: space-between; align-items: center;
-}
-.cart-title { font-family: var(--f-serif); font-size: 24px; }
-.cart-close { background: none; border: none; cursor: pointer; color: var(--ink); opacity: .5; padding: 4px; }
-.cart-close:hover { opacity: 1; }
-.cart-items { flex: 1; overflow-y: auto; padding: 16px 24px; display: flex; flex-direction: column; gap: 16px; }
-.cart-empty { text-align: center; color: var(--mid); padding: 48px 0; font-size: 15px; }
-.cart-item { display: flex; gap: 14px; align-items: center; }
-.cart-item-thumb {
-  width: 64px; height: 64px; border-radius: 8px;
-  background: color-mix(in srgb, var(--warm) 12%, var(--cream));
-  display: flex; align-items: center; justify-content: center;
-  font-size: 28px; flex-shrink: 0;
-}
-.cart-item-name { font-weight: 500; font-size: 15px; margin-bottom: 2px; }
-.cart-item-sub { font-size: 12px; color: var(--mid); }
-.cart-item-price { font-weight: 600; margin-left: auto; white-space: nowrap; }
-.cart-item-rm { background: none; border: none; color: var(--mid); cursor: pointer; padding: 4px; font-size: 18px; }
-.cart-footer {
-  padding: 16px max(24px, env(safe-area-inset-right, 0px)) max(24px, env(safe-area-inset-bottom, 0px)) 24px;
-  border-top: 1px solid var(--line);
-  display: flex; flex-direction: column; gap: 12px;
-}
-.cart-row { display: flex; justify-content: space-between; font-size: 14px; color: var(--mid); }
-.cart-row.total { font-weight: 600; font-size: 16px; color: var(--ink); margin-top: 4px; }
-.btn-checkout {
-  padding: 16px; text-align: center;
-  background: var(--ink); color: var(--cream);
-  border: none; border-radius: 100px;
-  font-size: 15px; font-weight: 600; cursor: pointer;
-  transition: opacity .2s;
-}
-.btn-checkout:hover { opacity: .8; }
-.btn-checkout:disabled { opacity: .4; cursor: default; }
-.cart-note { font-size: 12px; color: var(--mid); text-align: center; }
-
-/* ─── CHAT FAB ───────────────────────────────────────────── */
-.chat-fab {
-  position: fixed;
-  bottom: max(28px, env(safe-area-inset-bottom, 0px));
-  right: max(24px, env(safe-area-inset-right, 0px));
-  z-index: 150;
-  width: 52px; height: 52px; border-radius: 50%;
-  background: var(--ink); color: var(--cream);
-  border: none; cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 4px 20px rgba(0,0,0,.25);
-  transition: transform .2s var(--ease-out);
-}
-.chat-fab:hover { transform: scale(1.08); }
-.chat-panel {
-  position: fixed;
-  bottom: max(88px, calc(env(safe-area-inset-bottom, 0px) + 88px));
-  right: max(24px, env(safe-area-inset-right, 0px));
-  z-index: 150;
-  width: min(360px, calc(100vw - 32px));
-  background: var(--cream);
-  border-radius: 16px;
-  box-shadow: 0 8px 48px rgba(0,0,0,.18);
-  display: flex; flex-direction: column;
-  overflow: hidden;
-  transform: scale(.9) translateY(16px);
-  transform-origin: bottom right;
-  opacity: 0; pointer-events: none;
-  transition: transform .3s var(--ease-out), opacity .3s;
-  border: 1px solid var(--line);
-}
-.chat-panel.open { transform: none; opacity: 1; pointer-events: all; }
-.chat-panel-header {
-  padding: 16px 18px;
-  border-bottom: 1px solid var(--line);
-  display: flex; align-items: center; gap: 12px;
-}
-.chat-avatar { font-size: 22px; }
-.chat-panel-title { font-weight: 600; font-size: 14px; }
-.chat-panel-sub { font-size: 11px; color: var(--mid); }
-.chat-close { margin-left: auto; background: none; border: none; cursor: pointer; color: var(--mid); }
-.chat-messages { flex: 1; max-height: 280px; overflow-y: auto; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
-.msg { font-size: 13.5px; line-height: 1.5; padding: 10px 14px; border-radius: 12px; max-width: 88%; }
-.msg.ai { background: color-mix(in srgb, var(--ink) 6%, var(--cream)); align-self: flex-start; }
-.msg.user { background: var(--ink); color: var(--cream); align-self: flex-end; }
-.chat-form { padding: 12px 14px; border-top: 1px solid var(--line); display: flex; gap: 8px; }
-.chat-input {
-  flex: 1; padding: 10px 14px;
-  background: color-mix(in srgb, var(--ink) 5%, var(--cream));
-  border: 1px solid var(--line); border-radius: 100px;
-  font-size: 14px; color: var(--ink); font-family: var(--f-sans);
-  outline: none;
-}
-.chat-input:focus { border-color: var(--mid); }
-.chat-send {
-  width: 36px; height: 36px; border-radius: 50%;
-  background: var(--ink); color: var(--cream);
-  border: none; cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0; transition: opacity .2s;
-}
-.chat-send:hover { opacity: .7; }
-
-/* ─── TOAST ──────────────────────────────────────────────── */
-.toast-stack {
-  position: fixed;
-  bottom: max(90px, calc(env(safe-area-inset-bottom, 0px) + 90px));
-  left: 50%; transform: translateX(-50%);
-  z-index: 300;
-  display: flex; flex-direction: column; gap: 8px; align-items: center;
-}
-.toast {
-  background: var(--ink); color: var(--cream);
-  padding: 10px 20px; border-radius: 100px;
-  font-size: 13px; font-weight: 500;
-  animation: toast-in .3s var(--ease-out) forwards;
-  white-space: nowrap;
-}
-@keyframes toast-in {
-  from { opacity: 0; transform: translateY(8px); }
-  to   { opacity: 1; transform: none; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .bean-wrap, .scroll-line { animation: none; }
-  .reveal { opacity: 1; transform: none; transition: none; }
-  .marquee-track { animation-duration: 60s; }
-}
-</style>
-
-<!-- NAV -->
-<nav id="main-nav" role="navigation">
-  <a href="/" class="nav-logo">420 <em>Beans</em></a>
-  <ul class="nav-links">
-    <li><a href="/shop">Кафета</a></li>
-    <li><a href="#about">За нас</a></li>
-    <li><a href="#discovery">Помощ при избор</a></li>
-  </ul>
-  <div class="nav-right">
-    <button class="btn-lang" id="lang-btn">EN</button>
-    <button class="btn-cart" id="cart-open-btn">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-      <span id="cart-count-nav">Количка</span>
-    </button>
+<!-- Navigation -->
+<nav class="nav" id="main-nav" role="navigation" aria-label="Главна навигация">
+  <div class="container">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo" aria-label="420 Beans — начало">420 <span>Beans</span></a>
+      <div class="nav-links" role="menubar">
+        <a href="/shop" class="nav-link" role="menuitem" data-i18n="shopCoffee">Разгледай кафетата</a>
+        <a href="#discovery" class="nav-link" role="menuitem">Избери кафе</a>
+        <a href="#about" class="nav-link" role="menuitem" data-i18n="ourStory">Нашата история</a>
+      </div>
+      <div class="nav-actions">
+        <button class="nav-lang lang-toggle" aria-label="Смени езика">EN</button>
+        <div class="nav-cart-wrap">
+          <button class="nav-btn" data-cart-open aria-label="Отвори количката">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+            <span class="cart-count" aria-live="polite" style="display:none">0</span>
+          </button>
+        </div>
+        <button class="hamburger" id="hamburger" aria-label="Меню" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
   </div>
 </nav>
 
-<!-- HERO -->
+<!-- Mobile Nav -->
+<nav class="mobile-nav" id="mobile-nav" aria-label="Мобилна навигация">
+  <a href="/shop" class="mobile-nav-link" data-i18n="shopCoffee">Разгледай кафетата</a>
+  <a href="#discovery" class="mobile-nav-link">Избери кафе</a>
+  <a href="#about" class="mobile-nav-link" data-i18n="ourStory">Нашата история</a>
+</nav>
+
+<!-- Hero -->
 <section class="hero" aria-label="Hero">
-  <div class="hero-stage wrap">
-    <p class="eyebrow reveal">Специалти кафе — Пловдив, България</p>
-    <h1 class="hero-line1 reveal reveal-delay-1">Кафе<br>с <em>произход</em></h1>
-    <!-- 3D BEAN -->
-    <div class="bean-wrap" aria-hidden="true">
-      <canvas id="hero-bean" width="520" height="520"></canvas>
-    </div>
-    <p class="hero-line2 reveal reveal-delay-2">и характер</p>
-    <div class="hero-sub reveal reveal-delay-3">
-      <a href="/shop" class="hero-cta">Разгледай кафетата →</a>
-      <a href="#about" class="hero-ghost">Нашата история</a>
+  <div class="hero-left">
+    <p class="hero-eyebrow">Специалти кафе — Пловдив</p>
+    <h1 class="hero-headline">Кафе<br>с <em>характер</em><br>и произход</h1>
+    <p class="hero-desc">Избираме кафе с ясна история — от конкретни ферми, с интересен вкусов профил. Изпичаме го прясно и го изпращаме директно до теб.</p>
+    <div class="hero-ctas">
+      <a href="/shop" class="btn btn-primary btn-lg" data-i18n="shopCoffee">Разгледай кафетата</a>
+      <a href="#about" class="btn btn-outline btn-lg" data-i18n="ourStory">Нашата история</a>
     </div>
   </div>
-  <div class="hero-scroll" aria-hidden="true">
-    <span>Скролирай</span>
-    <div class="scroll-line"></div>
+  <div class="hero-right" aria-hidden="true">
+    <div class="bean-canvas-wrap">
+      <canvas id="beanCanvas" aria-hidden="true"></canvas>
+    </div>
+    <div class="hero-tag">
+      <div class="hero-tag-label">Прясно изпечено</div>
+      <div class="hero-tag-value">Single Origin ☕</div>
+    </div>
   </div>
 </section>
 
-<!-- MARQUEE -->
-<div class="marquee-band" aria-hidden="true">
+<!-- Marquee -->
+<div class="marquee-section" aria-hidden="true">
   <div class="marquee-track" id="marquee-track">
     <span class="marquee-item">Ethiopia<span class="marquee-dot"> · </span></span>
     <span class="marquee-item">Colombia<span class="marquee-dot"> · </span></span>
     <span class="marquee-item">Guatemala<span class="marquee-dot"> · </span></span>
     <span class="marquee-item">Kenya<span class="marquee-dot"> · </span></span>
     <span class="marquee-item">Peru<span class="marquee-dot"> · </span></span>
-    <span class="marquee-item">Rwanda<span class="marquee-dot"> · </span></span>
     <span class="marquee-item">Ethiopia<span class="marquee-dot"> · </span></span>
     <span class="marquee-item">Colombia<span class="marquee-dot"> · </span></span>
     <span class="marquee-item">Guatemala<span class="marquee-dot"> · </span></span>
     <span class="marquee-item">Kenya<span class="marquee-dot"> · </span></span>
     <span class="marquee-item">Peru<span class="marquee-dot"> · </span></span>
-    <span class="marquee-item">Rwanda<span class="marquee-dot"> · </span></span>
   </div>
 </div>
 
-<!-- FEATURED PRODUCTS -->
-<section class="products-section" aria-labelledby="products-title">
-  <div class="wrap">
-    <div class="section-intro reveal">
+<!-- Featured Products -->
+<section class="products-section" id="featured" aria-labelledby="featured-title">
+  <div class="container">
+    <div class="section-header">
       <div>
-        <p class="eyebrow" style="margin-bottom:10px">Специалти селекция</p>
-        <h2 id="products-title">Избрани <em>кафета</em></h2>
+        <p class="section-label" data-i18n="featuredLabel">Специалти селекция</p>
+        <h2 class="section-title" id="featured-title" data-i18n="featuredTitle">Избрани кафета</h2>
       </div>
-      <a href="/shop" class="btn-text">Виж всички →</a>
+      <a href="/shop" class="btn btn-outline-dark" data-i18n="shopCoffee">Разгледай всички</a>
     </div>
     <div class="products-grid" id="featured-grid">
-      <!-- JS populated -->
+      <!-- loaded by JS -->
     </div>
   </div>
 </section>
 
-<!-- DISCOVERY -->
+<!-- Discovery Section -->
 <section class="discovery-section" id="discovery" aria-labelledby="discovery-title">
-  <div class="wrap">
-    <div class="discovery-intro reveal">
-      <p class="eyebrow">Помощ при избор</p>
-      <h2 id="discovery-title">Намери своето <em>кафе</em></h2>
+  <div class="container">
+    <div>
+      <p class="section-label" style="color:var(--accent)" data-i18n="discoveryLabel">Помощ при избор</p>
+      <h2 class="section-title light" id="discovery-title" data-i18n="discoveryTitle">Намери своето кафе</h2>
     </div>
     <div class="discovery-grid">
-      <div class="d-card reveal" tabindex="0" role="button" data-method="espresso">
-        <div class="d-icon">☕</div>
-        <div class="d-title">Еспресо</div>
-        <div class="d-desc">Плътно, интензивно, с дълго послевкусие</div>
+      <div class="discovery-card" data-method="espresso" tabindex="0" role="button" aria-label="Еспресо кафета">
+        <div class="discovery-icon">☕</div>
+        <div class="discovery-title" data-i18n="espresso">Еспресо</div>
+        <div class="discovery-desc">Плътно, интензивно, с дълго послевкусие</div>
       </div>
-      <div class="d-card reveal reveal-delay-1" tabindex="0" role="button" data-method="filter">
-        <div class="d-icon">🫗</div>
-        <div class="d-title">Филтър</div>
-        <div class="d-desc">Нежно, ароматно, с деликатни нотки</div>
+      <div class="discovery-card" data-method="filter" tabindex="0" role="button" aria-label="Филтър кафета">
+        <div class="discovery-icon">🫗</div>
+        <div class="discovery-title" data-i18n="filter">Филтър</div>
+        <div class="discovery-desc">Нежно, ароматно, с деликатни нотки</div>
       </div>
-      <div class="d-card reveal reveal-delay-2" tabindex="0" role="button" data-method="fruity">
-        <div class="d-icon">🍒</div>
-        <div class="d-title">Плодово</div>
-        <div class="d-desc">Живи, ярки, изненадващи вкусове</div>
+      <div class="discovery-card" data-method="fruity" tabindex="0" role="button">
+        <div class="discovery-icon">🍒</div>
+        <div class="discovery-title" data-i18n="fruity">Плодово &amp; Флорално</div>
+        <div class="discovery-desc">Живи, ярки, изненадващи вкусове</div>
       </div>
-      <div class="d-card reveal reveal-delay-3" tabindex="0" role="button" data-method="chocolate">
-        <div class="d-icon">🍫</div>
-        <div class="d-title">Шоколад</div>
-        <div class="d-desc">Топло, балансирано, утешаващо</div>
+      <div class="discovery-card" data-method="chocolate" tabindex="0" role="button">
+        <div class="discovery-icon">🍫</div>
+        <div class="discovery-title" data-i18n="chocolate">Шоколад &amp; Сладко</div>
+        <div class="discovery-desc">Топло, баланс, утешаващо</div>
       </div>
-      <div class="d-card reveal reveal-delay-4" tabindex="0" role="button" data-method="experimental">
-        <div class="d-icon">🌀</div>
-        <div class="d-title">Експериментално</div>
-        <div class="d-desc">Анаеробни, необичайни, авантюристични</div>
+      <div class="discovery-card" data-method="experimental" tabindex="0" role="button">
+        <div class="discovery-icon">🌀</div>
+        <div class="discovery-title" data-i18n="experimental">Експериментално</div>
+        <div class="discovery-desc">Анаеробни, необичайни, авантюристични</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- BRAND STORY -->
+<!-- Brand Story -->
 <section class="brand-section" id="about" aria-labelledby="brand-title">
-  <div class="wrap">
+  <div class="container">
     <div class="brand-inner">
-      <div class="brand-text reveal">
-        <p class="eyebrow" style="margin-bottom:12px">За нас</p>
-        <h2 id="brand-title">Кафе с <em>обсесия</em></h2>
-        <p class="brand-body">Подбираме специалти кафе от конкретни ферми по света — кафе с ясен произход, интересна история и изразен вкус. Изпичаме го прясно и го изпращаме директно до теб.</p>
+      <div class="brand-content">
+        <div>
+          <p class="section-label">За нас</p>
+          <h2 class="section-title" id="brand-title" data-i18n="brandTitle">Кафе с характер</h2>
+        </div>
+        <p class="brand-body" data-i18n="brandBody">Подбираме специалти кафе от конкретни ферми по света — кафе с ясен произход, интересна история и изразен вкус. Изпичаме го прясно и го изпращаме директно до теб.</p>
         <div class="brand-stats">
-          <div>
-            <div class="stat-num">Single</div>
-            <div class="stat-label">Origin — конкретни ферми</div>
+          <div class="brand-stat">
+            <div class="brand-stat-num">Single</div>
+            <div class="brand-stat-label">Origin — конкретни ферми</div>
           </div>
-          <div>
-            <div class="stat-num">Прясно</div>
-            <div class="stat-label">Изпичаме след поръчка</div>
+          <div class="brand-stat">
+            <div class="brand-stat-num">Прясно</div>
+            <div class="brand-stat-label">Изпичаме след поръчка</div>
           </div>
-          <div>
-            <div class="stat-num">€30+</div>
-            <div class="stat-label">Безплатна доставка</div>
+          <div class="brand-stat">
+            <div class="brand-stat-num">€30+</div>
+            <div class="brand-stat-label">Безплатна доставка</div>
           </div>
-          <div>
-            <div class="stat-num">BG</div>
-            <div class="stat-label">Базирани в Пловдив</div>
+          <div class="brand-stat">
+            <div class="brand-stat-num">BG</div>
+            <div class="brand-stat-label">Базирани в Пловдив</div>
           </div>
         </div>
-        <a href="/shop" class="btn-primary">Разгледай кафетата →</a>
+        <a href="/shop" class="btn btn-dark btn-lg">Разгледай кафетата →</a>
       </div>
-      <div class="brand-bean reveal reveal-delay-2" aria-hidden="true">
-        <canvas id="brand-bean" width="480" height="480"></canvas>
+      <div class="brand-visual" aria-hidden="true">
+        <div class="brand-visual-placeholder">
+          <span class="brand-visual-mark">420</span>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- TRUST -->
+<!-- Trust Strip -->
 <section class="trust-section" aria-label="Предимства">
-  <div class="wrap">
+  <div class="container">
     <div class="trust-grid">
-      <div class="trust-item reveal">
-        <div class="trust-icon">🚚</div>
-        <div class="trust-title">Бърза доставка</div>
-        <div class="trust-desc">Куриерска доставка 1–3 дни</div>
+      <div class="trust-item">
+        <div class="trust-icon" aria-hidden="true">🚚</div>
+        <div class="trust-title" data-i18n="trustShipping">Бърза доставка</div>
+        <div class="trust-desc" data-i18n="trustShippingDesc">Куриерска доставка 1-3 дни</div>
       </div>
-      <div class="trust-item reveal reveal-delay-1">
-        <div class="trust-icon">🔥</div>
-        <div class="trust-title">Прясно изпечено</div>
-        <div class="trust-desc">Изпичаме след поръчка</div>
+      <div class="trust-item">
+        <div class="trust-icon" aria-hidden="true">🔥</div>
+        <div class="trust-title" data-i18n="trustFresh">Прясно изпечено</div>
+        <div class="trust-desc" data-i18n="trustFreshDesc">Изпичаме след поръчка</div>
       </div>
-      <div class="trust-item reveal reveal-delay-2">
-        <div class="trust-icon">📍</div>
-        <div class="trust-title">Проследим произход</div>
-        <div class="trust-desc">До конкретна ферма</div>
+      <div class="trust-item">
+        <div class="trust-icon" aria-hidden="true">📍</div>
+        <div class="trust-title" data-i18n="trustOrigin">Проследим произход</div>
+        <div class="trust-desc" data-i18n="trustOriginDesc">До конкретна ферма</div>
       </div>
-      <div class="trust-item reveal reveal-delay-3">
-        <div class="trust-icon">🔒</div>
-        <div class="trust-title">Сигурно плащане</div>
-        <div class="trust-desc">Stripe · Карта · eBanking</div>
+      <div class="trust-item">
+        <div class="trust-icon" aria-hidden="true">🔒</div>
+        <div class="trust-title" data-i18n="trustPayment">Сигурно плащане</div>
+        <div class="trust-desc" data-i18n="trustPaymentDesc">Stripe • Карта • eBanking</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- FOOTER -->
-<footer role="contentinfo">
-  <div class="wrap">
+<!-- Footer -->
+<footer class="footer" role="contentinfo">
+  <div class="container">
     <div class="footer-grid">
       <div>
-        <div class="footer-brand">420 <em>Beans</em></div>
+        <div class="footer-brand-name">420 <span>Beans</span></div>
         <p class="footer-tagline">Специалти кафе с проследим произход. Изпечено с обсесия. Доставено с грижа.</p>
       </div>
       <div>
         <div class="footer-col-title">Магазин</div>
         <div class="footer-links">
-          <a href="/shop">Всички кафета</a>
-          <a href="/shop">Аксесоари</a>
+          <a href="/shop" class="footer-link">Всички кафета</a>
+          <a href="/shop" class="footer-link">Аксесоари</a>
         </div>
       </div>
       <div>
         <div class="footer-col-title">Информация</div>
         <div class="footer-links">
-          <a href="#about">За нас</a>
-          <a href="#">Доставка</a>
-          <a href="#">Общи условия</a>
+          <a href="#about" class="footer-link">За нас</a>
+          <a href="#" class="footer-link">Доставка и връщане</a>
+          <a href="#" class="footer-link">Общи условия</a>
+          <a href="#" class="footer-link">Поверителност</a>
         </div>
       </div>
       <div>
         <div class="footer-col-title">Контакт</div>
         <div class="footer-links">
-          <span>Пловдив, България</span>
-          <span>hello@420beans.bg</span>
+          <span class="footer-link">Пловдив, България</span>
+          <a href="mailto:hello@420beans.bg" class="footer-link">hello@420beans.bg</a>
         </div>
       </div>
     </div>
     <div class="footer-bottom">
-      <span>© 2025 420 Beans. Всички права запазени.</span>
-      <button class="btn-lang" id="lang-btn-footer">EN</button>
+      <p class="footer-copy">© 2024 420 Beans. Всички права запазени.</p>
+      <button class="nav-lang lang-toggle" style="color:rgba(245,242,235,.5);border-color:rgba(245,242,235,.2)">EN</button>
     </div>
   </div>
 </footer>
 
-<!-- CART DRAWER -->
-<div class="cart-overlay" id="cart-overlay"></div>
+<!-- Cart Drawer -->
+<div class="cart-overlay" id="cart-overlay" aria-hidden="true"></div>
 <aside class="cart-drawer" id="cart-drawer" role="dialog" aria-label="Количка" aria-modal="true">
   <div class="cart-header">
-    <h2 class="cart-title">Количка</h2>
-    <button class="cart-close" id="cart-close-btn" aria-label="Затвори">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    <h2 class="cart-title" data-i18n="cartTitle">Количка</h2>
+    <button class="cart-close" data-cart-close aria-label="Затвори количката">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
     </button>
   </div>
   <div class="cart-items" id="cart-items"></div>
   <div class="cart-footer">
-    <div class="cart-row"><span>Стойност</span><span id="cart-subtotal">€0.00</span></div>
-    <div class="cart-row"><span>Доставка</span><span id="cart-shipping">€4.99</span></div>
-    <div class="cart-row total"><span>Общо</span><span id="cart-total">€0.00</span></div>
-    <button class="btn-checkout" id="checkout-btn" disabled>Към плащане</button>
-    <p class="cart-note">Изпичаме след потвърждение на поръчката</p>
+    <div class="cart-totals">
+      <div class="cart-row"><span data-i18n="cartSubtotal">Стойност</span><span id="cart-subtotal">€0.00</span></div>
+      <div class="cart-row"><span data-i18n="cartShipping">Доставка</span><span id="cart-shipping">€4.99</span></div>
+      <div class="cart-row total"><span data-i18n="cartTotal">Общо</span><span id="cart-total">€0.00</span></div>
+    </div>
+    <button class="btn btn-primary btn-full btn-lg" id="checkout-btn" data-i18n="cartCheckout">Към плащане</button>
+    <p class="cart-note" data-i18n="cartNote">Изпичаме след потвърждение на поръчката</p>
   </div>
 </aside>
 
-<!-- CHAT -->
-<button class="chat-fab" id="chat-fab" aria-label="Кафе асистент">
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+<!-- Chat Widget -->
+<button class="chat-fab" id="chat-fab" aria-label="Отвори чат асистент">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
 </button>
 <div class="chat-panel" id="chat-panel" role="dialog" aria-label="Кафе асистент">
   <div class="chat-panel-header">
-    <div class="chat-avatar">☕</div>
+    <div class="chat-avatar" aria-hidden="true">☕</div>
     <div>
       <div class="chat-panel-title">Кафе Асистент</div>
       <div class="chat-panel-sub">420 Beans</div>
     </div>
-    <button class="chat-close" id="chat-close">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    <button id="chat-close" aria-label="Затвори чат" style="margin-left:auto">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
     </button>
   </div>
-  <div class="chat-messages" id="chat-messages"></div>
+  <div class="chat-messages" id="chat-messages" aria-live="polite"></div>
   <form class="chat-form" id="chat-form">
-    <input class="chat-input" id="chat-input" type="text" placeholder="Попитай за кафе..." autocomplete="off">
+    <input class="chat-input" id="chat-input" type="text" data-i18n="chatPlaceholder" placeholder="Попитай за кафе..." autocomplete="off">
     <button class="chat-send" type="submit" aria-label="Изпрати">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
     </button>
   </form>
 </div>
 
-<!-- TOAST -->
+<!-- Toast Stack -->
 <div class="toast-stack" id="toast-stack" aria-live="assertive"></div>
 
+<script src="/app.js"></script>
+
+<!-- Flame Bean Animation -->
 <script>
-/* ─── BEAN CANVAS RENDERER ──────────────────────────────────────────── */
-function drawBean(canvas, opts = {}) {
-  const {
-    size = canvas.width,
-    animate = true,
-    spin = false,
-  } = opts;
+(function() {
+  'use strict';
 
+  const canvas = document.getElementById('beanCanvas');
+  if (!canvas) return;
   const ctx = canvas.getContext('2d');
-  let frame = 0;
-  const dpr = Math.min(window.devicePixelRatio || 1, 2);
-  canvas.width  = size * dpr;
-  canvas.height = size * dpr;
-  canvas.style.width  = size + 'px';
-  canvas.style.height = size + 'px';
-  ctx.scale(dpr, dpr);
 
-  // Color tokens from CSS
-  function tok(name) {
-    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  function resize() {
+    const parent = canvas.parentElement;
+    canvas.width  = parent.offsetWidth  || 400;
+    canvas.height = parent.offsetHeight || 500;
   }
 
-  function render(t) {
-    ctx.clearRect(0, 0, size, size);
-    const cx = size / 2;
-    const cy = size / 2;
-    const r  = size * .36;
-
-    // Wobble for hero, gentle spin for brand
-    const wobble = animate ? Math.sin(t * .0008) * .06 : 0;
-    const spinAngle = spin ? t * .0003 : 0;
-
-    ctx.save();
-    ctx.translate(cx, cy);
-    ctx.rotate(wobble + spinAngle);
-    ctx.translate(-cx, -cy);
-
-    // Shadow
-    const sh = ctx.createRadialGradient(cx, cy + r * .8, 0, cx, cy + r * .8, r * 1.1);
-    sh.addColorStop(0, 'rgba(0,0,0,.18)');
-    sh.addColorStop(1, 'rgba(0,0,0,0)');
-    ctx.fillStyle = sh;
-    ctx.beginPath();
-    ctx.ellipse(cx, cy + r * .85, r * .75, r * .22, 0, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Bean body — ellipse with a squished bottom
-    const grad = ctx.createRadialGradient(cx - r*.25, cy - r*.25, r*.05, cx, cy, r*1.1);
-    const isDark = document.documentElement.dataset.theme === 'dark' ||
-      (!document.documentElement.dataset.theme && window.matchMedia('(prefers-color-scheme: dark)').matches);
-
-    grad.addColorStop(0,   isDark ? '#A0876A' : '#7B4F2E');
-    grad.addColorStop(.35, isDark ? '#7A5C3E' : '#5C3318');
-    grad.addColorStop(.7,  isDark ? '#5C3D22' : '#3D1F0A');
-    grad.addColorStop(1,   isDark ? '#2E1E0E' : '#1E0C03');
-
-    ctx.fillStyle = grad;
-    ctx.beginPath();
-    // Coffee bean outline — two arcs
-    const bw = r * .72;
-    const bh = r * .98;
-    ctx.save();
-    ctx.translate(cx, cy);
-    // Outer silhouette (ellipse-ish)
-    ctx.beginPath();
-    ctx.moveTo(0, -bh);
-    ctx.bezierCurveTo( bw*.8, -bh*.6,  bw, 0,  bw*.8,  bh*.6);
-    ctx.bezierCurveTo( bw*.4,  bh,    -bw*.4,  bh, -bw*.8,  bh*.6);
-    ctx.bezierCurveTo(-bw,     0,    -bw*.8, -bh*.6, 0, -bh);
-    ctx.closePath();
-    ctx.fillStyle = grad;
-    ctx.fill();
-
-    // Crease highlight (lighter)
-    const crease = ctx.createLinearGradient(-bw*.1, -bh*.6, bw*.1, bh*.6);
-    crease.addColorStop(0,   isDark ? 'rgba(255,220,150,.15)' : 'rgba(255,200,120,.12)');
-    crease.addColorStop(.5,  isDark ? 'rgba(255,220,150,.25)' : 'rgba(255,200,120,.22)');
-    crease.addColorStop(1,   'rgba(0,0,0,0)');
-    ctx.fillStyle = crease;
-    ctx.fill();
-
-    // Center crease line
-    ctx.beginPath();
-    ctx.moveTo(0, -bh*.75);
-    ctx.bezierCurveTo(bw*.22, -bh*.2, bw*.22, bh*.2, 0, bh*.75);
-    ctx.strokeStyle = isDark ? 'rgba(0,0,0,.5)' : 'rgba(0,0,0,.4)';
-    ctx.lineWidth = bw * .09;
-    ctx.lineCap = 'round';
-    ctx.stroke();
-
-    // Specular highlight
-    const spec = ctx.createRadialGradient(-bw*.28, -bh*.42, 0, -bw*.28, -bh*.42, bw*.38);
-    spec.addColorStop(0,   isDark ? 'rgba(255,240,200,.28)' : 'rgba(255,240,200,.22)');
-    spec.addColorStop(1,   'rgba(255,255,255,0)');
-    ctx.fillStyle = spec;
-    ctx.fill();
-
-    // Lime accent glow
-    const lime = ctx.createRadialGradient(bw*.3, bh*.3, 0, bw*.3, bh*.3, bw*.55);
-    lime.addColorStop(0,   'rgba(198,255,59,.14)');
-    lime.addColorStop(1,   'rgba(198,255,59,0)');
-    ctx.fillStyle = lime;
-    ctx.fill();
-
-    ctx.restore();
-    ctx.restore();
-  }
-
-  if (animate) {
-    let raf;
-    function loop(ts) {
-      render(ts);
-      raf = requestAnimationFrame(loop);
+  // Coffee bean outline — parametric oval with a slight waist pinch
+  function getBeanPoints(steps) {
+    const pts = [];
+    // Outer oval loop
+    for (let i = 0; i < steps; i++) {
+      const t = (i / steps) * Math.PI * 2;
+      const rx = 0.20;
+      const ry = 0.36;
+      // Slight waist and taper at top/bottom
+      const waist  = 0.028 * Math.sin(t * 2);
+      const taper  = 1 - 0.08 * Math.abs(Math.cos(t));
+      const x = 0.5 + (rx + waist) * Math.cos(t);
+      const y = 0.5 + ry * taper * Math.sin(t);
+      pts.push({ x, y });
     }
-    raf = requestAnimationFrame(loop);
-    return () => cancelAnimationFrame(raf);
-  } else {
-    render(0);
+    // Central crease — two parallel lines close to the vertical axis
+    const creaseN = Math.floor(steps * 0.4);
+    for (let i = 0; i < creaseN; i++) {
+      const frac = i / (creaseN - 1);
+      const yc   = 0.15 + frac * 0.70;
+      // Crease bulges out a tiny bit in the middle
+      const bulge = 0.018 * Math.sin(frac * Math.PI);
+      pts.push({ x: 0.5 + bulge,  y: yc });
+      pts.push({ x: 0.5 - bulge,  y: yc });
+    }
+    return pts;
   }
-}
 
-// Init beans
-const heroCanvas = document.getElementById('hero-bean');
-const brandCanvas = document.getElementById('brand-bean');
-if (heroCanvas)  drawBean(heroCanvas,  { size: 520, animate: true,  spin: false });
-if (brandCanvas) drawBean(brandCanvas, { size: 480, animate: true,  spin: true  });
+  const BEAN_PTS = getBeanPoints(200);
 
-// Redraw on theme change
-const mq = window.matchMedia('(prefers-color-scheme: dark)');
-mq.addEventListener('change', () => {
-  drawBean(heroCanvas,  { size: 520, animate: true, spin: false });
-  drawBean(brandCanvas, { size: 480, animate: true, spin: true  });
-});
+  // Flame colour ramp (young → old)
+  const RAMP = [
+    [255, 248, 200], // white-yellow core
+    [255, 210,  50], // amber
+    [255, 140,  15], // orange
+    [255,  65,   0], // red-orange
+    [200,  20,   0], // deep red
+    [120,   0,   0], // dark ember
+  ];
 
-/* ─── SCROLL REVEAL ─────────────────────────────────────────────────── */
-const revealEls = document.querySelectorAll('.reveal');
-const io = new IntersectionObserver(entries => {
-  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
-}, { threshold: .12 });
-revealEls.forEach(el => io.observe(el));
-
-/* ─── NAV SCROLL ────────────────────────────────────────────────────── */
-const nav = document.getElementById('main-nav');
-window.addEventListener('scroll', () => {
-  nav.classList.toggle('scrolled', window.scrollY > 60);
-}, { passive: true });
-
-/* ─── PRODUCTS (mock until API) ─────────────────────────────────────── */
-const MOCK = [
-  { id:1, badge:'New', origin:'Ethiopia · Yirgacheffe', name:'Yirgacheffe Natural', notes:'Blueberry · Jasmine · Dark Chocolate', price:'€14.50', cat:'filter' },
-  { id:2, badge:'Popular', origin:'Colombia · Huila', name:'Huila Washed', notes:'Red Apple · Caramel · Hazelnut', price:'€13.00', cat:'espresso' },
-  { id:3, badge:'', origin:'Guatemala · Antigua', name:'Antigua Honey', notes:'Peach · Brown Sugar · Almond', price:'€12.50', cat:'espresso' },
-  { id:4, badge:'Limited', origin:'Kenya · Kirinyaga', name:'Kenya AA', notes:'Blackcurrant · Grapefruit · Rose', price:'€15.00', cat:'filter' },
-];
-
-const grid = document.getElementById('featured-grid');
-function renderProducts(list) {
-  grid.innerHTML = '';
-  list.forEach((p, i) => {
-    const card = document.createElement('div');
-    card.className = 'product-card reveal' + (i > 0 ? ` reveal-delay-${Math.min(i,4)}` : '');
-    card.innerHTML = `
-      <div class="product-img">
-        <canvas class="card-bean-canvas" width="200" height="200" data-size="200"></canvas>
-        ${p.badge ? `<span class="product-badge">${p.badge}</span>` : ''}
-      </div>
-      <div class="product-body">
-        <div class="product-origin">${p.origin}</div>
-        <div class="product-name">${p.name}</div>
-        <div class="product-notes">${p.notes}</div>
-        <div class="product-footer">
-          <span class="product-price">${p.price}</span>
-          <button class="btn-add" data-id="${p.id}" aria-label="Добави в количка">+</button>
-        </div>
-      </div>`;
-    grid.appendChild(card);
-    io.observe(card);
-    // draw small bean
-    const bc = card.querySelector('.card-bean-canvas');
-    drawBean(bc, { size: 200, animate: false });
-    // add to cart
-    card.querySelector('.btn-add').addEventListener('click', () => addToCart(p));
-  });
-}
-renderProducts(MOCK);
-
-/* Load real products */
-fetch('/api/products').then(r => r.ok ? r.json() : null).then(data => {
-  if (!data?.products?.length) return;
-  renderProducts(data.products.slice(0, 4).map(p => ({
-    id: p.id, badge: p.badge || '',
-    origin: (p.bg?.region || p.en?.region || ''),
-    name: p.bg?.name || p.en?.name || '',
-    notes: p.bg?.notes || p.en?.notes || '',
-    price: `€${(p.price || 0).toFixed(2)}`,
-    cat: p.category || 'filter',
-    raw: p,
-  })));
-}).catch(() => {});
-
-/* ─── CART ──────────────────────────────────────────────────────────── */
-let cart = [];
-try { cart = JSON.parse(localStorage.getItem('420beans_cart_v2')) || []; } catch {}
-
-function saveCart() {
-  try { localStorage.setItem('420beans_cart_v2', JSON.stringify(cart)); } catch {}
-}
-function addToCart(p) {
-  const ex = cart.find(i => i.id === p.id);
-  if (ex) ex.qty++;
-  else cart.push({ ...p, qty: 1 });
-  saveCart(); renderCart(); showToast(`${p.name || p.bg?.name || 'Кафе'} → количка ☕`);
-}
-function removeFromCart(id) {
-  cart = cart.filter(i => i.id !== id);
-  saveCart(); renderCart();
-}
-function renderCart() {
-  const items = document.getElementById('cart-items');
-  const count = cart.reduce((a, i) => a + i.qty, 0);
-  const subtotal = cart.reduce((a, i) => a + (parseFloat((i.price||'0').replace('€','')) || 0) * i.qty, 0);
-  const shipping = subtotal > 0 ? (subtotal >= 30 ? 0 : 4.99) : 4.99;
-  const total = subtotal + (subtotal > 0 ? shipping : 0);
-
-  document.getElementById('cart-count-nav').textContent = count > 0 ? `Количка (${count})` : 'Количка';
-  document.getElementById('cart-subtotal').textContent  = `€${subtotal.toFixed(2)}`;
-  document.getElementById('cart-shipping').textContent  = shipping === 0 ? 'Безплатно' : `€${shipping.toFixed(2)}`;
-  document.getElementById('cart-total').textContent     = `€${total.toFixed(2)}`;
-  document.getElementById('checkout-btn').disabled = cart.length === 0;
-
-  if (!cart.length) { items.innerHTML = '<p class="cart-empty">Количката е празна</p>'; return; }
-  items.innerHTML = cart.map(i => `
-    <div class="cart-item">
-      <div class="cart-item-thumb">☕</div>
-      <div>
-        <div class="cart-item-name">${i.name || i.bg?.name || 'Кафе'}</div>
-        <div class="cart-item-sub">${i.origin || ''} · x${i.qty}</div>
-      </div>
-      <span class="cart-item-price">${i.price}</span>
-      <button class="cart-item-rm" data-id="${i.id}" aria-label="Премахни">×</button>
-    </div>`).join('');
-  items.querySelectorAll('.cart-item-rm').forEach(b => b.addEventListener('click', () => removeFromCart(+b.dataset.id)));
-}
-renderCart();
-
-// Cart drawer
-const overlay = document.getElementById('cart-overlay');
-const drawer  = document.getElementById('cart-drawer');
-function openCart()  { drawer.classList.add('open'); overlay.classList.add('open'); }
-function closeCart() { drawer.classList.remove('open'); overlay.classList.remove('open'); }
-document.getElementById('cart-open-btn').addEventListener('click', openCart);
-document.getElementById('cart-close-btn').addEventListener('click', closeCart);
-overlay.addEventListener('click', closeCart);
-
-// Checkout
-document.getElementById('checkout-btn').addEventListener('click', async () => {
-  const btn = document.getElementById('checkout-btn');
-  btn.disabled = true; btn.textContent = 'Зарежда...';
-  try {
-    const r = await fetch('/api/checkout', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ items: cart }),
-    });
-    const d = await r.json();
-    if (d.url) { location.href = d.url; return; }
-    throw new Error(d.error || 'Грешка');
-  } catch (e) {
-    showToast('Грешка при плащане — опитай отново'); btn.disabled = false; btn.textContent = 'Към плащане';
+  function lerpColor(life) {
+    // life 0→1; young = hot (start of ramp), old = cool (end of ramp)
+    const i = (1 - life) * (RAMP.length - 1);
+    const lo = Math.floor(i), hi = Math.min(lo + 1, RAMP.length - 1);
+    const f  = i - lo;
+    const c0 = RAMP[lo], c1 = RAMP[hi];
+    return [
+      c0[0] + (c1[0] - c0[0]) * f | 0,
+      c0[1] + (c1[1] - c0[1]) * f | 0,
+      c0[2] + (c1[2] - c0[2]) * f | 0,
+    ];
   }
-});
 
-/* ─── DISCOVERY CARDS ───────────────────────────────────────────────── */
-document.querySelectorAll('.d-card').forEach(c => {
-  c.addEventListener('click', () => { location.href = `/shop?cat=${c.dataset.method}`; });
-  c.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') c.click(); });
-});
-
-/* ─── CHAT ──────────────────────────────────────────────────────────── */
-const fab   = document.getElementById('chat-fab');
-const panel = document.getElementById('chat-panel');
-const msgs  = document.getElementById('chat-messages');
-const form  = document.getElementById('chat-form');
-const inp   = document.getElementById('chat-input');
-let history = [];
-
-function addMsg(role, text) {
-  const d = document.createElement('div');
-  d.className = 'msg ' + (role === 'user' ? 'user' : 'ai');
-  d.textContent = text;
-  msgs.appendChild(d);
-  msgs.scrollTop = msgs.scrollHeight;
-}
-fab.addEventListener('click', () => {
-  panel.classList.toggle('open');
-  if (panel.classList.contains('open') && !history.length) {
-    addMsg('ai', 'Здравей! Помогни ти да намериш подходящото кафе. Как обичаш да го приготвяш — еспресо машина, филтър, или нещо друго?');
+  function beanXY(nx, ny) {
+    const W = canvas.width, H = canvas.height;
+    const px = W * 0.10, py = H * 0.07;
+    return [px + nx * (W - px * 2), py + ny * (H - py * 2)];
   }
-});
-document.getElementById('chat-close').addEventListener('click', () => panel.classList.remove('open'));
-form.addEventListener('submit', async e => {
-  e.preventDefault();
-  const text = inp.value.trim(); if (!text) return;
-  addMsg('user', text);
-  history.push({ role: 'user', parts: [{ text }] });
-  inp.value = '';
-  const typing = document.createElement('div');
-  typing.className = 'msg ai'; typing.textContent = '...'; msgs.appendChild(typing);
-  msgs.scrollTop = msgs.scrollHeight;
-  try {
-    const r = await fetch('/api/chat', { method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ message: text, history }) });
-    const d = await r.json();
-    const reply = d.reply || 'Нещо се обърка — опитай отново.';
-    typing.textContent = reply;
-    history.push({ role: 'model', parts: [{ text: reply }] });
-  } catch { typing.textContent = 'Не мога да се свържа с асистента.'; }
-});
 
-/* ─── TOAST ─────────────────────────────────────────────────────────── */
-function showToast(msg, dur = 2800) {
-  const t = document.createElement('div'); t.className = 'toast'; t.textContent = msg;
-  document.getElementById('toast-stack').appendChild(t);
-  setTimeout(() => t.remove(), dur);
-}
+  // ---- Flame Particle ----
+  class FP {
+    constructor(initial) { this.reset(initial); }
+    reset(initial) {
+      const pt = BEAN_PTS[Math.random() * BEAN_PTS.length | 0];
+      const [bx, by] = beanXY(pt.x, pt.y);
+      const W = canvas.width, H = canvas.height;
+      this.x  = bx + (Math.random() - 0.5) * W * 0.015;
+      this.y  = by + (Math.random() - 0.5) * H * 0.015;
+      this.vx = (Math.random() - 0.5) * 0.45;
+      this.vy = -(0.35 + Math.random() * 0.85);
+      this.life    = initial ? Math.random() : 0;
+      this.maxLife = 0.65 + Math.random() * 0.55;
+      this.sz      = 1.0 + Math.random() * 2.6;
+      this.phase   = Math.random() * Math.PI * 2;
+    }
+    update() {
+      this.life  += 0.013;
+      this.phase += 0.20;
+      this.vx    += (Math.random() - 0.5) * 0.10;
+      this.vx    *= 0.97;
+      this.vy    -= 0.007;
+      this.vy    *= 0.99;
+      this.x += this.vx;
+      this.y += this.vy;
+      if (this.life >= this.maxLife) this.reset(false);
+    }
+    draw() {
+      const t  = this.life / this.maxLife;
+      const alpha = t < 0.15
+        ? (t / 0.15)
+        : (1 - (t - 0.15) / (1 - 0.15));
+      const a  = Math.max(0, Math.min(1, alpha)) * (0.72 + 0.28 * Math.sin(this.phase));
+      const [r, g, b] = lerpColor(t);
+      const csz = this.sz * (1 - t * 0.45);
 
-/* ─── LANG (pass-through to app.js) ────────────────────────────────── */
-document.querySelectorAll('#lang-btn, #lang-btn-footer').forEach(b => {
-  b.addEventListener('click', () => {
-    const cur = localStorage.getItem('420b_lang') || 'bg';
-    const next = cur === 'bg' ? 'en' : 'bg';
-    localStorage.setItem('420b_lang', next);
-    document.querySelectorAll('#lang-btn, #lang-btn-footer').forEach(x => x.textContent = next === 'bg' ? 'EN' : 'BG');
-  });
-});
+      ctx.save();
+      ctx.globalAlpha = a;
+      const grd = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, csz * 2.8);
+      grd.addColorStop(0,   `rgba(${r},${g},${b},1)`);
+      grd.addColorStop(0.6, `rgba(${r},${g},${b},0.35)`);
+      grd.addColorStop(1,   `rgba(${r},${g},${b},0)`);
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, csz * 2.8, 0, Math.PI * 2);
+      ctx.fillStyle = grd;
+      ctx.fill();
+      // bright core
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, csz * 0.55, 0, Math.PI * 2);
+      ctx.fillStyle = `rgb(${r},${g},${b})`;
+      ctx.fill();
+      ctx.restore();
+    }
+  }
+
+  // ---- Ember spark ----
+  class Spark {
+    constructor() { this.reset(); }
+    reset() {
+      const pt = BEAN_PTS[Math.random() * BEAN_PTS.length | 0];
+      const [bx, by] = beanXY(pt.x, pt.y);
+      this.x  = bx;
+      this.y  = by;
+      this.vx = (Math.random() - 0.5) * 0.9;
+      this.vy = -(0.18 + Math.random() * 0.55);
+      this.life = 0;
+      this.maxLife = 1.2 + Math.random() * 1.8;
+      this.r = 0.7 + Math.random() * 1.0;
+    }
+    update() {
+      this.life += 0.007;
+      this.vx   += (Math.random() - 0.5) * 0.06;
+      this.vy   -= 0.002;
+      this.x += this.vx;
+      this.y += this.vy;
+      if (this.life >= this.maxLife) this.reset();
+    }
+    draw() {
+      const alpha = Math.sin((this.life / this.maxLife) * Math.PI) * 0.85;
+      ctx.save();
+      ctx.globalAlpha = alpha;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+      ctx.fillStyle = '#ffd060';
+      ctx.fill();
+      ctx.restore();
+    }
+  }
+
+  // ---- Ambient bean glow ----
+  function drawGlow() {
+    const W = canvas.width, H = canvas.height;
+    const cx = W * 0.5, cy = H * 0.5;
+    const rw = W * 0.24, rh = H * 0.40;
+    ctx.save();
+    ctx.globalAlpha = 0.07;
+    const g = ctx.createRadialGradient(cx, cy - rh * 0.05, 0, cx, cy, Math.max(rw, rh));
+    g.addColorStop(0,   'rgba(255,140,20,0.7)');
+    g.addColorStop(0.5, 'rgba(180,40,0,0.3)');
+    g.addColorStop(1,   'rgba(80,0,0,0)');
+    ctx.beginPath();
+    ctx.ellipse(cx, cy, rw, rh, 0, 0, Math.PI * 2);
+    ctx.fillStyle = g;
+    ctx.fill();
+    ctx.restore();
+  }
+
+  const particles = Array.from({ length: 280 }, (_, i) => new FP(i < 140));
+  const sparks    = Array.from({ length: 35  }, () => new Spark());
+
+  function frame() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawGlow();
+    for (const p of particles) { p.update(); p.draw(); }
+    for (const s of sparks)    { s.update(); s.draw(); }
+    requestAnimationFrame(frame);
+  }
+
+  resize();
+  window.addEventListener('resize', resize, { passive: true });
+  requestAnimationFrame(frame);
+})();
 </script>
+</body>
+</html>
