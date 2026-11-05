@@ -1,991 +1,1075 @@
 <!DOCTYPE html>
-<html lang="bg">
+<html lang="bg" data-lang="bg">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>420 Beans — Специалти кафе от Пловдив</title>
-  <meta name="description" content="420 Beans — специалти кафе с проследим произход. Прясно изпечено и доставено директно до теб.">
-  <meta property="og:title" content="420 Beans — Специалти кафе">
-  <meta property="og:description" content="Специалти кафе с проследим произход. Прясно изпечено и доставено директно до теб.">
-  <meta property="og:type" content="website">
-  <link rel="canonical" href="https://420beans.vercel.app/">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="/style.css">
-  <style>
-    /* ============================================================
-       420 BEANS V2 — REDESIGN OVERRIDE
-       Editorial specialty coffee aesthetic
-       ============================================================ */
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>420 BEANS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700&family=JetBrains+Mono:wght@300;400;700&display=swap">
+<style>
+:root {
+  --bg:     #03000A;
+  --bg1:    #08040F;
+  --bg2:    #0D0818;
+  --fg:     #E8D5FF;
+  --dim:    #5A4A7A;
+  --dim2:   #2A1A3A;
+  --lime:   #FF2CF7;
+  --lime2:  rgba(255,44,247,.08);
+  --lime3:  rgba(255,44,247,.04);
+  --amber:  #FF9D00;
+  --red:    #FF3A3A;
+  --cyan:   #0FF4FF;
+  --green:  #39FF14;
+  --border: rgba(255,44,247,.1);
+  --f-mono: 'JetBrains Mono', 'Space Mono', monospace;
+  --ease:   cubic-bezier(.16,1,.3,1);
+}
 
-    /* ---- Announcement bar — refined ---- */
-    .announcement-bar {
-      background: var(--accent);
-      color: var(--text);
-      text-align: center;
-      padding: 9px var(--sp-4);
-      font-family: var(--font-mono);
-      font-size: 11px;
-      letter-spacing: .08em;
-      font-weight: 500;
-    }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+::selection{background:var(--lime);color:#000;}
+html{scroll-behavior:smooth;}
 
-    /* ---- Navigation — cleaner ---- */
-    .nav {
-      background: rgba(245,242,235,0.96);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-      height: 60px;
-    }
-    --nav-h: 60px;
-    .nav-logo {
-      font-size: 1.1rem;
-      letter-spacing: -.01em;
-    }
-    .nav-logo span {
-      color: var(--text);
-      font-weight: 400;
-    }
-    .nav-link {
-      font-size: 0.8125rem;
-      letter-spacing: .02em;
-      color: var(--text-muted);
-    }
-    .nav-link:hover { color: var(--text); }
-    .nav-lang {
-      font-size: 10px;
-      letter-spacing: .1em;
-    }
-    .nav-btn svg { width: 18px; height: 18px; }
+body{
+  background:var(--bg);
+  color:var(--fg);
+  font-family:var(--f-mono);
+  overflow-x:hidden;
+  cursor:none;
+  min-height:100vh;
+}
 
-    /* ============================================================
-       HERO — Full-bleed, canvas-first
-       ============================================================ */
-    .hero {
-      display: block;
-      position: relative;
-      min-height: calc(100svh - 60px);
-      background: var(--bg-dark);
-      overflow: hidden;
-    }
+/* ── CRT OVERLAY ────────────────────── */
+body::after{
+  content:'';
+  position:fixed;inset:0;pointer-events:none;z-index:10000;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,.18) 2px,
+      rgba(0,0,0,.18) 4px
+    );
+  mix-blend-mode:multiply;
+}
 
-    /* Canvas fills the entire hero */
-    .bean-canvas-wrap {
-      position: absolute;
-      inset: 0;
-      z-index: 1;
-    }
-    #beanCanvas {
-      display: block;
-      width: 100%;
-      height: 100%;
-    }
-    /* Gradient overlay — text legibility */
-    .bean-canvas-wrap::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background:
-        linear-gradient(to right, rgba(20,18,16,0.92) 0%, rgba(20,18,16,0.70) 45%, rgba(20,18,16,0.10) 100%),
-        radial-gradient(ellipse at 70% 50%, transparent 35%, rgba(20,18,16,0.45) 100%);
-      pointer-events: none;
-      z-index: 2;
-    }
+/* ── NOISE ──────────────────────────── */
+body::before{
+  content:'';
+  position:fixed;inset:0;pointer-events:none;z-index:9999;
+  opacity:.04;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:200px 200px;
+  animation: noise-anim 0.5s steps(1) infinite;
+}
+@keyframes noise-anim{
+  0%{background-position:0 0;}
+  20%{background-position:-40px 20px;}
+  40%{background-position:30px -10px;}
+  60%{background-position:-20px 40px;}
+  80%{background-position:10px -30px;}
+  100%{background-position:0 0;}
+}
 
-    /* Hero content sits above canvas */
-    .hero-content {
-      position: relative;
-      z-index: 3;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      min-height: calc(100svh - 60px);
-      padding: var(--sp-20) var(--sp-16) var(--sp-16);
-      max-width: 760px;
-    }
+/* ── CURSOR ─────────────────────────── */
+#cursor{
+  position:fixed;width:4px;height:18px;
+  background:var(--cyan);
+  pointer-events:none;z-index:10001;
+  transform:translate(-50%,-50%);
+  box-shadow:0 0 8px var(--cyan),0 0 20px rgba(15,244,255,.4);
+  transition:transform .08s;
+}
+#cursor-ring{
+  position:fixed;width:28px;height:28px;
+  border:1px solid var(--lime);
+  pointer-events:none;z-index:10001;
+  transform:translate(-50%,-50%);
+  opacity:.5;
+  box-shadow:0 0 6px rgba(255,44,247,.3);
+  transition:all .18s var(--ease);
+}
 
-    .hero-eyebrow {
-      font-family: var(--font-mono);
-      font-size: 10px;
-      letter-spacing: .18em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: var(--sp-5);
-    }
+/* ── TOPBAR ─────────────────────────── */
+#topbar{
+  position:fixed;top:0;left:0;right:0;
+  z-index:200;
+  height:44px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 24px;
+  border-bottom:1px solid rgba(255,44,247,.15);
+  background:rgba(3,0,10,.95);
+  backdrop-filter:blur(12px);
+  box-shadow:0 1px 0 rgba(255,44,247,.08), 0 0 30px rgba(255,44,247,.04);
+}
+.tb-logo{
+  font-size:14px;letter-spacing:.25em;
+  color:var(--lime);
+  text-decoration:none;
+  font-weight:700;
+  text-shadow:0 0 12px rgba(255,44,247,.7),0 0 30px rgba(255,44,247,.3);
+}
+.tb-logo em{color:var(--dim);font-style:normal;}
+.tb-nav{display:flex;gap:0;align-items:center;}
+.tb-link{
+  font-size:10px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--dim);text-decoration:none;
+  padding:0 16px;height:44px;
+  display:flex;align-items:center;
+  border-right:1px solid rgba(255,44,247,.08);
+  transition:color .15s,text-shadow .15s;
+  cursor:none;
+  position:relative;
+}
+.tb-link:first-child{border-left:1px solid rgba(255,44,247,.08);}
+.tb-link::after{
+  content:'';
+  position:absolute;bottom:0;left:0;right:0;
+  height:2px;
+  background:linear-gradient(90deg,var(--cyan),var(--lime));
+  transform:scaleX(0);
+  transition:transform .2s var(--ease);
+  box-shadow:0 0 8px var(--cyan);
+}
+.tb-link:hover,.tb-link.active{color:var(--fg);text-shadow:0 0 10px rgba(255,44,247,.5);}
+.tb-link:hover::after,.tb-link.active::after{transform:scaleX(1);}
+.tb-right{display:flex;align-items:center;gap:0;}
+.tb-lang{
+  font-size:10px;letter-spacing:.15em;color:var(--dim);
+  background:none;border:none;
+  padding:0 12px;height:44px;
+  cursor:none;transition:color .15s,text-shadow .15s;
+}
+.tb-lang:hover,.tb-lang.active{color:var(--cyan);text-shadow:0 0 8px rgba(15,244,255,.6);}
+.tb-cart{
+  height:44px;padding:0 18px;
+  border-left:1px solid rgba(255,44,247,.08);
+  background:none;
+  font-family:var(--f-mono);font-size:10px;letter-spacing:.15em;
+  color:var(--dim);cursor:none;
+  transition:color .15s,text-shadow .15s;
+  display:flex;align-items:center;gap:8px;
+}
+.tb-cart:hover{color:var(--lime);text-shadow:0 0 10px rgba(255,44,247,.5);}
+.cart-badge{
+  background:var(--lime);color:#000;
+  font-size:8px;font-weight:700;
+  width:14px;height:14px;border-radius:0;
+  display:none;align-items:center;justify-content:center;
+  box-shadow:0 0 8px rgba(255,44,247,.8);
+}
 
-    .hero-headline {
-      font-family: var(--font-display);
-      font-size: clamp(3.5rem, 7vw, 6.5rem);
-      font-weight: 700;
-      line-height: .92;
-      letter-spacing: -.04em;
-      color: var(--text-light);
-      margin-bottom: var(--sp-6);
-    }
-    .hero-headline em {
-      font-style: normal;
-      color: var(--accent);
-    }
+/* ── MAIN LAYOUT ────────────────────── */
+#main{
+  min-height:100vh;
+  padding:82px 0 0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  overflow:hidden;
+}
 
-    .hero-desc {
-      font-size: clamp(1rem, 1.3vw, 1.15rem);
-      color: rgba(245,242,235,0.60);
-      max-width: 46ch;
-      line-height: 1.6;
-      margin-bottom: var(--sp-8);
-    }
+/* grid */
+#main::after{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background-image:
+    linear-gradient(rgba(255,44,247,.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(15,244,255,.03) 1px,transparent 1px);
+  background-size:56px 56px;
+  mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black,transparent);
+  z-index:0;
+}
 
-    .hero-ctas {
-      display: flex;
-      flex-wrap: wrap;
-      gap: var(--sp-3);
-    }
+/* radial glow bg */
+#main::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 60% 50% at 30% 60%, rgba(255,44,247,.06), transparent),
+    radial-gradient(ellipse 50% 40% at 70% 40%, rgba(15,244,255,.05), transparent);
+  z-index:0;
+}
 
-    /* Bottom-right tag */
-    .hero-tag {
-      position: absolute;
-      bottom: var(--sp-8);
-      right: var(--sp-8);
-      z-index: 3;
-      background: rgba(20,18,16,0.75);
-      color: var(--text-light);
-      border: 1px solid rgba(198,255,59,0.25);
-      border-radius: 0;
-      padding: var(--sp-4) var(--sp-5);
-      backdrop-filter: blur(12px);
-    }
-    .hero-tag-label {
-      font-family: var(--font-mono);
-      font-size: 9px;
-      color: var(--accent);
-      text-transform: uppercase;
-      letter-spacing: .12em;
-      margin-bottom: 4px;
-    }
-    .hero-tag-value {
-      font-family: var(--font-display);
-      font-size: var(--text-lg);
-      font-weight: 600;
-      letter-spacing: -.02em;
-    }
+/* ── TERMINAL WINDOW ────────────────── */
+#term-wrap{
+  position:relative;z-index:2;
+  width:min(760px,92vw);
+  margin:0 auto;
+}
 
-    /* ---- Buttons — sharper ---- */
-    .btn {
-      border-radius: 2px;
-      letter-spacing: .02em;
-    }
-    .btn-primary {
-      background: var(--accent);
-      color: var(--text);
-    }
-    .btn-primary:hover {
-      background: #d9ff5e;
-      box-shadow: 0 0 24px rgba(198,255,59,0.3);
-    }
-    .btn-outline {
-      border: 1px solid rgba(245,242,235,0.25);
-      color: rgba(245,242,235,0.75);
-    }
-    .btn-outline:hover {
-      border-color: rgba(245,242,235,0.6);
-      color: var(--text-light);
-      background: rgba(245,242,235,0.06);
-    }
+.term-window{
+  background:rgba(5,2,12,.96);
+  border:1px solid rgba(255,44,247,.25);
+  box-shadow:
+    0 0 0 1px rgba(15,244,255,.06),
+    0 0 40px rgba(255,44,247,.12),
+    0 0 80px rgba(255,44,247,.06),
+    0 0 120px rgba(15,244,255,.04),
+    0 32px 100px rgba(0,0,0,.9);
+  position:relative;
+}
+.term-window::before{
+  content:'';position:absolute;top:-1px;left:0;right:0;
+  height:1px;
+  background:linear-gradient(90deg,var(--cyan),var(--lime),var(--cyan));
+  opacity:.7;
+}
 
-    /* ============================================================
-       MARQUEE — Lime strip
-       ============================================================ */
-    .marquee-section {
-      background: var(--accent);
-      padding: var(--sp-3) 0;
-      border-top: none;
-      border-bottom: none;
-    }
-    .marquee-item {
-      font-size: 0.75rem;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-      font-weight: 600;
-    }
+/* titlebar */
+.term-bar{
+  display:flex;align-items:center;
+  padding:0 16px;
+  height:36px;
+  border-bottom:1px solid rgba(255,44,247,.12);
+  background:rgba(255,44,247,.04);
+  gap:8px;
+}
+.term-dot{width:10px;height:10px;border-radius:50%;}
+.term-dot.r{background:#ff5f57;box-shadow:0 0 6px #ff5f57;}
+.term-dot.y{background:#febc2e;box-shadow:0 0 6px #febc2e;}
+.term-dot.g{background:#28c840;box-shadow:0 0 6px #28c840;}
+.term-title{
+  flex:1;text-align:center;
+  font-size:10px;letter-spacing:.2em;color:var(--dim);
+  text-shadow:0 0 10px rgba(255,44,247,.3);
+}
 
-    /* ============================================================
-       PRODUCTS SECTION — Editorial layout
-       ============================================================ */
-    .products-section {
-      padding: var(--sp-24) 0 var(--sp-20);
-      background: var(--bg);
-    }
+/* body */
+.term-body{
+  height:420px;
+  overflow-y:auto;
+  padding:20px 24px;
+  scrollbar-width:thin;
+  scrollbar-color:var(--dim2) transparent;
+  position:relative;
+}
+.term-body::-webkit-scrollbar{width:4px;}
+.term-body::-webkit-scrollbar-track{background:transparent;}
+.term-body::-webkit-scrollbar-thumb{background:var(--dim2);border-radius:2px;}
 
-    .section-header {
-      margin-bottom: var(--sp-12);
-    }
-    .section-label {
-      font-size: 10px;
-      letter-spacing: .18em;
-      color: var(--text-muted);
-      margin-bottom: var(--sp-3);
-    }
-    .section-title {
-      font-size: clamp(2.25rem, 4vw, 3.5rem);
-      letter-spacing: -.035em;
-      font-weight: 700;
-      line-height: 1.0;
-    }
+/* lines */
+.t-line{
+  font-size:12px;line-height:1.9;
+  display:flex;gap:0;
+  white-space:pre-wrap;word-break:break-word;
+}
+.t-line .prompt{color:var(--lime);margin-right:8px;flex-shrink:0;text-shadow:0 0 8px rgba(255,44,247,.6);}
+.t-line .cmd{color:var(--fg);}
+.t-line.output .cmd{color:rgba(232,213,255,.6);margin-left:20px;}
+.t-line.header .cmd{color:var(--amber);font-weight:700;margin-left:20px;text-shadow:0 0 12px rgba(255,157,0,.5);}
+.t-line.success .cmd{color:var(--green);margin-left:20px;text-shadow:0 0 8px rgba(57,255,20,.5);}
+.t-line.err .cmd{color:var(--red);margin-left:20px;text-shadow:0 0 8px rgba(255,58,58,.4);}
+.t-line.info .cmd{color:var(--cyan);margin-left:20px;text-shadow:0 0 8px rgba(15,244,255,.5);}
+.t-line.gap{height:10px;}
+.t-line.link-line .cmd{
+  color:var(--cyan);cursor:none;
+  margin-left:20px;
+  transition:color .15s,text-shadow .15s;
+  text-decoration:underline;text-underline-offset:3px;
+  text-decoration-color:rgba(15,244,255,.3);
+  text-shadow:0 0 6px rgba(15,244,255,.4);
+}
+.t-line.link-line:hover .cmd{color:var(--lime);text-shadow:0 0 10px rgba(255,44,247,.6);}
 
-    /* Product cards — architectural, sharp */
-    .product-card {
-      border: 1px solid var(--border);
-      border-radius: 0;
-      background: var(--bg);
-      transition: border-color var(--t-base);
-    }
-    .product-card:hover {
-      border-color: var(--text);
-      box-shadow: none;
-      transform: none;
-    }
-    .product-card:hover .product-card-img img {
-      transform: scale(1.03);
-    }
-    .product-card-name {
-      font-size: var(--text-lg);
-      letter-spacing: -.025em;
-    }
-    .product-card-add {
-      border-radius: 0;
-      font-size: var(--text-xs);
-      letter-spacing: .04em;
-      padding: var(--sp-2) var(--sp-4);
-    }
-    .product-card-add:hover { background: #2a2420; }
-    .product-card-add.added { background: var(--accent); color: var(--text); }
+/* input row */
+.term-input-row{
+  display:flex;align-items:center;gap:8px;
+  padding:12px 24px 16px;
+  border-top:1px solid rgba(255,44,247,.1);
+  background:rgba(255,44,247,.02);
+}
+.term-prompt-label{
+  color:var(--lime);font-size:12px;flex-shrink:0;
+  text-shadow:0 0 10px rgba(255,44,247,.7);
+}
+.term-input{
+  flex:1;
+  background:none;border:none;outline:none;
+  font-family:var(--f-mono);font-size:12px;
+  color:var(--fg);caret-color:var(--cyan);
+  letter-spacing:.03em;
+}
+.term-input::placeholder{color:var(--dim2);}
+.term-cursor-blink{
+  width:2px;height:16px;
+  background:var(--cyan);
+  flex-shrink:0;
+  box-shadow:0 0 8px var(--cyan),0 0 16px rgba(15,244,255,.4);
+  animation:blink .8s step-end infinite;
+}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
 
-    /* ============================================================
-       DISCOVERY — Dark, architectural
-       ============================================================ */
-    .discovery-section {
-      background: var(--bg-dark);
-      padding: var(--sp-20) 0;
-    }
+/* ── BELOW TERM ─────────────────────── */
+#hints{
+  position:relative;z-index:2;
+  margin-top:20px;
+  display:flex;gap:16px;flex-wrap:wrap;justify-content:center;
+}
+.hint-tag{
+  font-size:9px;letter-spacing:.18em;color:var(--dim);
+  border:1px solid rgba(255,44,247,.15);padding:5px 12px;
+  cursor:none;transition:color .15s,border-color .15s,box-shadow .15s,background .15s;
+  background:rgba(255,44,247,.03);
+}
+.hint-tag:hover{
+  color:var(--cyan);
+  border-color:rgba(15,244,255,.4);
+  background:rgba(15,244,255,.05);
+  box-shadow:0 0 12px rgba(15,244,255,.15);
+}
+.hint-tag span{color:var(--lime);text-shadow:0 0 8px rgba(255,44,247,.5);}
 
-    .discovery-card {
-      border: 1px solid rgba(245,242,235,0.10);
-      border-radius: 0;
-      padding: var(--sp-8) var(--sp-6);
-      transition: border-color var(--t-base), background var(--t-base);
-    }
-    .discovery-card:hover, .discovery-card.active {
-      border-color: var(--accent);
-      background: rgba(198,255,59,0.05);
-      transform: none;
-    }
-    .discovery-icon { font-size: 1.5rem; }
-    .discovery-title {
-      font-size: var(--text-base);
-      letter-spacing: -.01em;
-    }
-    .discovery-desc {
-      font-size: var(--text-xs);
-      color: rgba(245,242,235,0.40);
-    }
+/* ── PAGES (hidden sections) ────────── */
+.page{display:none;}
+.page.active{display:block;}
 
-    /* ============================================================
-       BRAND STORY — Split, editorial
-       ============================================================ */
-    .brand-section {
-      padding: 0;
-      overflow: hidden;
-      background: var(--bg);
-    }
+/* ── CART DRAWER ────────────────────── */
+#cart-drawer{
+  position:fixed;right:0;top:0;bottom:0;width:380px;
+  background:var(--bg1);border-left:1px solid var(--border);
+  z-index:300;
+  transform:translateX(100%);
+  transition:transform .3s var(--ease);
+  display:flex;flex-direction:column;
+}
+#cart-drawer.open{transform:translateX(0);}
+.drawer-bar{
+  padding:0 24px;height:42px;
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.drawer-bar-title{font-size:10px;letter-spacing:.2em;color:var(--dim);}
+.drawer-close{background:none;border:none;color:var(--dim);font-size:18px;cursor:none;transition:color .15s;}
+.drawer-close:hover{color:var(--fg);}
+.drawer-items{flex:1;overflow-y:auto;padding:20px 24px;}
+.drawer-empty{font-size:11px;color:var(--dim);padding-top:32px;}
+.drawer-footer{padding:20px 24px;border-top:1px solid var(--border);}
+.drawer-total{display:flex;justify-content:space-between;font-size:11px;color:var(--dim);margin-bottom:16px;}
+.drawer-total span:last-child{color:var(--fg);font-weight:700;}
+.checkout-btn{
+  width:100%;background:var(--lime);color:#000;
+  font-family:var(--f-mono);font-size:10px;letter-spacing:.2em;
+  text-transform:uppercase;padding:14px;border:none;cursor:none;
+  transition:opacity .15s;
+}
+.checkout-btn:hover{opacity:.85;}
+.cart-item{
+  display:grid;grid-template-columns:1fr auto;
+  gap:12px;padding:14px 0;
+  border-bottom:1px solid var(--border);
+}
+.cart-item-name{font-size:12px;font-weight:600;margin-bottom:3px;}
+.cart-item-meta{font-size:9px;color:var(--dim);letter-spacing:.1em;}
+.cart-item-price{font-size:12px;color:var(--lime);}
 
-    .brand-inner {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      min-height: 560px;
-    }
+/* ── OVERLAY ────────────────────────── */
+#overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.5);
+  backdrop-filter:blur(4px);z-index:250;
+  opacity:0;pointer-events:none;transition:opacity .3s;
+}
+#overlay.show{opacity:1;pointer-events:all;}
 
-    .brand-content {
-      padding: var(--sp-20) var(--sp-16);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      gap: var(--sp-6);
-      border-right: 1px solid var(--border);
-    }
+/* ── TOAST ──────────────────────────── */
+#toast{
+  position:fixed;bottom:32px;left:50%;
+  transform:translateX(-50%) translateY(12px);
+  background:var(--bg1);border:1px solid rgba(57,255,20,.3);
+  font-size:11px;letter-spacing:.12em;
+  padding:10px 20px;z-index:400;
+  opacity:0;pointer-events:none;
+  transition:opacity .25s,transform .25s;
+}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
-    .brand-body {
-      font-size: 1.1rem;
-      line-height: 1.75;
-      color: var(--text-muted);
-      max-width: 44ch;
-    }
+/* ── NEON MARQUEE ──────────────────────── */
+#neon-strip{
+  position:fixed;
+  top:44px;left:0;right:0;
+  z-index:190;
+  height:38px;
+  overflow:hidden;
+  background:rgba(3,0,10,.97);
+  border-bottom:1px solid rgba(255,44,247,.15);
+  display:flex;align-items:center;
+  box-shadow:inset 0 -1px 0 rgba(15,244,255,.08);
+}
+#neon-track{
+  display:flex;
+  gap:0;
+  white-space:nowrap;
+  animation: marquee-run 28s linear infinite;
+  will-change:transform;
+}
+@keyframes marquee-run{
+  from{transform:translateX(0);}
+  to{transform:translateX(-50%);}
+}
+.neon-item{
+  display:inline-flex;
+  align-items:center;
+  gap:0;
+  padding:0 36px;
+  border-right:1px solid rgba(255,44,247,.1);
+  height:38px;
+  position:relative;
+}
+.neon-name{
+  font-family:'JetBrains Mono','Space Mono',monospace;
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.32em;
+  text-transform:uppercase;
+  color:#FF2CF7;
+  text-shadow:
+    0 0 2px #fff,
+    0 0 6px #FF2CF7,
+    0 0 14px #FF2CF7,
+    0 0 28px rgba(255,44,247,.6),
+    0 0 50px rgba(255,44,247,.3);
+  position:relative;
+}
+.neon-name::after{
+  content:attr(data-text);
+  position:absolute;inset:0;
+  color:transparent;
+  background-image:radial-gradient(circle,rgba(0,0,0,.55) 1px,transparent 1px);
+  background-size:3px 3px;
+  -webkit-background-clip:text;
+  background-clip:text;
+  letter-spacing:.32em;
+  pointer-events:none;
+}
+.neon-sep{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  color:rgba(15,244,255,.5);
+  letter-spacing:.1em;
+  margin:0 4px;
+  text-shadow:0 0 6px rgba(15,244,255,.6);
+}
+.neon-price{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;
+  letter-spacing:.2em;
+  color:rgba(15,244,255,.8);
+  margin-left:10px;
+  text-shadow:0 0 8px rgba(15,244,255,.5);
+}
+#neon-strip:hover #neon-track{animation-play-state:paused;}
 
-    /* Stats as a data row, not tiles */
-    .brand-stats {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0;
-      margin-top: var(--sp-2);
-      border-top: 1px solid var(--border);
-    }
-    .brand-stat {
-      background: transparent;
-      border-radius: 0;
-      padding: var(--sp-5) 0;
-      border-right: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-    }
-    .brand-stat:nth-child(even) {
-      border-right: none;
-      padding-left: var(--sp-5);
-    }
-    .brand-stat:nth-child(odd) {
-      padding-right: var(--sp-5);
-    }
-    .brand-stat-num {
-      font-size: var(--text-2xl);
-      letter-spacing: -.035em;
-      font-weight: 700;
-    }
-    .brand-stat-label {
-      font-size: 10px;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      margin-top: var(--sp-1);
-      font-family: var(--font-mono);
-    }
-
-    .brand-visual {
-      background: var(--bg-dark);
-      border-radius: 0;
-      aspect-ratio: auto;
-      min-height: 560px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      overflow: hidden;
-    }
-    .brand-visual-placeholder {
-      width: 100%;
-      height: 100%;
-      min-height: 560px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .brand-visual-mark {
-      font-family: var(--font-display);
-      font-size: clamp(120px, 18vw, 220px);
-      font-weight: 700;
-      color: rgba(198,255,59,0.12);
-      letter-spacing: -.06em;
-      line-height: 1;
-      user-select: none;
-    }
-
-    /* ============================================================
-       TRUST STRIP — Horizontal data strip
-       ============================================================ */
-    .trust-section {
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      padding: 0;
-      background: var(--bg-dark);
-    }
-    .trust-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 0;
-    }
-    .trust-item {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: var(--sp-2);
-      padding: var(--sp-8) var(--sp-8);
-      border-right: 1px solid rgba(245,242,235,0.10);
-      text-align: left;
-    }
-    .trust-item:last-child { border-right: none; }
-    .trust-icon {
-      font-size: 1.2rem;
-      margin-bottom: var(--sp-1);
-    }
-    .trust-title {
-      font-family: var(--font-display);
-      font-size: var(--text-base);
-      font-weight: 600;
-      color: var(--text-light);
-    }
-    .trust-desc {
-      font-family: var(--font-mono);
-      font-size: var(--text-xs);
-      color: rgba(245,242,235,0.45);
-    }
-
-    /* ============================================================
-       FOOTER — Refined
-       ============================================================ */
-    .footer {
-      background: var(--bg-dark);
-      color: var(--text-light);
-      padding: var(--sp-16) 0 var(--sp-8);
-      border-top: 1px solid rgba(245,242,235,0.08);
-    }
-    .footer-grid {
-      border-bottom: 1px solid rgba(245,242,235,0.08);
-      padding-bottom: var(--sp-12);
-    }
-    .footer-brand-name {
-      font-size: 1.5rem;
-      letter-spacing: -.025em;
-    }
-    .footer-brand-name span { color: var(--accent); }
-    .footer-tagline {
-      font-size: var(--text-sm);
-      color: rgba(245,242,235,0.40);
-      line-height: 1.65;
-      max-width: 30ch;
-    }
-
-    /* ============================================================
-       MOBILE — Thoughtful breakpoints
-       ============================================================ */
-    @media (max-width: 768px) {
-      .hero-content {
-        padding: var(--sp-12) var(--sp-5) var(--sp-10);
-        min-height: calc(100svh - 60px);
-        justify-content: flex-end;
-      }
-      .hero-headline {
-        font-size: clamp(2.75rem, 10vw, 4rem);
-      }
-      .hero-tag {
-        bottom: var(--sp-5);
-        right: var(--sp-5);
-      }
-      .brand-inner {
-        grid-template-columns: 1fr;
-        min-height: auto;
-      }
-      .brand-content {
-        padding: var(--sp-12) var(--sp-6);
-        border-right: none;
-        border-bottom: 1px solid var(--border);
-      }
-      .brand-visual {
-        min-height: 300px;
-        display: none; /* hide placeholder on mobile — no photo */
-      }
-      .trust-grid {
-        grid-template-columns: 1fr 1fr;
-      }
-      .trust-item {
-        padding: var(--sp-6) var(--sp-5);
-        border-bottom: 1px solid rgba(245,242,235,0.10);
-      }
-      .trust-item:nth-child(2n) { border-right: none; }
-    }
-
-    @media (max-width: 480px) {
-      .hero-headline {
-        font-size: 2.5rem;
-      }
-      .trust-grid {
-        grid-template-columns: 1fr;
-      }
-      .trust-item { border-right: none; }
-    }
-  </style>
+/* ── MOBILE ─────────────────────────── */
+@media(max-width:600px){
+  #topbar{padding:0 16px;}
+  .tb-nav .tb-link{padding:0 10px;font-size:9px;}
+  .term-body{height:300px;}
+  #hints{gap:12px;}
+}
+</style>
 </head>
 <body>
 
-<!-- Announcement Bar -->
-<div class="announcement-bar">
-  <span data-i18n="announcementBar">Прясно изпечено кафе • Доставка с куриер • Поръчай сега →</span>
-</div>
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+<div id="overlay"></div>
+<div id="toast"></div>
 
-<!-- Navigation -->
-<nav class="nav" id="main-nav" role="navigation" aria-label="Главна навигация">
-  <div class="container">
-    <div class="nav-inner">
-      <a href="/" class="nav-logo" aria-label="420 Beans — начало">420 <span>Beans</span></a>
-      <div class="nav-links" role="menubar">
-        <a href="/shop" class="nav-link" role="menuitem" data-i18n="shopCoffee">Разгледай кафетата</a>
-        <a href="#discovery" class="nav-link" role="menuitem">Избери кафе</a>
-        <a href="#about" class="nav-link" role="menuitem" data-i18n="ourStory">Нашата история</a>
-      </div>
-      <div class="nav-actions">
-        <button class="nav-lang lang-toggle" aria-label="Смени езика">EN</button>
-        <div class="nav-cart-wrap">
-          <button class="nav-btn" data-cart-open aria-label="Отвори количката">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-            <span class="cart-count" aria-live="polite" style="display:none">0</span>
-          </button>
-        </div>
-        <button class="hamburger" id="hamburger" aria-label="Меню" aria-expanded="false">
-          <span></span><span></span><span></span>
-        </button>
-      </div>
-    </div>
-  </div>
-</nav>
-
-<!-- Mobile Nav -->
-<nav class="mobile-nav" id="mobile-nav" aria-label="Мобилна навигация">
-  <a href="/shop" class="mobile-nav-link" data-i18n="shopCoffee">Разгледай кафетата</a>
-  <a href="#discovery" class="mobile-nav-link">Избери кафе</a>
-  <a href="#about" class="mobile-nav-link" data-i18n="ourStory">Нашата история</a>
-</nav>
-
-<!-- Hero — Full-bleed canvas with text overlay -->
-<section class="hero" aria-label="Hero">
-  <!-- Canvas fills entire hero -->
-  <div class="bean-canvas-wrap">
-    <canvas id="beanCanvas" aria-hidden="true"></canvas>
-  </div>
-
-  <!-- Text content over canvas -->
-  <div class="hero-content">
-    <p class="hero-eyebrow">Специалти кафе — Пловдив</p>
-    <h1 class="hero-headline">Кафе<br>с <em>характер</em><br>и произход</h1>
-    <p class="hero-desc">Избираме кафе с ясна история — от конкретни ферми, с интересен вкусов профил. Изпичаме го прясно и го изпращаме директно до теб.</p>
-    <div class="hero-ctas">
-      <a href="/shop" class="btn btn-primary btn-lg" data-i18n="shopCoffee">Разгледай кафетата</a>
-      <a href="#about" class="btn btn-outline btn-lg" data-i18n="ourStory">Нашата история</a>
-    </div>
-  </div>
-
-  <!-- Corner tag -->
-  <div class="hero-tag">
-    <div class="hero-tag-label">Прясно изпечено</div>
-    <div class="hero-tag-value">Single Origin ☕</div>
-  </div>
-</section>
-
-<!-- Marquee -->
-<div class="marquee-section" aria-hidden="true">
-  <div class="marquee-track" id="marquee-track">
-    <span class="marquee-item">Ethiopia<span class="marquee-dot"> · </span></span>
-    <span class="marquee-item">Colombia<span class="marquee-dot"> · </span></span>
-    <span class="marquee-item">Guatemala<span class="marquee-dot"> · </span></span>
-    <span class="marquee-item">Kenya<span class="marquee-dot"> · </span></span>
-    <span class="marquee-item">Peru<span class="marquee-dot"> · </span></span>
-    <span class="marquee-item">Ethiopia<span class="marquee-dot"> · </span></span>
-    <span class="marquee-item">Colombia<span class="marquee-dot"> · </span></span>
-    <span class="marquee-item">Guatemala<span class="marquee-dot"> · </span></span>
-    <span class="marquee-item">Kenya<span class="marquee-dot"> · </span></span>
-    <span class="marquee-item">Peru<span class="marquee-dot"> · </span></span>
-  </div>
-</div>
-
-<!-- Featured Products -->
-<section class="products-section" id="featured" aria-labelledby="featured-title">
-  <div class="container">
-    <div class="section-header">
-      <div>
-        <p class="section-label" data-i18n="featuredLabel">Специалти селекция</p>
-        <h2 class="section-title" id="featured-title" data-i18n="featuredTitle">Избрани кафета</h2>
-      </div>
-      <a href="/shop" class="btn btn-outline-dark" data-i18n="shopCoffee">Разгледай всички</a>
-    </div>
-    <div class="products-grid" id="featured-grid">
-      <!-- loaded by JS -->
-    </div>
-  </div>
-</section>
-
-<!-- Discovery Section -->
-<section class="discovery-section" id="discovery" aria-labelledby="discovery-title">
-  <div class="container">
-    <div>
-      <p class="section-label" style="color:rgba(198,255,59,0.7)" data-i18n="discoveryLabel">Помощ при избор</p>
-      <h2 class="section-title light" id="discovery-title" data-i18n="discoveryTitle">Намери своето кафе</h2>
-    </div>
-    <div class="discovery-grid">
-      <div class="discovery-card" data-method="espresso" tabindex="0" role="button" aria-label="Еспресо кафета">
-        <div class="discovery-icon">☕</div>
-        <div class="discovery-title" data-i18n="espresso">Еспресо</div>
-        <div class="discovery-desc">Плътно, интензивно, с дълго послевкусие</div>
-      </div>
-      <div class="discovery-card" data-method="filter" tabindex="0" role="button" aria-label="Филтър кафета">
-        <div class="discovery-icon">🫗</div>
-        <div class="discovery-title" data-i18n="filter">Филтър</div>
-        <div class="discovery-desc">Нежно, ароматно, с деликатни нотки</div>
-      </div>
-      <div class="discovery-card" data-method="fruity" tabindex="0" role="button">
-        <div class="discovery-icon">🍒</div>
-        <div class="discovery-title" data-i18n="fruity">Плодово &amp; Флорално</div>
-        <div class="discovery-desc">Живи, ярки, изненадващи вкусове</div>
-      </div>
-      <div class="discovery-card" data-method="chocolate" tabindex="0" role="button">
-        <div class="discovery-icon">🍫</div>
-        <div class="discovery-title" data-i18n="chocolate">Шоколад &amp; Сладко</div>
-        <div class="discovery-desc">Топло, баланс, утешаващо</div>
-      </div>
-      <div class="discovery-card" data-method="experimental" tabindex="0" role="button">
-        <div class="discovery-icon">🌀</div>
-        <div class="discovery-title" data-i18n="experimental">Експериментално</div>
-        <div class="discovery-desc">Анаеробни, необичайни, авантюристични</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Brand Story -->
-<section class="brand-section" id="about" aria-labelledby="brand-title">
-  <div class="brand-inner">
-    <div class="brand-content">
-      <div>
-        <p class="section-label">За нас</p>
-        <h2 class="section-title" id="brand-title" data-i18n="brandTitle">Кафе с характер</h2>
-      </div>
-      <p class="brand-body" data-i18n="brandBody">Подбираме специалти кафе от конкретни ферми по света — кафе с ясен произход, интересна история и изразен вкус. Изпичаме го прясно и го изпращаме директно до теб.</p>
-      <div class="brand-stats">
-        <div class="brand-stat">
-          <div class="brand-stat-num">Single</div>
-          <div class="brand-stat-label">Origin — конкретни ферми</div>
-        </div>
-        <div class="brand-stat">
-          <div class="brand-stat-num">Прясно</div>
-          <div class="brand-stat-label">Изпичаме след поръчка</div>
-        </div>
-        <div class="brand-stat">
-          <div class="brand-stat-num">€30+</div>
-          <div class="brand-stat-label">Безплатна доставка</div>
-        </div>
-        <div class="brand-stat">
-          <div class="brand-stat-num">BG</div>
-          <div class="brand-stat-label">Базирани в Пловдив</div>
-        </div>
-      </div>
-      <a href="/shop" class="btn btn-dark btn-lg">Разгледай кафетата →</a>
-    </div>
-    <div class="brand-visual" aria-hidden="true">
-      <div class="brand-visual-placeholder">
-        <span class="brand-visual-mark">420</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Trust Strip -->
-<section class="trust-section" aria-label="Предимства">
-  <div class="trust-grid">
-    <div class="trust-item">
-      <div class="trust-icon" aria-hidden="true">🚚</div>
-      <div class="trust-title" data-i18n="trustShipping">Бърза доставка</div>
-      <div class="trust-desc" data-i18n="trustShippingDesc">Куриерска доставка 1-3 дни</div>
-    </div>
-    <div class="trust-item">
-      <div class="trust-icon" aria-hidden="true">🔥</div>
-      <div class="trust-title" data-i18n="trustFresh">Прясно изпечено</div>
-      <div class="trust-desc" data-i18n="trustFreshDesc">Изпичаме след поръчка</div>
-    </div>
-    <div class="trust-item">
-      <div class="trust-icon" aria-hidden="true">📍</div>
-      <div class="trust-title" data-i18n="trustOrigin">Проследим произход</div>
-      <div class="trust-desc" data-i18n="trustOriginDesc">До конкретна ферма</div>
-    </div>
-    <div class="trust-item">
-      <div class="trust-icon" aria-hidden="true">🔒</div>
-      <div class="trust-title" data-i18n="trustPayment">Сигурно плащане</div>
-      <div class="trust-desc" data-i18n="trustPaymentDesc">Stripe • Карта • eBanking</div>
-    </div>
-  </div>
-</section>
-
-<!-- Footer -->
-<footer class="footer" role="contentinfo">
-  <div class="container">
-    <div class="footer-grid">
-      <div>
-        <div class="footer-brand-name">420 <span>Beans</span></div>
-        <p class="footer-tagline">Специалти кафе с проследим произход. Изпечено с обсесия. Доставено с грижа.</p>
-      </div>
-      <div>
-        <div class="footer-col-title">Магазин</div>
-        <div class="footer-links">
-          <a href="/shop" class="footer-link">Всички кафета</a>
-          <a href="/shop" class="footer-link">Аксесоари</a>
-        </div>
-      </div>
-      <div>
-        <div class="footer-col-title">Информация</div>
-        <div class="footer-links">
-          <a href="#about" class="footer-link">За нас</a>
-          <a href="#" class="footer-link">Доставка и връщане</a>
-          <a href="#" class="footer-link">Общи условия</a>
-          <a href="#" class="footer-link">Поверителност</a>
-        </div>
-      </div>
-      <div>
-        <div class="footer-col-title">Контакт</div>
-        <div class="footer-links">
-          <span class="footer-link">Пловдив, България</span>
-          <a href="mailto:hello@420beans.bg" class="footer-link">hello@420beans.bg</a>
-        </div>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <p class="footer-copy">© 2024 420 Beans. Всички права запазени.</p>
-      <button class="nav-lang lang-toggle" style="color:rgba(245,242,235,.5);border-color:rgba(245,242,235,.2)">EN</button>
-    </div>
-  </div>
-</footer>
-
-<!-- Cart Drawer -->
-<div class="cart-overlay" id="cart-overlay" aria-hidden="true"></div>
-<aside class="cart-drawer" id="cart-drawer" role="dialog" aria-label="Количка" aria-modal="true">
-  <div class="cart-header">
-    <h2 class="cart-title" data-i18n="cartTitle">Количка</h2>
-    <button class="cart-close" data-cart-close aria-label="Затвори количката">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+<!-- ─── TOPBAR ──────────────────────── -->
+<header id="topbar">
+  <a href="/" class="tb-logo">420<em>_</em>BEANS</a>
+  <nav class="tb-nav">
+    <a href="#" class="tb-link" data-cmd="ls shop" data-en="SHOP" data-bg-txt="МАГАЗИН">МАГАЗИН</a>
+    <a href="#" class="tb-link" data-cmd="ls origins" data-en="ORIGINS" data-bg-txt="ПРОИЗХОД">ПРОИЗХОД</a>
+    <a href="#" class="tb-link" data-cmd="ls blog" data-en="BLOG" data-bg-txt="БЛОГ">БЛОГ</a>
+    <a href="#" class="tb-link" data-cmd="about" data-en="ABOUT" data-bg-txt="ЗА НАС">ЗА НАС</a>
+  </nav>
+  <div class="tb-right">
+    <button class="tb-lang active" data-l="bg">BG</button>
+    <button class="tb-lang" data-l="en">EN</button>
+    <button class="tb-cart" id="cartBtn">
+      <span data-en="CART" data-bg-txt="КОШНИЦА">КОШНИЦА</span>
+      <span class="cart-badge" id="cartCount">0</span>
     </button>
   </div>
-  <div class="cart-items" id="cart-items"></div>
-  <div class="cart-footer">
-    <div class="cart-totals">
-      <div class="cart-row"><span data-i18n="cartSubtotal">Стойност</span><span id="cart-subtotal">€0.00</span></div>
-      <div class="cart-row"><span data-i18n="cartShipping">Доставка</span><span id="cart-shipping">€4.99</span></div>
-      <div class="cart-row total"><span data-i18n="cartTotal">Общо</span><span id="cart-total">€0.00</span></div>
-    </div>
-    <button class="btn btn-primary btn-full btn-lg" id="checkout-btn" data-i18n="cartCheckout">Към плащане</button>
-    <p class="cart-note" data-i18n="cartNote">Изпичаме след потвърждение на поръчката</p>
-  </div>
-</aside>
+</header>
 
-<!-- Chat Widget -->
-<button class="chat-fab" id="chat-fab" aria-label="Отвори чат асистент">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-</button>
-<div class="chat-panel" id="chat-panel" role="dialog" aria-label="Кафе асистент">
-  <div class="chat-panel-header">
-    <div class="chat-avatar" aria-hidden="true">☕</div>
-    <div>
-      <div class="chat-panel-title">Кафе Асистент</div>
-      <div class="chat-panel-sub">420 Beans</div>
-    </div>
-    <button id="chat-close" aria-label="Затвори чат" style="margin-left:auto">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-    </button>
-  </div>
-  <div class="chat-messages" id="chat-messages" aria-live="polite"></div>
-  <form class="chat-form" id="chat-form">
-    <input class="chat-input" id="chat-input" type="text" data-i18n="chatPlaceholder" placeholder="Попитай за кафе..." autocomplete="off">
-    <button class="chat-send" type="submit" aria-label="Изпрати">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-    </button>
-  </form>
+<!-- ─── NEON MARQUEE ───────────────────── -->
+<div id="neon-strip">
+  <div id="neon-track"></div>
 </div>
 
-<!-- Toast Stack -->
-<div class="toast-stack" id="toast-stack" aria-live="assertive"></div>
+<!-- ─── MAIN ────────────────────────── -->
+<main id="main">
+  <div id="term-wrap">
 
-<script src="/app.js"></script>
+    <div class="term-window">
+      <div class="term-bar">
+        <div class="term-dot r"></div>
+        <div class="term-dot y"></div>
+        <div class="term-dot g"></div>
+        <div class="term-title">420beans — bash — 80×24</div>
+      </div>
 
-<!-- Flame Bean Animation — improved -->
+      <div class="term-body" id="termBody"></div>
+
+      <div class="term-input-row">
+        <span class="term-prompt-label">~/420beans $</span>
+        <input type="text" class="term-input" id="termInput" autocomplete="off" spellcheck="false"
+          placeholder="type a command or press ↑↓ to browse...">
+        <div class="term-cursor-blink"></div>
+      </div>
+    </div>
+
+    <div id="hints">
+      <div class="hint-tag" data-cmd="ls shop"><span>ls</span> shop</div>
+      <div class="hint-tag" data-cmd="ls origins"><span>ls</span> origins</div>
+      <div class="hint-tag" data-cmd="ls blog"><span>ls</span> blog</div>
+      <div class="hint-tag" data-cmd="about"><span>about</span></div>
+      <div class="hint-tag" data-cmd="help"><span>help</span></div>
+      <div class="hint-tag" data-cmd="cart"><span>cart</span></div>
+    </div>
+  </div>
+</main>
+
+<!-- ─── CART DRAWER ──────────────────── -->
+<div id="cart-drawer">
+  <div class="drawer-bar">
+    <div class="drawer-bar-title" data-en="CART" data-bg-txt="КОШНИЦА">КОШНИЦА</div>
+    <button class="drawer-close" id="cartClose">×</button>
+  </div>
+  <div class="drawer-items" id="cartItems">
+    <div class="drawer-empty" data-en="Empty." data-bg-txt="Празна.">Празна.</div>
+  </div>
+  <div class="drawer-footer">
+    <div class="drawer-total">
+      <span data-en="TOTAL" data-bg-txt="ОБЩО">ОБЩО</span>
+      <span id="cartTotal">€0.00</span>
+    </div>
+    <button class="checkout-btn" id="checkoutBtn">CHECKOUT →</button>
+  </div>
+</div>
+
 <script>
-(function() {
-  'use strict';
+const CART_KEY = '420beans_cart_v2';
+const LANG_KEY = '420b_lang';
+let cart = [];
+let lang = localStorage.getItem(LANG_KEY) || 'bg';
+let cmdHistory = [];
+let histIdx = -1;
 
-  const canvas = document.getElementById('beanCanvas');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
+// ── CURSOR ─────────────────────────────────
+const cursor = document.getElementById('cursor');
+const cursorRing = document.getElementById('cursor-ring');
+document.addEventListener('mousemove', e => {
+  cursor.style.left = e.clientX + 'px';
+  cursor.style.top  = e.clientY + 'px';
+  setTimeout(() => {
+    cursorRing.style.left = e.clientX + 'px';
+    cursorRing.style.top  = e.clientY + 'px';
+  }, 50);
+});
+document.addEventListener('mousedown', () => cursor.style.transform = 'translate(-50%,-50%) scale(1.8)');
+document.addEventListener('mouseup',   () => cursor.style.transform = 'translate(-50%,-50%) scale(1)');
 
-  function resize() {
-    const parent = canvas.parentElement;
-    canvas.width  = parent.offsetWidth  || 800;
-    canvas.height = parent.offsetHeight || 600;
+// ── TERMINAL ENGINE ────────────────────────
+const body = document.getElementById('termBody');
+const input = document.getElementById('termInput');
+
+function line(type, prompt, text) {
+  const d = document.createElement('div');
+  d.className = 't-line ' + type;
+  if (type === 'gap') { body.appendChild(d); scrollTerm(); return; }
+  if (prompt) {
+    const ps = document.createElement('span');
+    ps.className = 'prompt';
+    ps.textContent = prompt;
+    d.appendChild(ps);
   }
+  const ts = document.createElement('span');
+  ts.className = 'cmd';
+  ts.textContent = text;
+  d.appendChild(ts);
+  body.appendChild(d);
+  scrollTerm();
+}
 
-  // Coffee bean outline — parametric oval with waist pinch
-  function getBeanPoints(steps) {
-    const pts = [];
-    for (let i = 0; i < steps; i++) {
-      const t = (i / steps) * Math.PI * 2;
-      const rx = 0.14;
-      const ry = 0.28;
-      const waist  = 0.022 * Math.sin(t * 2);
-      const taper  = 1 - 0.07 * Math.abs(Math.cos(t));
-      pts.push({
-        x: 0.5 + (rx + waist) * Math.cos(t),
-        y: 0.5 + ry * taper * Math.sin(t)
-      });
-    }
-    // Central crease
-    const creaseN = Math.floor(steps * 0.4);
-    for (let i = 0; i < creaseN; i++) {
-      const frac = i / (creaseN - 1);
-      const yc   = 0.22 + frac * 0.56;
-      const bulge = 0.014 * Math.sin(frac * Math.PI);
-      pts.push({ x: 0.5 + bulge,  y: yc });
-      pts.push({ x: 0.5 - bulge,  y: yc });
-    }
-    return pts;
+function lineHTML(type, html) {
+  const d = document.createElement('div');
+  d.className = 't-line ' + type;
+  const s = document.createElement('span');
+  s.className = 'cmd';
+  s.innerHTML = html;
+  d.appendChild(s);
+  body.appendChild(d);
+  scrollTerm();
+}
+
+function scrollTerm() {
+  requestAnimationFrame(() => { body.scrollTop = body.scrollHeight; });
+}
+
+async function typeIn(type, prompt, text, speed = 18) {
+  const d = document.createElement('div');
+  d.className = 't-line ' + type;
+  if (prompt) {
+    const ps = document.createElement('span');
+    ps.className = 'prompt';
+    ps.textContent = prompt;
+    d.appendChild(ps);
   }
+  const ts = document.createElement('span');
+  ts.className = 'cmd';
+  d.appendChild(ts);
+  body.appendChild(d);
 
-  const BEAN_PTS = getBeanPoints(240);
+  for (const ch of text) {
+    ts.textContent += ch;
+    scrollTerm();
+    await new Promise(r => setTimeout(r, speed + Math.random()*8));
+  }
+}
 
-  const RAMP = [
-    [255, 252, 220], // white-yellow core
-    [255, 220,  60], // bright amber
-    [255, 150,  20], // orange
-    [255,  80,   5], // red-orange
-    [200,  25,   0], // deep red
-    [100,   0,   0], // dark ember
+// ── PRODUCTS DATA ──────────────────────────
+const MOCK_PRODUCTS = [
+  { slug:'eth-yirg', name_bg:'Етиопия Йиргачефе', name_en:'Ethiopia Yirgacheffe', region:'Yirgacheffe · ETH', desc_bg:'Жасмин, праскова, черен чай', desc_en:'Jasmine, peach, black tea', price:18 },
+  { slug:'ken-nyeri', name_bg:'Кения АА Нйери', name_en:'Kenya AA Nyeri', region:'Nyeri · KEN', desc_bg:'Касис, томат, тъмен шоколад', desc_en:'Blackcurrant, tomato, dark chocolate', price:22 },
+  { slug:'col-huila', name_bg:'Колумбия Уила', name_en:'Colombia Huila', region:'Huila · COL', desc_bg:'Карамел, ябълка, орехи', desc_en:'Caramel, apple, walnut', price:19 },
+  { slug:'pan-boquete', name_bg:'Панама Боке', name_en:'Panama Boquete', region:'Boquete · PAN', desc_bg:'Bergamot, honey, tropical', desc_en:'Bergamot, honey, tropical', price:28 },
+];
+
+const ORIGINS = [
+  { code:'ETH', country_bg:'Етиопия', country_en:'Ethiopia', regions:'Yirgacheffe · Guji · Sidama' },
+  { code:'KEN', country_bg:'Кения', country_en:'Kenya', regions:"Nyeri · Kirinyaga · Murang'a" },
+  { code:'COL', country_bg:'Колумбия', country_en:'Colombia', regions:'Huila · Nariño · Antioquia' },
+  { code:'GTM', country_bg:'Гватемала', country_en:'Guatemala', regions:'Antigua · Huehuetenango' },
+  { code:'PAN', country_bg:'Панама', country_en:'Panama', regions:'Boquete · Volcán' },
+  { code:'YEM', country_bg:'Йемен', country_en:'Yemen', regions:'Al-Haima · Bani Matar' },
+];
+
+const BLOG_POSTS = [
+  { id:'001', title_bg:'Какво прави едно кафе specialty?', title_en:'What makes a coffee specialty?', date:'2025-10-12' },
+  { id:'002', title_bg:'Washed vs Natural - разликата в чашата', title_en:'Washed vs Natural — the cup difference', date:'2025-09-28' },
+  { id:'003', title_bg:'Нашият процес на печене', title_en:'Our roasting process', date:'2025-09-14' },
+];
+
+// ── COMMAND HANDLERS ───────────────────────
+async function cmd_help() {
+  line('gap', '', '');
+  line('header', '', lang === 'bg' ? '  ДОСТЪПНИ КОМАНДИ' : '  AVAILABLE COMMANDS');
+  line('gap', '', '');
+  const cmds = [
+    ['ls shop',     lang === 'bg' ? 'Разгледай кафетата'     : 'Browse coffees'],
+    ['ls origins',  lang === 'bg' ? 'Произходи на кафето'    : 'Coffee origins'],
+    ['ls blog',     lang === 'bg' ? 'Статии и новини'        : 'Articles & news'],
+    ['about',       lang === 'bg' ? 'За 420 Beans'           : 'About 420 Beans'],
+    ['cart',        lang === 'bg' ? 'Виж кошницата'          : 'View cart'],
+    ['checkout',    lang === 'bg' ? 'Плати поръчката'        : 'Checkout'],
+    ['lang bg|en',  lang === 'bg' ? 'Смени езика'            : 'Switch language'],
+    ['clear',       lang === 'bg' ? 'Изчисти терминала'      : 'Clear terminal'],
+    ['help',        lang === 'bg' ? 'Тази помощ'             : 'This help'],
   ];
+  cmds.forEach(([c, d]) => {
+    lineHTML('output', `  <span style="color:var(--lime);min-width:140px;display:inline-block;text-shadow:0 0 8px rgba(255,44,247,.5);">${c}</span><span style="color:var(--dim);">  ${d}</span>`);
+  });
+  line('gap', '', '');
+}
 
-  function lerpColor(life) {
-    const i = (1 - life) * (RAMP.length - 1);
-    const lo = Math.floor(i), hi = Math.min(lo + 1, RAMP.length - 1);
-    const f  = i - lo;
-    const c0 = RAMP[lo], c1 = RAMP[hi];
-    return [
-      c0[0] + (c1[0] - c0[0]) * f | 0,
-      c0[1] + (c1[1] - c0[1]) * f | 0,
-      c0[2] + (c1[2] - c0[2]) * f | 0,
-    ];
+async function cmd_shop() {
+  line('gap', '', '');
+  line('header', '', lang === 'bg' ? '  ТЕКУЩО ПРЕДЛАГАНЕ' : '  CURRENT OFFERING');
+  line('output', '', lang === 'bg' ? '  Натисни [число] за добавяне в кошницата' : '  Type [number] to add to cart');
+  line('gap', '', '');
+
+  let products = MOCK_PRODUCTS;
+  try {
+    const r = await fetch('/api/products');
+    if (r.ok) { const d = await r.json(); if (d?.length) products = d.slice(0,8); }
+  } catch {}
+
+  products.forEach((p, i) => {
+    const name = lang === 'bg' ? p.name_bg : (p.name_en || p.name_bg);
+    const desc = lang === 'bg' ? (p.desc_bg || p.description || '') : (p.desc_en || p.description || '');
+    lineHTML('output', `  <span style="color:var(--amber);">[${i+1}]</span>  <span style="color:var(--fg);font-weight:700;">${name}</span>  <span style="color:var(--cyan);text-shadow:0 0 8px rgba(15,244,255,.5);">€${p.price}</span>`);
+    if (desc) line('output', '', `       ${p.region}  ·  ${desc}`);
+    line('gap', '', '');
+  });
+
+  window.__shopProducts = products;
+  window.__shopMode = true;
+  line('info', '', lang === 'bg' ? '  Въведи число 1-' + products.length + ' за добавяне...' : '  Enter 1-' + products.length + ' to add to cart...');
+}
+
+async function cmd_origins() {
+  line('gap', '', '');
+  line('header', '', lang === 'bg' ? '  ПРОИЗХОДИ' : '  ORIGINS');
+  line('gap', '', '');
+  ORIGINS.forEach(o => {
+    const country = lang === 'bg' ? o.country_bg : o.country_en;
+    lineHTML('output',
+      `  <span style="color:var(--cyan);min-width:48px;display:inline-block;text-shadow:0 0 8px rgba(15,244,255,.5);">${o.code}</span>` +
+      `  <span style="color:var(--fg);">${country}</span>  ` +
+      `<span style="color:var(--dim);">${o.regions}</span>`
+    );
+  });
+  line('gap', '', '');
+}
+
+async function cmd_blog() {
+  line('gap', '', '');
+  line('header', '', lang === 'bg' ? '  БЛОГ' : '  BLOG');
+  line('gap', '', '');
+  BLOG_POSTS.forEach((p, i) => {
+    const title = lang === 'bg' ? p.title_bg : p.title_en;
+    lineHTML('output',
+      `  <span style="color:var(--amber);">[${i+1}]</span>  ` +
+      `<span style="color:var(--fg);">${title}</span>  ` +
+      `<span style="color:var(--dim);">${p.date}</span>`
+    );
+  });
+  line('gap', '', '');
+}
+
+async function cmd_about() {
+  line('gap', '', '');
+  line('header', '', '  420 BEANS — PLOVDIV');
+  line('gap', '', '');
+  const lines_bg = [
+    '  Specialty кафе с единичен произход.',
+    '  Печено в Пловдив от хора, на които им пука.',
+    '',
+    '  Всяко кафе носи историята на своето място —',
+    '  фермер, теруар, процес.',
+    '',
+    '  Без компромиси. Само честност в чашата.',
+  ];
+  const lines_en = [
+    '  Specialty coffee. Single origin.',
+    '  Roasted in Plovdiv by people who care.',
+    '',
+    '  Every coffee carries the story of its place —',
+    '  farmer, terroir, process.',
+    '',
+    '  No compromises. Just honesty in the cup.',
+  ];
+  const texts = lang === 'bg' ? lines_bg : lines_en;
+  for (const t of texts) {
+    if (!t) { line('gap', '', ''); continue; }
+    await new Promise(r => setTimeout(r, 40));
+    line('output', '', t);
   }
+  line('gap', '', '');
+}
 
-  function beanXY(nx, ny) {
-    const W = canvas.width, H = canvas.height;
-    // Center the bean, slightly right of center on large screens
-    const offsetX = W > 900 ? 0.58 : 0.5;
-    const scale = Math.min(W, H) * 0.85;
-    const bx = W * offsetX + (nx - 0.5) * scale;
-    const by = H * 0.5    + (ny - 0.5) * scale;
-    return [bx, by];
+async function cmd_cart() {
+  loadCart();
+  if (!cart.length) {
+    line('gap', '', '');
+    line('output', '', lang === 'bg' ? '  Кошницата е празна.' : '  Cart is empty.');
+    line('gap', '', '');
+    return;
   }
+  line('gap', '', '');
+  line('header', '', lang === 'bg' ? '  КОШНИЦА' : '  CART');
+  line('gap', '', '');
+  cart.forEach(item => {
+    lineHTML('output',
+      `  <span style="color:var(--fg);">${item.name}</span>  ` +
+      `<span style="color:var(--dim);">×${item.qty}</span>  ` +
+      `<span style="color:var(--cyan);text-shadow:0 0 8px rgba(15,244,255,.5);">€${(item.price * item.qty).toFixed(2)}</span>`
+    );
+  });
+  line('gap', '', '');
+  const total = cart.reduce((s,i) => s + i.price*i.qty, 0);
+  line('success', '', `  TOTAL: €${total.toFixed(2)}`);
+  line('gap', '', '');
+  line('info', '', lang === 'bg' ? '  Напиши "checkout" за плащане.' : '  Type "checkout" to pay.');
+}
 
-  class FP {
-    constructor(initial) { this.reset(initial); }
-    reset(initial) {
-      const pt = BEAN_PTS[Math.random() * BEAN_PTS.length | 0];
-      const [bx, by] = beanXY(pt.x, pt.y);
-      const W = canvas.width;
-      this.x  = bx + (Math.random() - 0.5) * W * 0.010;
-      this.y  = by + (Math.random() - 0.5) * W * 0.010;
-      this.vx = (Math.random() - 0.5) * 0.55;
-      this.vy = -(0.40 + Math.random() * 1.10);
-      this.life    = initial ? Math.random() : 0;
-      this.maxLife = 0.60 + Math.random() * 0.60;
-      this.sz      = 1.2 + Math.random() * 3.2;
-      this.phase   = Math.random() * Math.PI * 2;
-    }
-    update() {
-      this.life  += 0.012;
-      this.phase += 0.22;
-      this.vx    += (Math.random() - 0.5) * 0.12;
-      this.vx    *= 0.97;
-      this.vy    -= 0.008;
-      this.vy    *= 0.99;
-      this.x += this.vx;
-      this.y += this.vy;
-      if (this.life >= this.maxLife) this.reset(false);
-    }
-    draw() {
-      const t  = this.life / this.maxLife;
-      const alpha = t < 0.12
-        ? (t / 0.12)
-        : (1 - (t - 0.12) / (1 - 0.12));
-      const a  = Math.max(0, Math.min(1, alpha)) * (0.75 + 0.25 * Math.sin(this.phase));
-      const [r, g, b] = lerpColor(t);
-      const csz = this.sz * (1 - t * 0.50);
-
-      ctx.save();
-      ctx.globalAlpha = a;
-      const grd = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, csz * 3.2);
-      grd.addColorStop(0,   `rgba(${r},${g},${b},1)`);
-      grd.addColorStop(0.5, `rgba(${r},${g},${b},0.30)`);
-      grd.addColorStop(1,   `rgba(${r},${g},${b},0)`);
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, csz * 3.2, 0, Math.PI * 2);
-      ctx.fillStyle = grd;
-      ctx.fill();
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, csz * 0.5, 0, Math.PI * 2);
-      ctx.fillStyle = `rgb(${r},${g},${b})`;
-      ctx.fill();
-      ctx.restore();
-    }
+async function cmd_checkout() {
+  loadCart();
+  if (!cart.length) {
+    line('err', '', lang === 'bg' ? '  Кошницата е празна.' : '  Cart is empty.'); return;
   }
+  line('info', '', lang === 'bg' ? '  Свързване с платежна система...' : '  Connecting to payment system...');
+  try {
+    const r = await fetch('/api/checkout', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ items: cart, lang })
+    });
+    const d = await r.json();
+    if (d.url) { window.location.href = d.url; }
+    else line('err', '', 'ERROR: ' + (d.error || 'unknown'));
+  } catch { line('err', '', lang === 'bg' ? '  Checkout недостъпен.' : '  Checkout unavailable.'); }
+}
 
-  class Spark {
-    constructor() { this.reset(); }
-    reset() {
-      const pt = BEAN_PTS[Math.random() * BEAN_PTS.length | 0];
-      const [bx, by] = beanXY(pt.x, pt.y);
-      this.x  = bx;
-      this.y  = by;
-      this.vx = (Math.random() - 0.5) * 1.2;
-      this.vy = -(0.20 + Math.random() * 0.70);
-      this.life = 0;
-      this.maxLife = 1.0 + Math.random() * 2.0;
-      this.r = 0.8 + Math.random() * 1.2;
-    }
-    update() {
-      this.life += 0.007;
-      this.vx   += (Math.random() - 0.5) * 0.07;
-      this.vy   -= 0.002;
-      this.x += this.vx;
-      this.y += this.vy;
-      if (this.life >= this.maxLife) this.reset();
-    }
-    draw() {
-      const alpha = Math.sin((this.life / this.maxLife) * Math.PI) * 0.90;
-      ctx.save();
-      ctx.globalAlpha = alpha;
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-      ctx.fillStyle = '#ffd060';
-      ctx.fill();
-      ctx.restore();
-    }
+async function cmd_clear() {
+  body.innerHTML = '';
+  await boot();
+}
+
+async function cmd_lang(arg) {
+  const l = (arg || '').trim().toLowerCase();
+  if (l === 'bg' || l === 'en') {
+    lang = l;
+    localStorage.setItem(LANG_KEY, lang);
+    applyLang();
+    line('success', '', lang === 'bg' ? '  Език: BG' : '  Language: EN');
+  } else {
+    line('err', '', 'Usage: lang bg | lang en');
   }
+}
 
-  function drawGlow() {
-    const W = canvas.width, H = canvas.height;
-    const offsetX = W > 900 ? 0.58 : 0.5;
-    const cx = W * offsetX, cy = H * 0.5;
-    const rw = Math.min(W, H) * 0.20;
-    const rh = Math.min(W, H) * 0.36;
-    ctx.save();
-    ctx.globalAlpha = 0.06;
-    const g = ctx.createRadialGradient(cx, cy - rh * 0.05, 0, cx, cy, Math.max(rw, rh) * 1.4);
-    g.addColorStop(0,   'rgba(255,150,30,0.8)');
-    g.addColorStop(0.4, 'rgba(180,50,0,0.35)');
-    g.addColorStop(1,   'rgba(80,0,0,0)');
-    ctx.beginPath();
-    ctx.ellipse(cx, cy, rw * 1.4, rh * 1.4, 0, 0, Math.PI * 2);
-    ctx.fillStyle = g;
-    ctx.fill();
-    ctx.restore();
+async function cmd_open_cart() {
+  document.getElementById('cart-drawer').classList.add('open');
+  document.getElementById('overlay').classList.add('show');
+  updateCartUI();
+  line('success', '', lang === 'bg' ? '  Кошницата е отворена →' : '  Cart opened →');
+}
+
+async function cmd_add(numStr) {
+  if (!window.__shopMode || !window.__shopProducts) {
+    line('err', '', lang === 'bg' ? '  Първо напиши "ls shop"' : '  Run "ls shop" first'); return;
   }
-
-  const particles = Array.from({ length: 320 }, (_, i) => new FP(i < 160));
-  const sparks    = Array.from({ length: 45  }, () => new Spark());
-
-  function frame() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawGlow();
-    for (const p of particles) { p.update(); p.draw(); }
-    for (const s of sparks)    { s.update(); s.draw(); }
-    requestAnimationFrame(frame);
+  const n = parseInt(numStr) - 1;
+  if (isNaN(n) || n < 0 || n >= window.__shopProducts.length) {
+    line('err', '', lang === 'bg' ? `  Невалиден номер. Въведи 1-${window.__shopProducts.length}` : `  Invalid. Enter 1-${window.__shopProducts.length}`); return;
   }
+  const p = window.__shopProducts[n];
+  addToCart(p);
+  const name = lang === 'bg' ? p.name_bg : (p.name_en || p.name_bg);
+  line('success', '', `  ✓ ${name} → ${lang === 'bg' ? 'кошница' : 'cart'}`);
+}
 
-  resize();
-  window.addEventListener('resize', () => {
-    resize();
-    // Reinitialize particles to new positions
-    for (const p of particles) p.reset(true);
-    for (const s of sparks)    s.reset();
-  }, { passive: true });
-  requestAnimationFrame(frame);
-})();
+async function cmd_ai(msg) {
+  if (!msg) { line('err', '', 'Usage: ask <question>'); return; }
+  line('info', '', lang === 'bg' ? '  Свързване с AI...' : '  Connecting to AI...');
+  try {
+    const r = await fetch('/api/chat', {
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({message:msg,lang})
+    });
+    const d = await r.json();
+    line('gap', '', '');
+    line('output', '> ', d.reply || '...');
+    line('gap', '', '');
+  } catch { line('err', '', 'AI unavailable'); }
+}
+
+// ── COMMAND ROUTER ─────────────────────────
+async function runCmd(raw) {
+  const trimmed = raw.trim();
+  if (!trimmed) return;
+  line('output', '~/420beans $ ', trimmed);
+  cmdHistory.unshift(trimmed); histIdx = -1;
+
+  const parts = trimmed.toLowerCase().split(/\s+/);
+  const base = parts[0];
+  const arg1 = parts[1] || '';
+  const rest = parts.slice(1).join(' ');
+
+  if (base === 'help') { await cmd_help(); }
+  else if (base === 'ls' && arg1 === 'shop') { await cmd_shop(); }
+  else if (base === 'ls' && arg1 === 'origins') { await cmd_origins(); }
+  else if (base === 'ls' && arg1 === 'blog') { await cmd_blog(); }
+  else if (base === 'ls') { line('err', '', `ls: ${arg1 || '.'}: no such directory. Try: ls shop, ls origins, ls blog`); }
+  else if (base === 'about') { await cmd_about(); }
+  else if (base === 'cart') { await cmd_open_cart(); }
+  else if (base === 'checkout') { await cmd_checkout(); }
+  else if (base === 'clear' || base === 'cls') { await cmd_clear(); }
+  else if (base === 'lang') { await cmd_lang(arg1); }
+  else if (base === 'add' || (base === 'cart' && /^\d+$/.test(arg1))) { await cmd_add(arg1 || rest); }
+  else if (/^\d+$/.test(trimmed)) { await cmd_add(trimmed); }
+  else if (base === 'ask' || base === 'ai') { await cmd_ai(rest); }
+  else if (base === 'shop') { await cmd_shop(); }
+  else if (base === 'origins') { await cmd_origins(); }
+  else if (base === 'blog') { await cmd_blog(); }
+  else if (base === 'exit' || base === 'quit') { line('info', '', 'You cannot exit specialty coffee.'); }
+  else {
+    line('err', '', `command not found: ${trimmed}`);
+    line('output', '', `Type "help" for available commands.`);
+  }
+}
+
+// ── BOOT SEQUENCE ─────────────────────────
+async function boot() {
+  await typeIn('info', '', 'Initializing 420 Beans OS v2.0...', 22);
+  await new Promise(r => setTimeout(r, 200));
+  await typeIn('output', '', 'Loading coffee database... OK', 22);
+  await new Promise(r => setTimeout(r, 150));
+  await typeIn('output', '', 'Calibrating taste sensors... OK', 22);
+  await new Promise(r => setTimeout(r, 250));
+  line('gap', '', '');
+  await typeIn('info', '', lang === 'bg'
+    ? '  ░▒▓█  420 BEANS — SPECIALTY КАФЕ · ПЛОВДИВ  █▓▒░'
+    : '  ░▒▓█  420 BEANS — SPECIALTY COFFEE · PLOVDIV  █▓▒░', 14);
+  line('gap', '', '');
+  await typeIn('output', '', lang === 'bg'
+    ? '  Specialty кафе с единичен произход. Печено в Пловдив.'
+    : '  Single-origin specialty coffee. Roasted in Plovdiv.', 16);
+  line('gap', '', '');
+  line('info', '', lang === 'bg' ? '  Напиши "help" за команди или избери от менюто горе.' : '  Type "help" for commands or use the top menu.');
+  line('gap', '', '');
+}
+
+// ── INPUT HANDLING ─────────────────────────
+input.addEventListener('keydown', async e => {
+  if (e.key === 'Enter') {
+    const val = input.value;
+    input.value = '';
+    await runCmd(val);
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    if (histIdx < cmdHistory.length - 1) { histIdx++; input.value = cmdHistory[histIdx] || ''; }
+  } else if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    if (histIdx > 0) { histIdx--; input.value = cmdHistory[histIdx] || ''; }
+    else { histIdx = -1; input.value = ''; }
+  }
+});
+
+document.getElementById('termBody').addEventListener('click', () => input.focus());
+
+// ── HINT TAGS ──────────────────────────────
+document.querySelectorAll('.hint-tag').forEach(el => {
+  el.addEventListener('click', () => {
+    const c = el.dataset.cmd;
+    if (c) { input.value = c; input.focus(); runCmd(c); input.value = ''; }
+  });
+});
+
+// ── TOPBAR LINKS ───────────────────────────
+document.querySelectorAll('.tb-link').forEach(el => {
+  el.addEventListener('click', e => {
+    e.preventDefault();
+    const c = el.dataset.cmd;
+    if (c) { runCmd(c); input.focus(); }
+    document.querySelectorAll('.tb-link').forEach(l => l.classList.remove('active'));
+    el.classList.add('active');
+  });
+});
+
+// ── LANG ───────────────────────────────────
+function applyLang() {
+  const isBG = lang === 'bg';
+  document.querySelectorAll('[data-en]').forEach(el => {
+    const v = isBG ? el.dataset.bgTxt : el.dataset.en;
+    if (v) el.textContent = v;
+  });
+  document.querySelectorAll('.tb-lang').forEach(b => b.classList.toggle('active', b.dataset.l === lang));
+}
+document.querySelectorAll('.tb-lang').forEach(b => {
+  b.addEventListener('click', () => {
+    lang = b.dataset.l;
+    localStorage.setItem(LANG_KEY, lang);
+    applyLang();
+  });
+});
+applyLang();
+
+// ── CART ───────────────────────────────────
+function loadCart() {
+  try { cart = JSON.parse(localStorage.getItem(CART_KEY)) || []; } catch { cart = []; }
+}
+function saveCart() { localStorage.setItem(CART_KEY, JSON.stringify(cart)); }
+function addToCart(p) {
+  loadCart();
+  const ex = cart.find(i => i.slug === p.slug);
+  if (ex) ex.qty++;
+  else cart.push({ slug: p.slug, name: p.name_bg, price: p.price, qty: 1 });
+  saveCart();
+  updateCartUI();
+  showToast(lang === 'bg' ? 'Добавено в кошницата' : 'Added to cart');
+}
+function updateCartUI() {
+  loadCart();
+  const total = cart.reduce((s,i) => s + i.price*i.qty, 0);
+  const count = cart.reduce((s,i) => s + i.qty, 0);
+  const badge = document.getElementById('cartCount');
+  badge.textContent = count;
+  badge.style.display = count > 0 ? 'flex' : 'none';
+  document.getElementById('cartTotal').textContent = `€${total.toFixed(2)}`;
+  const items = document.getElementById('cartItems');
+  if (!cart.length) {
+    items.innerHTML = `<div class="drawer-empty">${lang === 'bg' ? 'Празна.' : 'Empty.'}</div>`; return;
+  }
+  items.innerHTML = cart.map(i => `
+    <div class="cart-item">
+      <div>
+        <div class="cart-item-name">${i.name}</div>
+        <div class="cart-item-meta">250G · QTY ${i.qty}</div>
+      </div>
+      <div class="cart-item-price">€${(i.price*i.qty).toFixed(2)}</div>
+    </div>
+  `).join('');
+}
+document.getElementById('cartBtn').addEventListener('click', () => {
+  document.getElementById('cart-drawer').classList.add('open');
+  document.getElementById('overlay').classList.add('show');
+  updateCartUI();
+});
+document.getElementById('cartClose').addEventListener('click', () => {
+  document.getElementById('cart-drawer').classList.remove('open');
+  document.getElementById('overlay').classList.remove('show');
+});
+document.getElementById('overlay').addEventListener('click', () => {
+  document.getElementById('cart-drawer').classList.remove('open');
+  document.getElementById('overlay').classList.remove('show');
+});
+document.getElementById('checkoutBtn').addEventListener('click', () => runCmd('checkout'));
+
+// ── TOAST ──────────────────────────────────
+let toastT;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastT);
+  toastT = setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+// ── NEON MARQUEE ─────────────────────────
+const MOCK_MARQUEE = [
+  { name_bg:'Етиопия Йиргачефе', name_en:'Ethiopia Yirgacheffe', price:18 },
+  { name_bg:'Кения АА Нйери',    name_en:'Kenya AA Nyeri',        price:22 },
+  { name_bg:'Колумбия Уила',     name_en:'Colombia Huila',        price:19 },
+  { name_bg:'Панама Боке',       name_en:'Panama Boquete',        price:28 },
+  { name_bg:'Гватемала Антигуа', name_en:'Guatemala Antigua',     price:17 },
+  { name_bg:'Йемен Ал-Хайма',   name_en:'Yemen Al-Haima',        price:32 },
+];
+
+async function buildMarquee() {
+  let items = MOCK_MARQUEE;
+  try {
+    const r = await fetch('/api/products');
+    if (r.ok) { const d = await r.json(); if (d?.length) items = d; }
+  } catch {}
+
+  const track = document.getElementById('neon-track');
+  const full = [...items, ...items, ...items, ...items];
+  track.innerHTML = full.map(p => {
+    const name = lang === 'bg' ? (p.name_bg || p.name) : (p.name_en || p.name_bg || p.name);
+    return `
+      <span class="neon-item">
+        <span class="neon-name" data-text="${name}">${name}</span>
+        <span class="neon-sep">·</span>
+        <span class="neon-price">€${p.price}</span>
+      </span>
+    `;
+  }).join('');
+
+  const dur = Math.max(20, items.length * 5);
+  track.style.animationDuration = dur + 's';
+}
+
+buildMarquee();
+
+// ── INIT ───────────────────────────────────
+updateCartUI();
+boot().then(() => input.focus());
 </script>
 </body>
 </html>
