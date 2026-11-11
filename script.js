@@ -20,65 +20,106 @@ let FREE_SHIPPING_THRESHOLD = 35; // €35
 /* ─────────────────────────────────────────────────────
    LOAD DATA
 ───────────────────────────────────────────────────────*/
-async function loadData() {
-  try {
-    const [productsRes, settingsRes, textsRes, contentRes] = await Promise.all([
-      fetch('/api/products'),
-      fetch('./_data/settings.json'),
-      fetch('./_data/texts.json'),
-      fetch('/api/content').catch(() => ({ ok: false })),
-    ]);
+/* Fetch JSON with a timeout and optional retries. Resolves to null on any failure
+   (network error, timeout, non-2xx, invalid JSON) so the page never hangs on a request. */
+async function fetchJson(url, { timeout = 8000, retries = 0 } = {}) {
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), timeout);
+    try {
+      const res = await fetch(url, { signal: ctrl.signal });
+      if (res.ok) return await res.json();
+    } catch (_) { /* network error, timeout or bad JSON — try again / give up */ }
+    finally { clearTimeout(timer); }
+    if (attempt < retries) await new Promise(r => setTimeout(r, 800));
+  }
+  return null;
+}
 
+function productsStatusHtml(message, withRetry) {
+  const retry = withRetry
+    ? `<p style="margin-top:20px"><button class="filter-btn" onclick="retryProducts()">${lang === 'bg' ? 'Опитай пак' : 'Try again'}</button></p>`
+    : '';
+  return `<div id="productsLoader" style="grid-column:1/-1;padding:80px 24px;text-align:center"><p style="opacity:0.6;font-size:0.8rem;letter-spacing:0.12em">${message}</p>${retry}</div>`;
+}
+
+async function loadProducts() {
+  const grid = document.getElementById('productGrid');
+  if (grid) grid.innerHTML = productsStatusHtml(lang === 'bg' ? 'Зареждане на кафетата…' : 'Loading coffees…', false);
+
+  const raw = await fetchJson('/api/products', { timeout: 8000, retries: 1 });
+  if (!raw) {
+    if (grid) grid.innerHTML = productsStatusHtml(lang === 'bg' ? 'Не успяхме да заредим кафетата.' : 'We could not load the coffees.', true);
+    return false;
+  }
+
+  const products = Array.isArray(raw) ? raw : (raw.products || []);
+  if (!products.length) {
+    if (grid) grid.innerHTML = productsStatusHtml(lang === 'bg' ? 'Скоро ще има нови кафета.' : 'New coffees are coming soon.', false);
+    return true;
+  }
+
+  try {
+    CATALOG = {};
+    products.forEach(p => {
+      const enName = p.en?.name || p.name || '';
+      const bgName = p.bg?.name || p.name || '';
+      CATALOG[p.id] = {
+        en:         enName,
+        bg:         bgName,
+        price:      p.price,
+        price_500:  p.price_500,
+        price_1000: p.price_1000,
+        roast:      p.roast  || 0,
+        stripeLink: p.stripeLink || '',
+        color:      'linear-gradient(160deg,#1A1512,#2C1810)',
+        image:      p.image  || p.image_url || '',
+        category:   p.category || 'filter',
+        badge:      p.badge  || '',
+        _en: p.en || { name: enName, region: p.category || '', notes: p.description || '', process: '' },
+        _bg: p.bg || { name: bgName, region: p.category || '', notes: p.description || '', process: '' },
+      };
+    });
+    renderProducts(products);
+    // Populate marquee from real products (used if settings.marquee not set)
+    window._productsForMarquee = products;
+    return true;
+  } catch (err) {
+    console.warn('Product render error:', err);
+    if (grid) grid.innerHTML = productsStatusHtml(lang === 'bg' ? 'Не успяхме да заредим кафетата.' : 'We could not load the coffees.', true);
+    return false;
+  }
+}
+
+async function retryProducts() {
+  await loadProducts();
+  applyTranslations();
+  applyProductLanguage();
+}
+
+async function loadData() {
+  // Start the small side requests right away, but never let them block the shop.
+  const settingsP = fetchJson('./_data/settings.json', { timeout: 4000 });
+  const textsP    = fetchJson('./_data/texts.json',    { timeout: 4000 });
+  const contentP  = fetchJson('/api/content',          { timeout: 5000 });
+
+  await loadProducts();
+
+  try {
     // Texts: _data/texts.json first, then admin overrides from the database
-    if (textsRes.ok) applyTextsJson(await textsRes.json());
-    let content = {};
-    try { if (contentRes.ok) content = await contentRes.json(); } catch (_) { content = {}; }
+    const texts = await textsP;
+    if (texts) applyTextsJson(texts);
+    const content = (await contentP) || {};
     applyTextOverrides(content.texts);
 
-    // Products
-    if (productsRes.ok) {
-      const raw = await productsRes.json();
-      const products = Array.isArray(raw) ? raw : (raw.products || []);
-      CATALOG = {};
-      products.forEach(p => {
-        const enName = p.en?.name || p.name || '';
-        const bgName = p.bg?.name || p.name || '';
-        CATALOG[p.id] = {
-          en:         enName,
-          bg:         bgName,
-          price:      p.price,
-          price_500:  p.price_500,
-          price_1000: p.price_1000,
-          roast:      p.roast  || 0,
-          stripeLink: p.stripeLink || '',
-          color:      'linear-gradient(160deg,#1A1512,#2C1810)',
-          image:      p.image  || p.image_url || '',
-          category:   p.category || 'filter',
-          badge:      p.badge  || '',
-          _en: p.en || { name: enName, region: p.category || '', notes: p.description || '', process: '' },
-          _bg: p.bg || { name: bgName, region: p.category || '', notes: p.description || '', process: '' },
-        };
-      });
-      renderProducts(products);
-
-      // Populate marquee from real products (used if settings.marquee not set)
-      window._productsForMarquee = products;
-    }
-
     // Settings: _data/settings.json first, admin settings from the database on top
-    let settings = {};
-    if (settingsRes.ok) {
-      try { settings = await settingsRes.json(); } catch (_) { settings = {}; }
-    }
-    settings = { ...settings, ...(content.settings || {}) };
+    const settings = { ...((await settingsP) || {}), ...(content.settings || {}) };
     if (settings.stripePublishableKey && !settings.stripePublishableKey.includes('REPLACE')) {
       CONFIG.STRIPE_PUBLISHABLE_KEY = settings.stripePublishableKey;
     }
     applySiteSettings(settings);
-
   } catch (err) {
-    console.warn('Data load error, using fallback:', err.message);
-    useFallbackCatalog();
+    console.warn('Texts/settings load error:', err.message);
   }
 }
 
@@ -283,7 +324,11 @@ function useFallbackCatalog() {
 /* ─────────────────────────────────────────────────────
    STATE
 ───────────────────────────────────────────────────────*/
-let lang = localStorage.getItem('lang') || 'bg';
+// Bulgarian is the default. New key so an old saved "en" no longer overrides it;
+// an explicit choice made with the БГ/EN buttons is still remembered.
+const LANG_KEY = '420beans_lang_v3';
+let lang = 'bg';
+try { const saved = localStorage.getItem(LANG_KEY); if (saved === 'bg' || saved === 'en') lang = saved; } catch (_) {}
 let cart = [];
 
 /* ─────────────────────────────────────────────────────
@@ -305,7 +350,7 @@ function applyTranslations() {
 
 function setLang(l) {
   lang = l;
-  localStorage.setItem('lang', l);
+  try { localStorage.setItem(LANG_KEY, l); } catch (_) {}
   $('#btnBG').classList.toggle('active', l === 'bg');
   $('#btnEN').classList.toggle('active', l === 'en');
   document.documentElement.lang = l;
@@ -740,6 +785,12 @@ function initChat() {
    INIT
 ───────────────────────────────────────────────────────*/
 document.addEventListener('DOMContentLoaded', async () => {
+  // Language first, before any network request: the page paints in Bulgarian immediately.
+  document.documentElement.lang = lang;
+  $('#btnBG')?.classList.toggle('active', lang === 'bg');
+  $('#btnEN')?.classList.toggle('active', lang === 'en');
+  applyTranslations();
+
   await loadData();
   applyTranslations();
   applyProductLanguage();
@@ -755,6 +806,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 /* Expose globals */
 window.setLang        = setLang;
+window.retryProducts  = retryProducts;
 window.addToCart      = addToCart;
 window.changeQty      = changeQty;
 window.removeFromCart = removeFromCart;
