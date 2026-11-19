@@ -36,7 +36,7 @@ module.exports = async (req, res) => {
     const productIds = items.map(i => i.id);
     const { data: products, error } = await supabase
       .from('products')
-      .select('id, name, description, price, price_500, price_1000, image_url')
+      .select('*') // '*' so it works whether or not the optional `active` column exists
       .in('id', productIds);
     if (error) throw error;
     if (!products?.length) {
@@ -45,6 +45,7 @@ module.exports = async (req, res) => {
     const lineItems = items.map(item => {
       const product = products.find(p => p.id === item.id);
       if (!product) throw new Error(`Product ${item.id} not found`);
+      if (product.active === false) throw new Error(`Product ${item.id} is not available`);
       const qty = parseInt(item.quantity, 10);
       if (!qty || qty < 1 || qty > 20) throw new Error('Invalid quantity');
 

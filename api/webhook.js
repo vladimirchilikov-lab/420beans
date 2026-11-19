@@ -15,6 +15,10 @@ async function getRawBody(req) {
   });
 }
 
+function safeParseItems(raw) {
+  try { const v = JSON.parse(raw || '[]'); return Array.isArray(v) ? v : []; } catch (_) { return []; }
+}
+
 module.exports = async (req, res) => {
   if (req.method !== 'POST') return res.status(405).end();
 
@@ -47,7 +51,7 @@ module.exports = async (req, res) => {
         .from('orders')
         .select('id')
         .eq('stripe_session_id', session.id)
-        .single();
+        .maybeSingle();
 
       if (!existing) {
         const { error } = await supabase
@@ -57,13 +61,15 @@ module.exports = async (req, res) => {
             customer_email: session.customer_details?.email || 'unknown',
             total: session.amount_total,
             status: 'paid',
-            items: JSON.parse(session.metadata?.items || '[]'),
+            items: safeParseItems(session.metadata?.items),
           }]);
         if (error) throw error;
         console.log(`✅ Order saved — €${(session.amount_total/100).toFixed(2)}`);
       }
     } catch (err) {
+      // Answer 500 so Stripe retries the delivery (for up to 3 days) instead of the order being lost.
       console.error('Order save error:', err.message);
+      return res.status(500).json({ error: 'Order save failed' });
     }
   }
 
