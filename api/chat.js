@@ -146,6 +146,11 @@ module.exports = async function handler(req, res) {
     return sendError(res, 405, 'Методът не е разрешен.');
   }
 
+  // Feature flag: AI chat is disabled by default. Set AI_CHAT_ENABLED=true to enable.
+  if (process.env.AI_CHAT_ENABLED !== 'true') {
+    return sendError(res, 503, 'AI chat is disabled');
+  }
+
   const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
   const SUPABASE_URL = process.env.SUPABASE_URL;
   const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
