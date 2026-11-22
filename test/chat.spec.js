@@ -70,7 +70,7 @@ describe('AI Chat Feature Flag', () => {
     expect(res.statusCode).toBe(405);
   });
 
-  it('does not call Anthropic API when disabled', async () => {
+  it('does not call Gemini API when disabled', async () => {
     delete process.env.AI_CHAT_ENABLED;
     const fetchSpy = vi.spyOn(global, 'fetch');
     const chatModule = await import('../api/chat.js');

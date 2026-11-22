@@ -6,7 +6,8 @@
     "deploy": "wrangler deploy",
     "dev": "wrangler dev",
     "start": "wrangler dev",
-    "test": "vitest"
+    "test": "vitest",
+    "test:chat": "vitest run --config vitest.node.config.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.44.2",
