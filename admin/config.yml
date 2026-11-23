@@ -77,7 +77,7 @@ collections:
             widget: "object"
             fields:
               - { label: "Малък надпис (EN)", name: "eyebrowEN", widget: "string", default: "Specialty Coffee — Est. 2024" }
-              - { label: "Малък надпис (БГ)", name: "eyebrowBG", widget: "string", default: "Специалти Кафе — Осн. 2024" }
+              - { label: "Малък надпис (БГ)", name: "eyebrowBG", widget: "string", default: "Специално Кафе — Осн. 2024" }
               - { label: "Описание (EN)", name: "descEN", widget: "text", default: "Carefully selected high-quality coffee, focused on flavour profile and traceable single-farm origin." }
               - { label: "Описание (БГ)", name: "descBG", widget: "text", default: "Подбираме внимателно висококачествено кафе с фокус върху вкусовия профил и проследим произход до конкретни ферми." }
 
@@ -163,7 +163,7 @@ collections:
             widget: "object"
             fields:
               - { label: "Tagline (EN)", name: "taglineEN", widget: "text", default: "Specialty coffee with traceable single-farm origin. Roasted with obsession. Delivered with care." }
-              - { label: "Tagline (БГ)", name: "taglineBG", widget: "text", default: "Специалти кафе с проследим произход до конкретни ферми. Препечено с обсесия. Доставено с грижа." }
+              - { label: "Tagline (БГ)", name: "taglineBG", widget: "text", default: "Специално кафе с проследим произход до конкретни ферми. Препечено с обсесия. Доставено с грижа." }
               - { label: "Copyright (EN)", name: "copyEN", widget: "string", default: "© 2024 420 Beans. All rights reserved." }
               - { label: "Copyright (БГ)", name: "copyBG", widget: "string", default: "© 2024 420 Beans. Всички права запазени." }
 
